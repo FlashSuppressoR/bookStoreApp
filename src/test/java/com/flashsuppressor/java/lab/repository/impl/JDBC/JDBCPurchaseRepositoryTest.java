@@ -23,9 +23,9 @@ public class JDBCPurchaseRepositoryTest extends BaseRepositoryTest {
         super();
         purchaseRepository = new JDBCPurchaseRepository(getConnectionPool());
         expectedPurchases = new ArrayList<>() {{
-            add(new Purchase( 1 , new Customer( 2 , "Alex", "Alex@com" , "alex"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
-            add(new Purchase( 2 , new Customer( 3 , "Rus", "Rus@com" , "rus"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
-            add(new Purchase( 3 , new Customer( 1 , "Max", "Max@com" , "max"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
+            add(new Purchase(1, new Customer(2, "Alex", "Alex@com", "alex"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
+            add(new Purchase(2, new Customer(3, "Rus", "Rus@com", "rus"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
+            add(new Purchase(3, new Customer(1, "Max", "Max@com", "max"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
         }};
     }
 
@@ -43,7 +43,7 @@ public class JDBCPurchaseRepositoryTest extends BaseRepositoryTest {
     @Test
     public void addTest() throws SQLException {
         //given
-        Purchase expectedPurchase = new Purchase( 4 , new Customer( 4 , "Alex3", "Alexw3@com" , "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0"));
+        Purchase expectedPurchase = new Purchase(4, new Customer(4, "Alex3", "Alexw3@com", "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0"));
         //when
         Purchase actualPurchase = purchaseRepository.add(expectedPurchase);
         //then
@@ -53,14 +53,14 @@ public class JDBCPurchaseRepositoryTest extends BaseRepositoryTest {
     @Test
     public void addAllTest() throws SQLException {
         //given
-        List<Purchase> expectedList = new ArrayList<>(){{
-            add(new Purchase( 4 , new Customer( 4 , "Alex3", "Alexw3@com" , "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
-            add(new Purchase( 5 , new Customer( 5 , "Vell", "Vell@com" , "vell"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
+        List<Purchase> expectedList = new ArrayList<>() {{
+            add(new Purchase(4, new Customer(4, "Alex3", "Alexw3@com", "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
+            add(new Purchase(5, new Customer(5, "Vell", "Vell@com", "vell"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
         }};
         //when
-        List<Purchase> actualList = new ArrayList<>(){{
-            add(new Purchase( null , new Customer( 4 , "Alex3", "Alexw3@com" , "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
-            add(new Purchase( null , new Customer( 5 , "Vell", "Vell@com" , "vell"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
+        List<Purchase> actualList = new ArrayList<>() {{
+            add(new Purchase(null, new Customer(4, "Alex3", "Alexw3@com", "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
+            add(new Purchase(null, new Customer(5, "Vell", "Vell@com", "vell"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
         }};
         purchaseRepository.addAll(actualList);
         //then

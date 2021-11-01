@@ -20,9 +20,9 @@ public class JDBCAuthorRepositoryTest extends BaseRepositoryTest {
         super();
         authorRepository = new JDBCAuthorRepository(getConnectionPool());
         expectedAuthors = new ArrayList<>() {{
-            add(new Author( 1 , "Bred Dee" ));
-            add(new Author( 2 , "John Serb" ));
-            add(new Author( 3 , "Alex Green" ));
+            add(new Author(1, "Bred Dee"));
+            add(new Author(2, "John Serb"));
+            add(new Author(3, "Alex Green"));
         }};
     }
 
@@ -36,6 +36,7 @@ public class JDBCAuthorRepositoryTest extends BaseRepositoryTest {
         //given
         //when
         List<Author> actualAuthors = authorRepository.findAll();
+        assertEquals(expectedAuthors.size(), actualAuthors.size());
         //then
         for (int i = 0; i < expectedAuthors.size(); i++) {
             assertAuthorEquals(expectedAuthors.get(i), actualAuthors.get(i));
@@ -45,7 +46,7 @@ public class JDBCAuthorRepositoryTest extends BaseRepositoryTest {
     @Test
     public void updateTest() throws SQLException {
         //given
-        Author expectedUser = new Author( 3 , "Max Ew");
+        Author expectedUser = new Author(3, "Max Ew");
         //when
         Author actualAuthor = authorRepository.update(expectedUser);
         //then
@@ -63,7 +64,7 @@ public class JDBCAuthorRepositoryTest extends BaseRepositoryTest {
     @Test
     public void addTest() throws SQLException {
         //given
-        Author expectedAuthor = new Author( 4 ,"Roi Bard");
+        Author expectedAuthor = new Author(4, "Roi Bard");
         //when
         Author actualAuthor = authorRepository.add(expectedAuthor);
 
@@ -74,7 +75,7 @@ public class JDBCAuthorRepositoryTest extends BaseRepositoryTest {
     @Test
     public void findByIdTest() throws SQLException {
         //given
-        Author expectedAuthor = new Author( 1 , "Bred Dee" );
+        Author expectedAuthor = new Author(1, "Bred Dee");
         //when
         Author actualAuthor = authorRepository.findById(1);
         //then
@@ -84,14 +85,14 @@ public class JDBCAuthorRepositoryTest extends BaseRepositoryTest {
     @Test
     public void addAllTest() throws SQLException {
         //given
-        List<Author> expectedList = new ArrayList<>(){{
+        List<Author> expectedList = new ArrayList<>() {{
             add(new Author(4, "Alexandrod"));
-            add(new Author(5,"Bred Eqwex"));
+            add(new Author(5, "Bred Eqwex"));
         }};
         //when
-        List<Author> actualList = new ArrayList<>(){{
+        List<Author> actualList = new ArrayList<>() {{
             add(new Author(null, "Alexandrod"));
-            add(new Author(null,"Bred Eqwex"));
+            add(new Author(null, "Bred Eqwex"));
         }};
         authorRepository.addAll(actualList);
         //then

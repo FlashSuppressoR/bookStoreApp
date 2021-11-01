@@ -1,7 +1,5 @@
--- CREATE SCHEMA BOOK_STORE --
 CREATE SCHEMA IF NOT EXISTS book_store;
 
--- CREATE TABLE BOOK_STORE.PUBLISHER --
 CREATE TABLE IF NOT EXISTS book_store.publisher
 (
     id   INT         NOT NULL AUTO_INCREMENT,
@@ -9,7 +7,6 @@ CREATE TABLE IF NOT EXISTS book_store.publisher
     PRIMARY KEY (id)
 );
 
--- CREATE TABLE BOOK_STORE.GENRE --
 CREATE TABLE IF NOT EXISTS book_store.genre
 (
     id   INT         NOT NULL AUTO_INCREMENT,
@@ -17,7 +14,6 @@ CREATE TABLE IF NOT EXISTS book_store.genre
     PRIMARY KEY (id)
 );
 
--- CREATE TABLE BOOK_STORE.BOOK --
 CREATE TABLE IF NOT EXISTS book_store.book
 (
     id           BIGINT(12)    NOT NULL AUTO_INCREMENT,
@@ -35,7 +31,6 @@ CREATE TABLE IF NOT EXISTS book_store.book
             REFERENCES book_store.genre (id)
 );
 
--- CREATE TABLE BOOK_STORE.REVIEW --
 CREATE TABLE IF NOT EXISTS book_store.review
 (
     id      INT          NOT NULL AUTO_INCREMENT,
@@ -48,7 +43,6 @@ CREATE TABLE IF NOT EXISTS book_store.review
             REFERENCES book_store.book (id)
 );
 
--- CREATE TABLE BOOK_STORE.CUSTOMER --
 CREATE TABLE IF NOT EXISTS book_store.customer
 (
     id       INT         NOT NULL AUTO_INCREMENT,
@@ -58,7 +52,6 @@ CREATE TABLE IF NOT EXISTS book_store.customer
     PRIMARY KEY (id)
 );
 
--- CREATE TABLE BOOK_STORE.AUTHOR --
 CREATE TABLE IF NOT EXISTS book_store.author
 (
     id   INT         NOT NULL AUTO_INCREMENT,
@@ -66,7 +59,6 @@ CREATE TABLE IF NOT EXISTS book_store.author
     PRIMARY KEY (id)
 );
 
--- CREATE TABLE BOOK_STORE.CART --
 CREATE TABLE IF NOT EXISTS book_store.cart
 (
     id           INT        NOT NULL AUTO_INCREMENT,
@@ -82,7 +74,6 @@ CREATE TABLE IF NOT EXISTS book_store.cart
             REFERENCES book_store.book (id)
 );
 
--- CREATE TABLE BOOK_STORE.PURCHASE --
 CREATE TABLE IF NOT EXISTS book_store.purchase
 (
     id            INT       NOT NULL AUTO_INCREMENT,
@@ -94,7 +85,6 @@ CREATE TABLE IF NOT EXISTS book_store.purchase
             REFERENCES book_store.customer (id)
 );
 
--- CREATE TABLE BOOK_STORE.BOOK_AUTHOR --
 CREATE TABLE IF NOT EXISTS book_store.book_author
 (
     book_id   BIGINT(12) NOT NULL,

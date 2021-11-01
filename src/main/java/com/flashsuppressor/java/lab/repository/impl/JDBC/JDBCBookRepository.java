@@ -18,10 +18,10 @@ public class JDBCBookRepository implements BookRepository {
     private static final String GENRE_ID_COLUMN = "genre_id";
     private static final String SELECT_ALL_QUERY = "SELECT * FROM book";
     private static final String INSERT_BOOK_QUERY =
-            "INSERT INTO book(name, price,publisher_id, genre_id) VALUES (?, ?, ?, ?)";
-    private static final String DELETE_BOOK_QUERY = "DELETE FROM book where id = ?;";
-    private static final String UPDATE_BOOK_QUERY = "UPDATE book SET price = ? WHERE id = ?";
-    private static final String FIND_BOOK_BY_ID_QUERY = "SELECT * FROM book where id = ?";
+            "INSERT INTO book_store.book(name, price,publisher_id, genre_id) VALUES (?, ?, ?, ?)";
+    private static final String DELETE_BOOK_QUERY = "DELETE FROM book_store.book where id = ?;";
+    private static final String UPDATE_BOOK_QUERY = "UPDATE book_store.book SET price = ? WHERE id = ?";
+    private static final String FIND_BOOK_BY_ID_QUERY = "SELECT * FROM book_store.book where id = ?";
 
     private final DataSource dataSource;
 

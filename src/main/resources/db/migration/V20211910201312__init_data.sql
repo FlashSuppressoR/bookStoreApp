@@ -29,9 +29,9 @@ INSERT INTO book_store.cart (id,customer_id, book_id, book_counter) VALUES ( 2, 
 INSERT INTO book_store.cart (id,customer_id, book_id, book_counter) VALUES ( 3, 2, 3, 1);
 
 -- INIT TABLE PURCHASE --
-INSERT INTO book_store.purchase  (id, customer_id, purchase_time) VALUES ( 1 , 2, '2014-04-04 08:00:00');
-INSERT INTO book_store.purchase  (id, customer_id, purchase_time) VALUES ( 2 , 3, '2014-04-04 08:00:00');
-INSERT INTO book_store.purchase  (id, customer_id, purchase_time) VALUES ( 3 , 1, '2014-04-04 08:00:00');
+INSERT INTO book_store.purchase  (id, customer_id, purchase_time) VALUES ( 1 , 2, '2021-04-04 08:00:00');
+INSERT INTO book_store.purchase  (id, customer_id, purchase_time) VALUES ( 2 , 3, '2021-04-04 08:00:00');
+INSERT INTO book_store.purchase  (id, customer_id, purchase_time) VALUES ( 3 , 1, '2021-04-04 08:00:00');
 
 -- INIT TABLE REVIEWS --
 INSERT INTO book_store.review  (id, mark, comment, book_id) VALUES ( 1 , 5, 'Perfect book!', 1);
@@ -44,3 +44,5 @@ INSERT INTO book_store.book_author  (book_id, author_id) VALUES ( 2 , 2 );
 INSERT INTO book_store.book_author  (book_id, author_id) VALUES ( 3 , 3 );
 
 COMMIT ;
+
+

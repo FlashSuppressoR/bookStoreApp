@@ -21,7 +21,7 @@ public class Cart {
     @Column(name = "book_counter")
     private Integer bookCounter;
 
-    public Cart(){
+    public Cart() {
     }
 
     public Cart(Integer id, Customer customer, Long bookId, Integer bookCounter) {

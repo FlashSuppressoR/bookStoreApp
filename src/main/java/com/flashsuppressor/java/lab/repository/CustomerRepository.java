@@ -10,9 +10,14 @@ import java.util.Optional;
 public interface CustomerRepository {
 
     Customer findByEmail(String email) throws SQLException;
+
     Customer findById(int id) throws SQLException;
+
     List<Customer> findAll() throws SQLException;
+
     Customer update(Customer customer) throws SQLException;
+
     boolean deleteById(int id) throws SQLException;
+
     Customer add(Customer customer) throws SQLException;
 }

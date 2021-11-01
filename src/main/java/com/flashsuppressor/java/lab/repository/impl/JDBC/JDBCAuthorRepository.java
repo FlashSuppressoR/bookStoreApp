@@ -11,12 +11,11 @@ import java.util.List;
 public class JDBCAuthorRepository implements AuthorRepository {
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
-    private static final String FIND_ALL_QUERY = "SELECT * FROM author";
-    private static final String FIND_AUTHOR_BY_ID_QUERY = "SELECT * FROM author where id = ?";
-    private static final String INSERT_AUTHOR_QUERY = "INSERT INTO author(name) VALUES (?)";
-    private static final String DELETE_AUTHOR_QUERY = "DELETE FROM author where id = ?;";
-    private static final String UPDATE_AUTHOR_QUERY
-            = "UPDATE author SET name = ? WHERE id = ?";
+    private static final String FIND_ALL_QUERY = "SELECT * FROM book_store.author";
+    private static final String FIND_AUTHOR_BY_ID_QUERY = "SELECT * FROM book_store.author where id = ?";
+    private static final String INSERT_AUTHOR_QUERY = "INSERT INTO book_store.author(name) VALUES (?)";
+    private static final String DELETE_AUTHOR_QUERY = "DELETE FROM book_store.author where id = ?;";
+    private static final String UPDATE_AUTHOR_QUERY = "UPDATE book_store.author SET name = ? WHERE id = ?";
 
     private final DataSource dataSource;
 

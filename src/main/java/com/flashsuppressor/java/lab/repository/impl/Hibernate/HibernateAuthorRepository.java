@@ -10,7 +10,7 @@ import java.util.List;
 
 public class HibernateAuthorRepository implements AuthorRepository {
     private final Session session;
-    private static final String FIND_AUTHORS_QUERY = "select a from Author a ";
+    private static final String FIND_AUTHORS_QUERY = "select a from  Author a ";
 
     public HibernateAuthorRepository(Session session) {
         this.session = session;

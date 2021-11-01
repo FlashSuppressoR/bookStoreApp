@@ -20,9 +20,9 @@ public class JDBCCustomerRepositoryTest extends BaseRepositoryTest {
         super();
         customerRepository = new JDBCCustomerRepository(getConnectionPool());
         expectedCustomers = new ArrayList<>() {{
-            add(new Customer( 1 , "Max", "Max@com" , "max"));
-            add( new Customer( 2 , "Alex", "Alex@com" , "alex"));
-            add(new Customer( 3 , "Rus", "Rus@com" , "rus"));
+            add(new Customer(1, "Max", "Max@com", "max"));
+            add(new Customer(2, "Alex", "Alex@com", "alex"));
+            add(new Customer(3, "Rus", "Rus@com", "rus"));
         }};
     }
 
@@ -37,7 +37,7 @@ public class JDBCCustomerRepositoryTest extends BaseRepositoryTest {
     @Test
     public void addTest() throws SQLException {
         //given
-        Customer expectedCustomer = new Customer( 4 ,"Tobby", "Tobby@com", "Tobby" );
+        Customer expectedCustomer = new Customer(4, "Tobby", "Tobby@com", "Tobby");
         //when
         Customer actualCustomer = customerRepository.add(expectedCustomer);
 
@@ -63,7 +63,7 @@ public class JDBCCustomerRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void findByEmailTest_null_shouldThrowSQLException(){
+    public void findByEmailTest_null_shouldThrowSQLException() {
         //given && when
         String nullableEmail = null;
         //then
@@ -84,7 +84,7 @@ public class JDBCCustomerRepositoryTest extends BaseRepositoryTest {
     @Test
     public void updateTest() throws SQLException {
         //given
-        Customer expectedCustomer = new Customer( 1 , "MaxPower", "Max@com" , "max");
+        Customer expectedCustomer = new Customer(1, "MaxPower", "Max@com", "max");
         //when
         Customer actualCustomer = customerRepository.update(expectedCustomer);
         //then
@@ -102,7 +102,7 @@ public class JDBCCustomerRepositoryTest extends BaseRepositoryTest {
     @Test
     public void findByIdTest() throws SQLException {
         //given
-        Customer expectedCustomer = new Customer(1, "Max", "Max@com", "max" );
+        Customer expectedCustomer = new Customer(1, "Max", "Max@com", "max");
         //when
         Customer actualCustomer = customerRepository.findById(1);
         //then

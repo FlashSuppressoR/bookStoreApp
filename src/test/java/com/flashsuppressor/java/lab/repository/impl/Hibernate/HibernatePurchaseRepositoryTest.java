@@ -2,6 +2,7 @@ package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 
 import com.flashsuppressor.java.lab.entity.Customer;
 import com.flashsuppressor.java.lab.entity.Purchase;
+import com.flashsuppressor.java.lab.repository.BaseRepositoryTest;
 import com.flashsuppressor.java.lab.repository.PurchaseRepository;
 import org.junit.jupiter.api.Test;
 
@@ -10,11 +11,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.flashsuppressor.java.lab.util.HibernateUtil.getSessionFactory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class HibernatePurchaseRepositoryTest {
+public class HibernatePurchaseRepositoryTest extends BaseRepositoryTest {
     private final PurchaseRepository purchaseRepository;
     private final List<Purchase> expectedPurchases;
 
@@ -22,9 +22,12 @@ public class HibernatePurchaseRepositoryTest {
         super();
         this.purchaseRepository = new HibernatePurchaseRepository(getSessionFactory().openSession());
         expectedPurchases = new ArrayList<>() {{
-            add(new Purchase( 1 , new Customer( 2 , "Alex", "Alex@com" , "alex"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
-            add(new Purchase( 2 , new Customer( 3 , "Rus", "Rus@com" , "rus"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
-            add(new Purchase( 3 , new Customer( 1 , "Max", "Max@com" , "max"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
+            add(new Purchase(1, new Customer(2, "Alex", "Alex@com", "alex"),
+                    Timestamp.valueOf("2007-09-10 00:00:00.0")));
+            add(new Purchase(2, new Customer(3, "Rus", "Rus@com", "rus"),
+                    Timestamp.valueOf("2007-09-10 00:00:00.0")));
+            add(new Purchase(3, new Customer(1, "Max", "Max@com", "max"),
+                    Timestamp.valueOf("2007-09-10 00:00:00.0")));
         }};
     }
 
@@ -52,7 +55,7 @@ public class HibernatePurchaseRepositoryTest {
     @Test
     public void add() throws SQLException {
         //given
-        Purchase expectedPurchase = new Purchase( 4 , new Customer( 4 , "Alex3", "Alexw3@com" , "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0"));
+        Purchase expectedPurchase = new Purchase(4, new Customer(4, "Alex3", "Alexw3@com", "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0"));
         //when
         Purchase actualPurchase = purchaseRepository.add(expectedPurchase);
         //then
@@ -62,14 +65,14 @@ public class HibernatePurchaseRepositoryTest {
     @Test
     public void addAll() throws SQLException {
         //given
-        List<Purchase> expectedList = new ArrayList<>(){{
-            add(new Purchase( 4 , new Customer( 4 , "Alex3", "Alexw3@com" , "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
-            add(new Purchase( 5 , new Customer( 5 , "Vell", "Vell@com" , "vell"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
+        List<Purchase> expectedList = new ArrayList<>() {{
+            add(new Purchase(4, new Customer(4, "Alex3", "Alexw3@com", "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
+            add(new Purchase(5, new Customer(5, "Vell", "Vell@com", "vell"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
         }};
         //when
-        List<Purchase> actualList = new ArrayList<>(){{
-            add(new Purchase( null , new Customer( 4 , "Alex3", "Alexw3@com" , "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
-            add(new Purchase( null , new Customer( 5 , "Vell", "Vell@com" , "vell"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
+        List<Purchase> actualList = new ArrayList<>() {{
+            add(new Purchase(null, new Customer(4, "Alex3", "Alexw3@com", "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
+            add(new Purchase(null, new Customer(5, "Vell", "Vell@com", "vell"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
         }};
         purchaseRepository.addAll(actualList);
         //then

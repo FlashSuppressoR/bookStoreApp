@@ -21,9 +21,9 @@ public class HibernateCustomerRepositoryTest extends BaseRepositoryTest {
         super();
         this.customerRepository = new HibernateCustomerRepository(getSessionFactory().openSession());
         expectedCustomers = new ArrayList<>() {{
-            add(new Customer( 1 , "Max", "Max@com" , "max"));
-            add( new Customer( 2 , "Alex", "Alex@com" , "alex"));
-            add(new Customer( 3 , "Rus", "Rus@com" , "rus"));
+            add(new Customer(1, "Max", "Max@com", "max"));
+            add(new Customer(2, "Alex", "Alex@com", "alex"));
+            add(new Customer(3, "Rus", "Rus@com", "rus"));
         }};
     }
 
@@ -57,7 +57,7 @@ public class HibernateCustomerRepositoryTest extends BaseRepositoryTest {
     @Test
     public void addTest() throws SQLException {
         //given
-        Customer expectedCustomer = new Customer( 4 , "Jim", "Jim@com" , "23ax");
+        Customer expectedCustomer = new Customer(4, "Jim", "Jim@com", "23ax");
         //when
         Customer actualCustomer = customerRepository.add(expectedCustomer);
         //then
@@ -77,7 +77,7 @@ public class HibernateCustomerRepositoryTest extends BaseRepositoryTest {
     @Test
     public void updateTest() throws SQLException {
         //given
-        Customer expectedCustomer = new Customer( 1 , "MaxPower", "Max@com" , "max");
+        Customer expectedCustomer = new Customer(1, "MaxPower", "Max@com", "max");
         //when
         Customer actualCustomer = customerRepository.update(expectedCustomer);
         //then

@@ -11,10 +11,10 @@ import java.util.List;
 public class JDBCPublisherRepository implements PublisherRepository {
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
-    private static final String SELECT_ALL_QUERY = "SELECT * FROM publisher";
-    private static final String INSERT_PUBLISHER_QUERY = "INSERT INTO publisher(name) VALUES (?)";
-    private static final String DELETE_PUBLISHER_BY_ID_QUERY = "DELETE FROM publisher where id = ?";
-    private static final String FIND_PUBLISHER_BY_ID_QUERY = "SELECT * FROM publisher where id = ?";
+    private static final String SELECT_ALL_QUERY = "SELECT * FROM book_store.publisher";
+    private static final String INSERT_PUBLISHER_QUERY = "INSERT INTO book_store.publisher(name) VALUES (?)";
+    private static final String DELETE_PUBLISHER_BY_ID_QUERY = "DELETE FROM book_store.publisher where id = ?";
+    private static final String FIND_PUBLISHER_BY_ID_QUERY = "SELECT * FROM book_store.publisher where id = ?";
 
     private final DataSource dataSource;
 

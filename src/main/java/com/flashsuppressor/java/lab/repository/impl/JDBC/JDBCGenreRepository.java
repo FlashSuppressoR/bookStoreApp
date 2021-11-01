@@ -11,10 +11,10 @@ import java.util.List;
 public class JDBCGenreRepository implements GenreRepository {
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
-    private static final String SELECT_ALL_QUERY = "SELECT * FROM genre";
-    private static final String INSERT_GENRE_QUERY = "INSERT INTO genre(name) VALUES (?)";
-    private static final String DELETE_GENRE_BY_ID_QUERY = "DELETE FROM genre where id = ?";
-    private static final String FIND_GENRE_BY_ID_QUERY = "SELECT * FROM genre where id = ?";
+    private static final String SELECT_ALL_QUERY = "SELECT * FROM book_store.genre";
+    private static final String INSERT_GENRE_QUERY = "INSERT INTO book_store.genre(name) VALUES (?)";
+    private static final String DELETE_GENRE_BY_ID_QUERY = "DELETE FROM book_store.genre where id = ?";
+    private static final String FIND_GENRE_BY_ID_QUERY = "SELECT * FROM book_store.genre where id = ?";
 
     private final DataSource dataSource;
 

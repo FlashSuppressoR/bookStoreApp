@@ -29,18 +29,18 @@ public class Book {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "book_author",
-    joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
-    inverseJoinColumns = @JoinColumn(name = "author_id", referencedColumnName = "id"))
+            joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id", referencedColumnName = "id"))
     private Set<Author> authors;
 
-    public Book(){
+    public Book() {
     }
 
     public Book(Long id, String name, double price, Publisher publisher, Genre genre, int amount) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.publisher= publisher;
+        this.publisher = publisher;
         this.genre = genre;
         this.amount = amount;
     }

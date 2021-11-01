@@ -13,10 +13,11 @@ public class JDBCPurchaseRepository implements PurchaseRepository {
     private static final String ID_COLUMN = "id";
     private static final String CUSTOMER_ID_COLUMN = "customer_id";
     private static final String PURCHASE_TIME_COLUMN = "purchase_time";
-    private static final String SELECT_ALL_QUERY = "SELECT * FROM purchase";
-    private static final String INSERT_PURCHASE_QUERY = "INSERT INTO purchase(customer_id, purchase_time) VALUES (?, ?)";
-    private static final String DELETE_PURCHASE_BY_ID_QUERY = "DELETE FROM purchase where id = ?";
-    private static final String FIND_PURCHASE_BY_ID_QUERY = "SELECT * FROM publisher where id = ?";
+    private static final String SELECT_ALL_QUERY = "SELECT * FROM book_store.purchase";
+    private static final String INSERT_PURCHASE_QUERY
+            = "INSERT INTO book_store.purchase(customer_id, purchase_time) VALUES (?, ?)";
+    private static final String DELETE_PURCHASE_BY_ID_QUERY = "DELETE FROM book_store.purchase where id = ?";
+    private static final String FIND_PURCHASE_BY_ID_QUERY = "SELECT * FROM book_store.publisher where id = ?";
 
     private final DataSource dataSource;
 

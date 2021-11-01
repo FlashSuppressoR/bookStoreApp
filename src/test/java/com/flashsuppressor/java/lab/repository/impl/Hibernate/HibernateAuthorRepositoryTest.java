@@ -2,17 +2,17 @@ package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 
 import com.flashsuppressor.java.lab.entity.Author;
 import com.flashsuppressor.java.lab.repository.AuthorRepository;
+import com.flashsuppressor.java.lab.repository.BaseRepositoryTest;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.flashsuppressor.java.lab.util.HibernateUtil.getSessionFactory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class HibernateAuthorRepositoryTest {
+public class HibernateAuthorRepositoryTest extends BaseRepositoryTest {
     AuthorRepository authorRepository;
     private final List<Author> expectedAuthors;
 
@@ -20,9 +20,9 @@ public class HibernateAuthorRepositoryTest {
         super();
         this.authorRepository = new HibernateAuthorRepository(getSessionFactory().openSession());
         expectedAuthors = new ArrayList<>() {{
-            add(new Author( 1 , "Bred Dee" ));
-            add(new Author( 2 , "John Serb" ));
-            add(new Author( 3 , "Alex Green" ));
+            add(new Author(1, "Bred Dee"));
+            add(new Author(2, "John Serb"));
+            add(new Author(3, "Alex Green"));
         }};
     }
 
@@ -39,7 +39,7 @@ public class HibernateAuthorRepositoryTest {
     @Test
     public void updateTest() throws SQLException {
         //given
-        Author expectedUser = new Author( 3 , "Max Ew");
+        Author expectedUser = new Author(3, "Max Ew");
         //when
         Author actualAuthor = authorRepository.update(expectedUser);
         //then
@@ -57,7 +57,7 @@ public class HibernateAuthorRepositoryTest {
     @Test
     public void addTest() throws SQLException {
         //given
-        Author expectedAuthor = new Author( 4 ,"Roi Bard");
+        Author expectedAuthor = new Author(4, "Roi Bard");
         //when
         Author actualAuthor = authorRepository.add(expectedAuthor);
 
@@ -68,14 +68,14 @@ public class HibernateAuthorRepositoryTest {
     @Test
     public void addAllTest() throws SQLException {
         //given
-        List<Author> expectedList = new ArrayList<>(){{
+        List<Author> expectedList = new ArrayList<>() {{
             add(new Author(4, "Alexandrod"));
-            add(new Author(5,"Bred Eqwex"));
+            add(new Author(5, "Bred Eqwex"));
         }};
         //when
-        List<Author> actualList = new ArrayList<>(){{
+        List<Author> actualList = new ArrayList<>() {{
             add(new Author(null, "Alexandrod"));
-            add(new Author(null,"Bred Eqwex"));
+            add(new Author(null, "Bred Eqwex"));
         }};
         authorRepository.addAll(actualList);
         //then
@@ -87,7 +87,7 @@ public class HibernateAuthorRepositoryTest {
     @Test
     public void findByIdTest() throws SQLException {
         //given
-        Author expectedAuthor = new Author( 1 , "Bred Dee" );
+        Author expectedAuthor = new Author(1, "Bred Dee");
         //when
         Author actualAuthor = authorRepository.findById(1);
         //then

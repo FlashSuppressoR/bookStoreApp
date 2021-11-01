@@ -8,7 +8,10 @@ import java.util.List;
 public interface ReviewRepository {
 
     List<Review> findAll() throws SQLException;
+
     Review add(Review review) throws SQLException;
+
     void addAll(List<Review> reviews) throws SQLException;
+
     boolean deleteById(int id) throws SQLException;
 }

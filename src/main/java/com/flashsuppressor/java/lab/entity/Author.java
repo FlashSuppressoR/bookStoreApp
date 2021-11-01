@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name="author", schema = "book_store")
+@Table(name = "author", schema = "book_store")
 public class Author {
 
     @Id
@@ -17,7 +17,7 @@ public class Author {
     @ManyToMany(mappedBy = "authors")
     private Set<Book> books = new HashSet<>();
 
-    public Author(){
+    public Author() {
     }
 
     public Author(Integer id, String name) {

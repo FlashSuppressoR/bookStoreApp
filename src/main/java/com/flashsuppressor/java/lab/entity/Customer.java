@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name="customer", schema = "book_store")
+@Table(name = "customer", schema = "book_store")
 public class Customer {
 
     @Id
@@ -21,10 +21,10 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private Set<Purchase> purchases;
 
-    public Customer(){
+    public Customer() {
     }
 
-    public Customer(Integer id, String name, String email, String password){
+    public Customer(Integer id, String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -59,7 +59,7 @@ public class Customer {
         return password;
     }
 
-    public void setPassword(String password)     {
+    public void setPassword(String password) {
         this.password = password;
     }
 

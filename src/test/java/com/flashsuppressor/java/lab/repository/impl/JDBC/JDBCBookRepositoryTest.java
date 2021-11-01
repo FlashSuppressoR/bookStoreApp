@@ -22,12 +22,12 @@ public class JDBCBookRepositoryTest extends BaseRepositoryTest {
         super();
         bookRepository = new JDBCBookRepository(getConnectionPool());
         expectedBooks = new ArrayList<>() {{
-            add(new Book( 1L , "Little Bee", 3.22 ,
-                    new Publisher(1 , "Big Daddy"), new Genre( 1 , "Fantasy"),0));
-            add(new Book( 2L , "Big system Black Sun", 2.33,
-                    new Publisher(2 , "Minsk prod"), new Genre( 2 , "Horror"),0));
-            add(new Book( 3L , "Alex Green", 13.22,
-                    new Publisher(3 , "New Town"), new Genre( 3 , "Humor"),0));
+            add(new Book(1L, "Little Bee", 3.22,
+                    new Publisher(1, "Big Daddy"), new Genre(1, "Fantasy"), 0));
+            add(new Book(2L, "Big system Black Sun", 2.33,
+                    new Publisher(2, "Minsk prod"), new Genre(2, "Horror"), 0));
+            add(new Book(3L, "Alex Green", 13.22,
+                    new Publisher(3, "New Town"), new Genre(3, "Humor"), 0));
         }};
     }
 
@@ -45,8 +45,8 @@ public class JDBCBookRepositoryTest extends BaseRepositoryTest {
     @Test
     public void updateTest() throws SQLException {
         //given
-        Book expectedBook = new Book( 1L , "Dark Night", 3.22 ,
-                new Publisher(1 , "Big Daddy"), new Genre( 1 , "Fantasy"),0);
+        Book expectedBook = new Book(1L, "Dark Night", 3.22,
+                new Publisher(1, "Big Daddy"), new Genre(1, "Fantasy"), 0);
         //when
         Book actualBook = bookRepository.update(expectedBook);
         //then
@@ -56,8 +56,8 @@ public class JDBCBookRepositoryTest extends BaseRepositoryTest {
     @Test
     public void findBookByIdTest() throws SQLException {
         //given
-        Book expectedBook = new Book( 1L , "Little Bee", 3.22 ,
-                new Publisher(1 , "Big Daddy"), new Genre( 1 , "Fantasy"),0);
+        Book expectedBook = new Book(1L, "Little Bee", 3.22,
+                new Publisher(1, "Big Daddy"), new Genre(1, "Fantasy"), 0);
         //when
         Book actualBook = bookRepository.findById(1L);
         //then
@@ -75,8 +75,8 @@ public class JDBCBookRepositoryTest extends BaseRepositoryTest {
     @Test
     public void addTest() throws SQLException {
         //given
-        Book expectedBook = new Book( 4L , "My mind", 132.22 ,
-                new Publisher(4 , "Boss ex"), new Genre( 4 , "Publish"),0);
+        Book expectedBook = new Book(4L, "My mind", 132.22,
+                new Publisher(4, "Boss ex"), new Genre(4, "Publish"), 0);
         //when
         Book actualBook = bookRepository.add(expectedBook);
         //then
@@ -86,18 +86,18 @@ public class JDBCBookRepositoryTest extends BaseRepositoryTest {
     @Test
     public void addAllTest() throws SQLException {
         //given
-        List<Book> expectedList = new ArrayList<>(){{
-            add(new Book( 4L , "My mind", 132.22 ,
-                    new Publisher(4 , "Boss ex"), new Genre( 4 , "Publish"),0));
-            add(new Book( 5L , "My World", 32.32 ,
-                    new Publisher(4 , "World Wild"), new Genre( 5 , "History"),0));
+        List<Book> expectedList = new ArrayList<>() {{
+            add(new Book(4L, "My mind", 132.22,
+                    new Publisher(4, "Boss ex"), new Genre(4, "Publish"), 0));
+            add(new Book(5L, "My World", 32.32,
+                    new Publisher(4, "World Wild"), new Genre(5, "History"), 0));
         }};
         //when
-        List<Book> actualList = new ArrayList<>(){{
-            add(new Book( null , "My mind", 132.22 ,
-                    new Publisher(4 , "Boss ex"), new Genre( 4 , "Publish"),0));
-            add(new Book( null, "My World", 32.32 ,
-                    new Publisher(4 , "World Wild"), new Genre( 5 , "History"),0));
+        List<Book> actualList = new ArrayList<>() {{
+            add(new Book(null, "My mind", 132.22,
+                    new Publisher(4, "Boss ex"), new Genre(4, "Publish"), 0));
+            add(new Book(null, "My World", 32.32,
+                    new Publisher(4, "World Wild"), new Genre(5, "History"), 0));
         }};
         bookRepository.addAll(actualList);
         //then

@@ -16,7 +16,7 @@ public class Genre {
     @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL)
     private Set<Book> books;
 
-    public Genre(){
+    public Genre() {
     }
 
     public Genre(Integer id, String name) {

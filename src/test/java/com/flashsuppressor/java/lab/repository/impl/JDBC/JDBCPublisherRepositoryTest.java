@@ -20,9 +20,9 @@ public class JDBCPublisherRepositoryTest extends BaseRepositoryTest {
         super();
         publisherRepository = new JDBCPublisherRepository(getConnectionPool());
         expectedPublishers = new ArrayList<>() {{
-            add(new Publisher( 1 , "Big Daddy"));
-            add(new Publisher( 2 , "Minsk prod" ));
-            add(new Publisher( 3 , "New Town" ));
+            add(new Publisher(1, "Big Daddy"));
+            add(new Publisher(2, "Minsk prod"));
+            add(new Publisher(3, "New Town"));
         }};
     }
 
@@ -40,7 +40,7 @@ public class JDBCPublisherRepositoryTest extends BaseRepositoryTest {
     @Test
     public void addTest() throws SQLException {
         //given
-        Publisher expectedPublisher = new Publisher( 1 , "Big Daddy");
+        Publisher expectedPublisher = new Publisher(1, "Big Daddy");
         //when
         Publisher actualPublisher = publisherRepository.add(expectedPublisher);
 
@@ -51,14 +51,14 @@ public class JDBCPublisherRepositoryTest extends BaseRepositoryTest {
     @Test
     public void addAllTest() throws SQLException {
         //given
-        List<Publisher> expectedList = new ArrayList<>(){{
+        List<Publisher> expectedList = new ArrayList<>() {{
             add(new Publisher(4, "Ballads Writer"));
-            add(new Publisher(5,"Third House"));
+            add(new Publisher(5, "Third House"));
         }};
         //when
-        List<Publisher> actualList = new ArrayList<>(){{
+        List<Publisher> actualList = new ArrayList<>() {{
             add(new Publisher(null, "Ballads Writer"));
-            add(new Publisher(null,"Third House"));
+            add(new Publisher(null, "Third House"));
         }};
         publisherRepository.addAll(actualList);
         //then

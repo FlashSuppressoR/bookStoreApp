@@ -8,8 +8,12 @@ import java.util.List;
 public interface CartRepository {
 
     List<Cart> findAll() throws SQLException;
+
     Cart add(Cart cart) throws SQLException;
+
     Cart update(Cart cart) throws SQLException;
+
     Cart findById(int id) throws SQLException;
+
     boolean deleteById(int id) throws SQLException;
 }

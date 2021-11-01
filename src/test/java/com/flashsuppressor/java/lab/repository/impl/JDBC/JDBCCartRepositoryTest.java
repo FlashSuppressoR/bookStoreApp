@@ -22,9 +22,9 @@ public class JDBCCartRepositoryTest extends BaseRepositoryTest {
         super();
         cartRepository = new JDBCCartRepository(getConnectionPool());
         expectedCarts = new ArrayList<>() {{
-            add(new Cart( 1 , new Customer( 1 , "Max", "Max@com" , "max"), 1L, 1));
-            add(new Cart( 2 , new Customer( 2 , "Alex", "Alex@com" , "alex"), 2L, 1));
-            add(new Cart( 3 , new Customer(3,"Rus", "Rus@com" , "rus"), 3L,1 ));
+            add(new Cart(1, new Customer(1, "Max", "Max@com", "max"), 1L, 1));
+            add(new Cart(2, new Customer(2, "Alex", "Alex@com", "alex"), 2L, 1));
+            add(new Cart(3, new Customer(3, "Rus", "Rus@com", "rus"), 3L, 1));
         }};
     }
 
@@ -42,8 +42,8 @@ public class JDBCCartRepositoryTest extends BaseRepositoryTest {
     @Test
     public void addTest() throws SQLException {
         //given
-        Cart expectedCart = new Cart( 4 ,
-                new Customer( 4 , "Max Offer", "MaxOf@com" , "maxee3"), 2L, 1);
+        Cart expectedCart = new Cart(4,
+                new Customer(4, "Max Offer", "MaxOf@com", "maxee3"), 2L, 1);
         //when
         Cart actualCart = cartRepository.add(expectedCart);
         //then
@@ -53,7 +53,7 @@ public class JDBCCartRepositoryTest extends BaseRepositoryTest {
     @Test
     public void updateTest() throws SQLException {
         //given
-        Cart expectedCart = new Cart( 1 , new Customer( 1 , "Max", "Max@com" , "max"), 1L, 2);
+        Cart expectedCart = new Cart(1, new Customer(1, "Max", "Max@com", "max"), 1L, 2);
         //when
         Cart actualCart = cartRepository.update(expectedCart);
         //then
@@ -63,7 +63,7 @@ public class JDBCCartRepositoryTest extends BaseRepositoryTest {
     @Test
     public void findByIdTest() throws SQLException {
         //given
-        Cart expectedCart = new Cart( 2 , new Customer( 2 , "Alex", "Alex@com" , "alex"), 2L, 1);
+        Cart expectedCart = new Cart(2, new Customer(2, "Alex", "Alex@com", "alex"), 2L, 1);
         //when
         Cart actualCart = cartRepository.findById(2);
         //then

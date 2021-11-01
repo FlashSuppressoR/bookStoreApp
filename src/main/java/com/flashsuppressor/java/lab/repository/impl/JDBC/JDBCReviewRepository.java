@@ -14,10 +14,11 @@ public class JDBCReviewRepository implements ReviewRepository {
     private static final String MARK_COLUMN = "mark";
     private static final String COMMENT_COLUMN = "comment";
     private static final String BOOK_ID_COLUMN = "book_id";
-    private static final String SELECT_ALL_QUERY = "SELECT * FROM review";
-    private static final String INSERT_REVIEW_QUERY = "INSERT INTO review(mark, comment, book_id) VALUES (?, ?, ?)";
-    private static final String DELETE_REVIEW_BY_ID_QUERY = "DELETE FROM review where id = ?";
-    private static final String FIND_REVIEW_BY_ID_QUERY = "SELECT * FROM review where id = ?";
+    private static final String SELECT_ALL_QUERY = "SELECT * FROM book_store.review";
+    private static final String INSERT_REVIEW_QUERY
+            = "INSERT INTO book_store.review(mark, comment, book_id) VALUES (?, ?, ?)";
+    private static final String DELETE_REVIEW_BY_ID_QUERY = "DELETE FROM book_store.review where id = ?";
+    private static final String FIND_REVIEW_BY_ID_QUERY = "SELECT * FROM book_store.review where id = ?";
 
     private final DataSource dataSource;
 

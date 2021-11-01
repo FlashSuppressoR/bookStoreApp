@@ -15,20 +15,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class JDBCReviewRepositoryTest extends BaseRepositoryTest {
     private final ReviewRepository reviewRepository;
     private final List<Review> expectedReviews;
-    private final Book firstIdBook = (new Book( 1L , "Little Bee", 3.22 ,
-            new Publisher(1 , "Big Daddy"), new Genre( 1 , "Fantasy"),0));
-    private final Book secondIdBook = (new Book( 2L , "Big system Black Sun", 2.33,
-            new Publisher(2 , "Minsk prod"), new Genre( 2 , "Horror"),0));
-    private final Book thirdIdBook = (new Book( 3L , "Alex Green", 13.22,
-            new Publisher(3 , "New Town"), new Genre( 3 , "Humor"),0));
+    private final Book firstIdBook = (new Book(1L, "Little Bee", 3.22,
+            new Publisher(1, "Big Daddy"), new Genre(1, "Fantasy"), 0));
+    private final Book secondIdBook = (new Book(2L, "Big system Black Sun", 2.33,
+            new Publisher(2, "Minsk prod"), new Genre(2, "Horror"), 0));
+    private final Book thirdIdBook = (new Book(3L, "Alex Green", 13.22,
+            new Publisher(3, "New Town"), new Genre(3, "Humor"), 0));
 
     public JDBCReviewRepositoryTest() {
         super();
         reviewRepository = new JDBCReviewRepository(getConnectionPool());
         expectedReviews = new ArrayList<>() {{
-            add(new Review( 1 , 5, "Perfect book!", firstIdBook));
-            add(new Review( 2 , 3, "So-so", secondIdBook));
-            add(new Review( 3 , 4, "So cool", thirdIdBook));
+            add(new Review(1, 5, "Perfect book!", firstIdBook));
+            add(new Review(2, 3, "So-so", secondIdBook));
+            add(new Review(3, 4, "So cool", thirdIdBook));
         }};
     }
 
@@ -46,7 +46,7 @@ public class JDBCReviewRepositoryTest extends BaseRepositoryTest {
     @Test
     public void addTest() throws SQLException {
         //given
-        Review expectedReview = new Review( 4 , 5, "cool", thirdIdBook);
+        Review expectedReview = new Review(4, 5, "cool", thirdIdBook);
         //when
         Review actualReview = reviewRepository.add(expectedReview);
 
@@ -56,14 +56,14 @@ public class JDBCReviewRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void addAllTest() throws SQLException {
-        List<Review> expectedList = new ArrayList<>(){{
-            add(new Review( 1 , 5, "Perfecto!", firstIdBook));
-            add(new Review( 2 , 3, "pfff", firstIdBook));
+        List<Review> expectedList = new ArrayList<>() {{
+            add(new Review(1, 5, "Perfecto!", firstIdBook));
+            add(new Review(2, 3, "pfff", firstIdBook));
         }};
         //when
-        List<Review> actualList = new ArrayList<>(){{
-            add(new Review( 1 , 5, "Perfecto!", firstIdBook));
-            add(new Review( 2 , 3, "pfff", firstIdBook));
+        List<Review> actualList = new ArrayList<>() {{
+            add(new Review(1, 5, "Perfecto!", firstIdBook));
+            add(new Review(2, 3, "pfff", firstIdBook));
         }};
         reviewRepository.addAll(actualList);
         //then

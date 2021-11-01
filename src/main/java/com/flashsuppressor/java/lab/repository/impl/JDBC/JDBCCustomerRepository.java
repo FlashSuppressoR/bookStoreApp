@@ -13,13 +13,14 @@ public class JDBCCustomerRepository implements CustomerRepository {
     private static final String NAME_COLUMN = "name";
     private static final String EMAIL_COLUMN = "email";
     private static final String PASSWORD_COLUMN = "password";
-    private static final String ADD_CUSTOMER_QUERY = "INSERT INTO customer(name, email, password) VALUES (?, ?, ?)";
-    private static final String FIND_ALL_CUSTOMERS_QUERY = "SELECT * FROM customer";
-    private static final String FIND_CUSTOMER_BY_EMAIL_QUERY = "SELECT * FROM customer WHERE email = ?";
-    private static final String FIND_CUSTOMER_BY_ID_QUERY = "SELECT * FROM customer where id = ?";
-    private static final String DELETE_CUSTOMER_BY_ID_QUERY = "DELETE FROM customer where id = ?";
+    private static final String ADD_CUSTOMER_QUERY
+            = "INSERT INTO book_store.customer(name, email, password) VALUES (?, ?, ?)";
+    private static final String FIND_ALL_CUSTOMERS_QUERY = "SELECT * FROM book_store.customer";
+    private static final String FIND_CUSTOMER_BY_EMAIL_QUERY = "SELECT * FROM book_store.customer WHERE email = ?";
+    private static final String FIND_CUSTOMER_BY_ID_QUERY = "SELECT * FROM book_store.customer where id = ?";
+    private static final String DELETE_CUSTOMER_BY_ID_QUERY = "DELETE FROM book_store.customer where id = ?";
     private static final String UPDATE_CUSTOMER_BY_ID_QUERY
-            = "UPDATE customer SET name = ?, email = ?, password = ? WHERE id = ?";
+            = "UPDATE book_store.customer SET name = ?, email = ?, password = ? WHERE id = ?";
 
     private final DataSource dataSource;
 
@@ -29,7 +30,7 @@ public class JDBCCustomerRepository implements CustomerRepository {
 
     @Override
     public Customer findByEmail(String email) throws SQLException {
-        if (email == null){
+        if (email == null) {
             throw new SQLException("Customer field 'email' must not be null!");
         }
         try (Connection con = dataSource.getConnection()) {

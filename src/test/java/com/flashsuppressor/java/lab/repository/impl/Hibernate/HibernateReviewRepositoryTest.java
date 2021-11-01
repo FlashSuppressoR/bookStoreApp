@@ -1,6 +1,7 @@
 package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 
 import com.flashsuppressor.java.lab.entity.*;
+import com.flashsuppressor.java.lab.repository.BaseRepositoryTest;
 import com.flashsuppressor.java.lab.repository.ReviewRepository;
 import org.junit.jupiter.api.Test;
 
@@ -8,11 +9,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.flashsuppressor.java.lab.util.HibernateUtil.getSessionFactory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class HibernateReviewRepositoryTest {
+public class HibernateReviewRepositoryTest extends BaseRepositoryTest {
     private final ReviewRepository reviewRepository;
     private final List<Review> expectedReviews;
     private final Book firstIdBook = (new Book( 1L , "Little Bee", 3.22 ,

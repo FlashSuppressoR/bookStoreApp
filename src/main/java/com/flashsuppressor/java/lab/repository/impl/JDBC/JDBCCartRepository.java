@@ -14,12 +14,12 @@ public class JDBCCartRepository implements CartRepository {
     private static final String CUSTOMER_ID_COLUMN = "customer_id";
     private static final String BOOK_ID_COLUMN = "book_id";
     private static final String BOOK_COUNTER_COLUMN = "book_counter";
-    private static final String SELECT_ALL_QUERY = "SELECT * FROM cart";
-    private static final String INSERT_CART_QUERY = "INSERT INTO cart(customer_id, book_id, book_counter) VALUES (?, ?, ?)";
+    private static final String SELECT_ALL_QUERY = "SELECT * FROM book_store.cart";
+    private static final String INSERT_CART_QUERY = "INSERT INTO book_store.cart(customer_id, book_id, book_counter) VALUES (?, ?, ?)";
     private static final String UPDATE_CART_QUERY
-            = "UPDATE cart SET book_id = ? WHERE id = ?";
-    private static final String FIND_CART_BY_ID_QUERY = "SELECT * FROM cart where customer_id = ?";
-    private static final String DELETE_CART_BY_ID_QUERY = "DELETE FROM cart where id = ?";
+            = "UPDATE book_store.cart SET book_id = ? WHERE id = ?";
+    private static final String FIND_CART_BY_ID_QUERY = "SELECT * FROM book_store.cart where customer_id = ?";
+    private static final String DELETE_CART_BY_ID_QUERY = "DELETE FROM book_store.cart where id = ?";
 
     private final DataSource dataSource;
 

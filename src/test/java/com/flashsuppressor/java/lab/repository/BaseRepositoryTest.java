@@ -15,7 +15,7 @@ public abstract class BaseRepositoryTest {
     private final SessionFactory sessionFactory;
 
     public BaseRepositoryTest() {
-        flywayService = new FlywayService();
+        flywayService = new FlywayService(true);
         connectionPool = JdbcConnectionPool.create(Properties.H2_URL, Properties.H2_USERNAME, Properties.H2_PASSWORD);
         sessionFactory = HibernateUtil.getSessionFactory();
     }
@@ -33,6 +33,7 @@ public abstract class BaseRepositoryTest {
     public JdbcConnectionPool getConnectionPool() {
         return connectionPool;
     }
+
     public SessionFactory getSessionFactory() {
         return sessionFactory;
     }
