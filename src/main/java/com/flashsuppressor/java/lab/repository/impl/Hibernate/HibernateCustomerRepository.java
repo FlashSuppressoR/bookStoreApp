@@ -10,7 +10,7 @@ import java.util.List;
 
 public class HibernateCustomerRepository implements CustomerRepository {
     private final Session session;
-    private static final String FIND_CUSTOMER_BY_EMAIL_QUERY = "select c from Customer c where email = ?";
+    private static final String FIND_CUSTOMER_BY_EMAIL_QUERY = "select c from Customer c where Customer.email = ?1";
     private static final String FIND_ALL_CUSTOMERS_QUERY = "select c from Customer c";
 
     public HibernateCustomerRepository(Session session) {
@@ -22,7 +22,7 @@ public class HibernateCustomerRepository implements CustomerRepository {
         Customer customer;
         try {
             customer = session.createQuery(FIND_CUSTOMER_BY_EMAIL_QUERY, Customer.class)
-                    .setParameter(0, email).uniqueResult();
+                    .setParameter(1, email).uniqueResult();
         } catch (Exception ex) {
             throw new SQLException("Something was wrong in the repository", ex);
         }
