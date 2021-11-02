@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface CartRepository {
 
+    Cart findById(int id) throws SQLException;
+
     List<Cart> findAll() throws SQLException;
 
-    Cart add(Cart cart) throws SQLException;
+    Cart create(Cart cart) throws SQLException;
 
     Cart update(Cart cart) throws SQLException;
-
-    Cart findById(int id) throws SQLException;
 
     boolean deleteById(int id) throws SQLException;
 }

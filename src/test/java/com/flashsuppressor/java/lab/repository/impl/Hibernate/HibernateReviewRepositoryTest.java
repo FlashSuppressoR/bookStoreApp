@@ -48,7 +48,7 @@ public class HibernateReviewRepositoryTest extends BaseRepositoryTest {
         //given
         Review expectedReview = new Review( 4 , 5, "cool", thirdIdBook);
         //when
-        Review actualReview = reviewRepository.add(expectedReview);
+        Review actualReview = reviewRepository.create(expectedReview);
 
         //then
         assertReviewEquals(expectedReview, actualReview);
@@ -65,7 +65,7 @@ public class HibernateReviewRepositoryTest extends BaseRepositoryTest {
             add(new Review( 1 , 5, "Perfecto!", firstIdBook));
             add(new Review( 2 , 3, "pfff", firstIdBook));
         }};
-        reviewRepository.addAll(actualList);
+        reviewRepository.createAll(actualList);
         //then
         for (int i = 0; i < expectedList.size(); i++) {
             assertReviewEquals(expectedList.get(i), actualList.get(i));

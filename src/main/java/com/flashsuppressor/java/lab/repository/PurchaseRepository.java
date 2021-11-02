@@ -7,13 +7,15 @@ import java.util.List;
 
 public interface PurchaseRepository {
 
-    List<Purchase> findAll() throws SQLException;
-
-    Purchase add(Purchase purchase) throws SQLException;
-
     Purchase findById(int id) throws SQLException;
 
-    void addAll(List<Purchase> purchases) throws SQLException;
+    List<Purchase> findAll();
+
+    Purchase create(Purchase purchase) throws SQLException;
+
+    void createAll(List<Purchase> purchases);
+
+    Purchase update(Purchase purchase) throws SQLException;
 
     boolean deleteById(int id) throws SQLException;
 }

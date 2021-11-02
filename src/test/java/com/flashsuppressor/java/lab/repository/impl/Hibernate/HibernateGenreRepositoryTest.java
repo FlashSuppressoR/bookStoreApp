@@ -27,6 +27,16 @@ public class HibernateGenreRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
+    public void updateTest() throws SQLException {
+        //given
+        Genre expectedGenre = new Genre(3, "Max Ew");
+        //when
+        Genre actualGenre = genreRepository.update(expectedGenre);
+        //then
+        assertGenreEquals(expectedGenre, actualGenre);
+    }
+
+    @Test
     public void findAll() throws SQLException {
         //given
         //when
@@ -52,7 +62,7 @@ public class HibernateGenreRepositoryTest extends BaseRepositoryTest {
         //given
         Genre expectedGenre = new Genre(4, "Love story");
         //when
-        Genre actualGenre = genreRepository.add(expectedGenre);
+        Genre actualGenre = genreRepository.create(expectedGenre);
         //then
         assertGenreEquals(expectedGenre, actualGenre);
     }
@@ -69,7 +79,7 @@ public class HibernateGenreRepositoryTest extends BaseRepositoryTest {
             add(new Genre(null, "Ballad"));
             add(new Genre(null, "Thriller"));
         }};
-        genreRepository.addAll(actualList);
+        genreRepository.createAll(actualList);
         //then
         for (int i = 0; i < expectedList.size(); i++) {
             assertGenreEquals(expectedList.get(i), actualList.get(i));

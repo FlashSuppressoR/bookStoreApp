@@ -4,8 +4,6 @@ import com.flashsuppressor.java.lab.entity.Customer;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
-
 
 public interface CustomerRepository {
 
@@ -15,9 +13,9 @@ public interface CustomerRepository {
 
     List<Customer> findAll() throws SQLException;
 
+    Customer create(Customer customer) throws SQLException;
+
     Customer update(Customer customer) throws SQLException;
 
     boolean deleteById(int id) throws SQLException;
-
-    Customer add(Customer customer) throws SQLException;
 }

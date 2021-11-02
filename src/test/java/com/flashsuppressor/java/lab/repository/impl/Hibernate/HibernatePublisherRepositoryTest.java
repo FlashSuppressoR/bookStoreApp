@@ -52,7 +52,7 @@ public class HibernatePublisherRepositoryTest extends BaseRepositoryTest {
         //given
         Publisher expectedPublisher = new Publisher(1, "Big Daddy");
         //when
-        Publisher actualPublisher = publisherRepository.add(expectedPublisher);
+        Publisher actualPublisher = publisherRepository.create(expectedPublisher);
         //then
         assertPublisherEquals(expectedPublisher, actualPublisher);
     }
@@ -69,7 +69,7 @@ public class HibernatePublisherRepositoryTest extends BaseRepositoryTest {
             add(new Publisher(null, "Ballads Writer"));
             add(new Publisher(null, "Third House"));
         }};
-        publisherRepository.addAll(actualList);
+        publisherRepository.createAll(actualList);
         //then
         for (int i = 0; i < expectedList.size(); i++) {
             assertPublisherEquals(expectedList.get(i), actualList.get(i));

@@ -3,9 +3,7 @@ package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 import com.flashsuppressor.java.lab.entity.Publisher;
 import com.flashsuppressor.java.lab.repository.PublisherRepository;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class HibernatePublisherRepository implements PublisherRepository {
@@ -17,77 +15,59 @@ public class HibernatePublisherRepository implements PublisherRepository {
     }
 
     @Override
-    public List<Publisher> findAll() throws SQLException {
-        List<Publisher> publisherList;
-        try {
-            publisherList = session.createQuery(FIND_ALL_PUBLISHERS_QUERY, Publisher.class).list();
-        } catch (Exception ex) {
-            throw new SQLException("Something was wrong in the Publishers", ex);
-        }
-        return publisherList;
+    public List<Publisher> findAll() {
+
+        return session.createQuery(FIND_ALL_PUBLISHERS_QUERY, Publisher.class).list();
     }
 
     @Override
-    public Publisher findById(int id) throws SQLException {
-        Publisher publisher;
-        try {
-            publisher = session.find(Publisher.class, id);
-        } catch (Exception ex) {
-            throw new SQLException("Can not find Publisher", ex);
-        }
-        return publisher;
+    public Publisher findById(int id) {
+
+        return session.find(Publisher.class, id);
     }
 
     @Override
-    public Publisher add(Publisher publisher) throws SQLException {
+    public Publisher create(Publisher publisher) {
         Publisher newPublisher;
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
-            Integer newPublisherId = (Integer) session.save("Publisher", publisher);
-            newPublisher = session.find(Publisher.class, newPublisherId);
-            transaction.commit();
-        } catch (Exception ex) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            throw new SQLException("Something was wrong in the Publisher", ex);
-        }
+        session.beginTransaction();
+        Integer newPublisherId = (Integer) session.save(publisher);
+        newPublisher = session.find(Publisher.class, newPublisherId);
+        session.getTransaction().commit();
+
         return newPublisher;
     }
 
     @Override
-    public void addAll(List<Publisher> publishers) throws SQLException {
-        try {
-            for (Publisher publisher : publishers) {
-                session.save(publisher);
-            }
-        } catch (Exception ex) {
-            throw new SQLException("Something was wrong in the publisher", ex);
+    public void createAll(List<Publisher> publishers) {
+        for (Publisher publisher : publishers) {
+            session.save(publisher);
         }
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException {
-        boolean result;
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
-            Publisher publisher = session.find(Publisher.class, id);
+    public Publisher update(Publisher publisher) {
+        Publisher updatedPublisher;
+        session.beginTransaction();
+        session.update(publisher);
+        updatedPublisher = session.find(Publisher.class, publisher.getId());
+        session.getTransaction().commit();
 
-            if (publisher != null) {
-                session.delete(publisher);
-                result = (null == session.find(Publisher.class, id));
-            } else {
-                result = false;
-            }
-            transaction.commit();
-        } catch (Exception ex) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            throw new SQLException("Can not remove 'Publisher'", ex);
+        return updatedPublisher;
+    }
+
+    @Override
+    public boolean deleteById(int id) {
+        boolean result;
+        session.beginTransaction();
+        Publisher publisher = session.find(Publisher.class, id);
+        if (publisher != null) {
+            session.delete(publisher);
+            result = (null == session.find(Publisher.class, id));
+        } else {
+            result = false;
         }
+        session.getTransaction().commit();
+
         return result;
     }
 }

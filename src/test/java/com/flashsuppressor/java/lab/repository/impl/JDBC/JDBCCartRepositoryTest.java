@@ -45,7 +45,7 @@ public class JDBCCartRepositoryTest extends BaseRepositoryTest {
         Cart expectedCart = new Cart(4,
                 new Customer(4, "Max Offer", "MaxOf@com", "maxee3"), 2L, 1);
         //when
-        Cart actualCart = cartRepository.add(expectedCart);
+        Cart actualCart = cartRepository.create(expectedCart);
         //then
         assertCartEquals(expectedCart, actualCart);
     }

@@ -59,7 +59,7 @@ public class HibernateAuthorRepositoryTest extends BaseRepositoryTest {
         //given
         Author expectedAuthor = new Author(4, "Roi Bard");
         //when
-        Author actualAuthor = authorRepository.add(expectedAuthor);
+        Author actualAuthor = authorRepository.create(expectedAuthor);
 
         //then
         assertAuthorEquals(expectedAuthor, actualAuthor);
@@ -77,7 +77,7 @@ public class HibernateAuthorRepositoryTest extends BaseRepositoryTest {
             add(new Author(null, "Alexandrod"));
             add(new Author(null, "Bred Eqwex"));
         }};
-        authorRepository.addAll(actualList);
+        authorRepository.createAll(actualList);
         //then
         for (int i = 0; i < expectedList.size(); i++) {
             assertAuthorEquals(expectedList.get(i), actualList.get(i));

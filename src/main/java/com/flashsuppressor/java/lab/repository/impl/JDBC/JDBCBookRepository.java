@@ -16,12 +16,13 @@ public class JDBCBookRepository implements BookRepository {
     private static final String PRICE_COLUMN = "price";
     private static final String PUBLISHER_ID_COLUMN = "publisher_id";
     private static final String GENRE_ID_COLUMN = "genre_id";
-    private static final String SELECT_ALL_QUERY = "SELECT * FROM book";
-    private static final String INSERT_BOOK_QUERY =
-            "INSERT INTO book_store.book(name, price,publisher_id, genre_id) VALUES (?, ?, ?, ?)";
-    private static final String DELETE_BOOK_QUERY = "DELETE FROM book_store.book where id = ?;";
-    private static final String UPDATE_BOOK_QUERY = "UPDATE book_store.book SET price = ? WHERE id = ?";
     private static final String FIND_BOOK_BY_ID_QUERY = "SELECT * FROM book_store.book where id = ?";
+    private static final String FIND_ALL_QUERY = "SELECT * FROM book";
+    private static final String CREATE_BOOK_QUERY =
+            "INSERT INTO book_store.book(name, price,publisher_id, genre_id) VALUES (?, ?, ?, ?)";
+    private static final String UPDATE_BOOK_QUERY =
+            "UPDATE book_store.book SET name = ?, price = ?, publisher_id = ?, genre_id = ?, amount = ? WHERE id = ?";
+    private static final String DELETE_BOOK_QUERY = "DELETE FROM book_store.book where id = ?;";
 
     private final DataSource dataSource;
 
@@ -34,7 +35,7 @@ public class JDBCBookRepository implements BookRepository {
         List<Book> books = new ArrayList<>();
         try (Connection con = dataSource.getConnection();
              Statement stm = con.createStatement();
-             ResultSet resultSet = stm.executeQuery(SELECT_ALL_QUERY)) {
+             ResultSet resultSet = stm.executeQuery(FIND_ALL_QUERY)) {
             while (resultSet.next()) {
                 Book book = new Book();
                 book.setId(resultSet.getLong(ID_COLUMN));
@@ -51,33 +52,104 @@ public class JDBCBookRepository implements BookRepository {
     }
 
     @Override
-    public Book update(Book book) throws SQLException {
-        try (Connection conn = dataSource.getConnection()) {
-            Book updatedBook;
-            try {
-                PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_BOOK_QUERY);
-                preparedStatement.setDouble(1, book.getPrice());
-                preparedStatement.execute();
-                updatedBook = find(conn, book.getId());
-                conn.commit();
-            } catch (SQLException ex) {
-                conn.rollback();
-                throw new SQLException("Can't update Offer", ex);
-            } finally {
-                conn.setAutoCommit(true);
-            }
-            return updatedBook;
-        } catch (SQLException ex) {
-            throw new SQLException("Can't update Offer", ex);
-        }
-    }
-
-    @Override
     public Book findById(Long id) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
             return find(conn, id);
         } catch (SQLException ex) {
             throw new SQLException("Can't find Book", ex);
+        }
+    }
+
+    @Override
+    public Book create(Book book) throws SQLException {
+        try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                Book newBook = null;
+                PreparedStatement preparedStatement = conn.prepareStatement(CREATE_BOOK_QUERY, Statement.RETURN_GENERATED_KEYS);
+                preparedStatement.setString(1, book.getName());
+                preparedStatement.setDouble(2, book.getPrice());
+                preparedStatement.setObject(3, book.getPublisher());
+                preparedStatement.setObject(4, book.getGenre());
+
+                int effectiveRows = preparedStatement.executeUpdate();
+
+                if (effectiveRows == 1) {
+                    ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        newBook = find(conn, generatedKeys.getLong(ID_COLUMN));
+                    }
+                }
+
+                conn.commit();
+                return newBook;
+            } catch (SQLException ex) {
+                conn.rollback();
+                throw new SQLException("Something was wrong with the create operation", ex);
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        } catch (SQLException ex) {
+            throw new SQLException("Something was wrong with the connection", ex);
+        }
+    }
+
+    @Override
+    public void createAll(List<Book> books) {
+        try (Connection con = dataSource.getConnection()) {
+            con.setAutoCommit(false);
+            try {
+                for (Book book : books) {
+                    insertBook(book, con);
+                }
+                con.commit();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                con.rollback();
+            } finally {
+                con.setAutoCommit(true);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public Book update(Book book) throws SQLException {
+        try (Connection conn = dataSource.getConnection()) {
+            Book updatedBook;
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_BOOK_QUERY);
+                preparedStatement.setString(1, book.getName());
+                preparedStatement.setDouble(2, book.getPrice());
+                preparedStatement.setObject(3, book.getPublisher());
+                preparedStatement.setObject(4, book.getGenre());
+                preparedStatement.setInt(5, book.getAmount());
+                preparedStatement.setLong(6, book.getId());
+
+                preparedStatement.execute();
+                updatedBook = find(conn, book.getId());
+                conn.commit();
+            } catch (SQLException ex) {
+                conn.rollback();
+                throw new SQLException("Can't update Book", ex);
+            } finally {
+                conn.setAutoCommit(true);
+            }
+            return updatedBook;
+        } catch (SQLException ex) {
+            throw new SQLException("Can't update Book", ex);
+        }
+    }
+
+    @Override
+    public boolean deleteById(int id) throws SQLException {
+        try (Connection conn = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = conn.prepareStatement(DELETE_BOOK_QUERY);
+            preparedStatement.setInt(1, id);
+            return preparedStatement.executeUpdate() == 1;
+        } catch (SQLException ex) {
+            throw new SQLException("Can't delete Book", ex);
         }
     }
 
@@ -104,72 +176,8 @@ public class JDBCBookRepository implements BookRepository {
         return book;
     }
 
-    @Override
-    public boolean deleteById(int id) throws SQLException {
-        try (Connection conn = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = conn.prepareStatement(DELETE_BOOK_QUERY);
-            preparedStatement.setInt(1, id);
-            return preparedStatement.executeUpdate() == 1;
-        } catch (SQLException ex) {
-            throw new SQLException("Can't delete Book", ex);
-        }
-    }
-
-    @Override
-    public Book add(Book book) throws SQLException {
-        try (Connection conn = dataSource.getConnection()) {
-            conn.setAutoCommit(false);
-            try {
-                Book newBook = null;
-                PreparedStatement preparedStatement = conn.prepareStatement(INSERT_BOOK_QUERY, Statement.RETURN_GENERATED_KEYS);
-                preparedStatement.setString(1, book.getName());
-                preparedStatement.setDouble(2, book.getPrice());
-                preparedStatement.setObject(3, book.getPublisher());
-                preparedStatement.setObject(4, book.getGenre());
-
-                int effectiveRows = preparedStatement.executeUpdate();
-
-                if (effectiveRows == 1) {
-                    ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-                    if (generatedKeys.next()) {
-                        newBook = find(conn, generatedKeys.getLong(ID_COLUMN));
-                    }
-                }
-                conn.commit();
-                return newBook;
-            } catch (SQLException ex) {
-                conn.rollback();
-                throw new SQLException("Something was wrong with the additional operations", ex);
-            } finally {
-                conn.setAutoCommit(true);
-            }
-        } catch (SQLException ex) {
-            throw new SQLException("Something was wrong with the connection", ex);
-        }
-    }
-
-    @Override
-    public void addAll(List<Book> books) {
-        try (Connection con = dataSource.getConnection()) {
-            con.setAutoCommit(false);
-            try {
-                for (Book book : books) {
-                    insertBook(book, con);
-                }
-                con.commit();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                con.rollback();
-            } finally {
-                con.setAutoCommit(true);
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-
     private void insertBook(Book book, Connection con) throws SQLException {
-        try (PreparedStatement preparedStatement = con.prepareStatement(INSERT_BOOK_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = con.prepareStatement(CREATE_BOOK_QUERY, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, book.getName());
             preparedStatement.setDouble(2, book.getPrice());
             preparedStatement.setObject(3, book.getPublisher());

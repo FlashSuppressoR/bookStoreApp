@@ -67,7 +67,7 @@ public class HibernateBookRepositoryTest extends BaseRepositoryTest {
         Book expectedBook = new Book(4L, "My mind", 132.22,
                 new Publisher(4, "Boss ex"), new Genre(4, "Publish"), 0);
         //when
-        Book actualBook = bookRepository.add(expectedBook);
+        Book actualBook = bookRepository.create(expectedBook);
         //then
         assertBookEquals(expectedBook, actualBook);
     }
@@ -88,7 +88,7 @@ public class HibernateBookRepositoryTest extends BaseRepositoryTest {
             add(new Book(null, "My World", 32.32,
                     new Publisher(4, "World Wild"), new Genre(5, "History"), 0));
         }};
-        bookRepository.addAll(actualList);
+        bookRepository.createAll(actualList);
         //then
         for (int i = 0; i < expectedList.size(); i++) {
             assertBookEquals(expectedList.get(i), actualList.get(i));

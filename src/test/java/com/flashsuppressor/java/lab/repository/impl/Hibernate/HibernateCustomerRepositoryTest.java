@@ -59,7 +59,7 @@ public class HibernateCustomerRepositoryTest extends BaseRepositoryTest {
         //given
         Customer expectedCustomer = new Customer(4, "Jim", "Jim@com", "23ax");
         //when
-        Customer actualCustomer = customerRepository.add(expectedCustomer);
+        Customer actualCustomer = customerRepository.create(expectedCustomer);
         //then
         assertCustomerEquals(expectedCustomer, actualCustomer);
     }

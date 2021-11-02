@@ -7,13 +7,15 @@ import java.util.List;
 
 public interface GenreRepository {
 
-    List<Genre> findAll() throws SQLException;
-
-    Genre add(Genre genre) throws SQLException;
-
-    void addAll(List<Genre> genres) throws SQLException;
-
     Genre findById(int id) throws SQLException;
+
+    List<Genre> findAll();
+
+    Genre create(Genre genre) throws SQLException;
+
+    void createAll(List<Genre> genres);
+
+    Genre update(Genre genre) throws SQLException;
 
     boolean deleteById(int id) throws SQLException;
 }

@@ -7,13 +7,15 @@ import java.util.List;
 
 public interface PublisherRepository {
 
-    List<Publisher> findAll() throws SQLException;
-
-    Publisher add(Publisher publisher) throws SQLException;
-
     Publisher findById(int id) throws SQLException;
 
-    void addAll(List<Publisher> publisher) throws SQLException;
+    List<Publisher> findAll();
+
+    Publisher create(Publisher publisher) throws SQLException;
+
+    void createAll(List<Publisher> publisher);
+
+    Publisher update(Publisher publisher) throws SQLException;
 
     boolean deleteById(int id) throws SQLException;
 }

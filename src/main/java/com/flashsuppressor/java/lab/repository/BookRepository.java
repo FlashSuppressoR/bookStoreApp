@@ -7,15 +7,15 @@ import java.util.List;
 
 public interface BookRepository {
 
-    List<Book> findAll() throws SQLException;
-
-    Book add(Book book) throws SQLException;
-
-    void addAll(List<Book> books) throws SQLException;
-
     Book findById(Long id) throws SQLException;
 
-    boolean deleteById(int id) throws SQLException;
+    List<Book> findAll();
+
+    Book create(Book book) throws SQLException;
+
+    void createAll(List<Book> books);
 
     Book update(Book book) throws SQLException;
+
+    boolean deleteById(int id) throws SQLException;
 }

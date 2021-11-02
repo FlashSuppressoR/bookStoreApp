@@ -39,7 +39,7 @@ public class JDBCCustomerRepositoryTest extends BaseRepositoryTest {
         //given
         Customer expectedCustomer = new Customer(4, "Tobby", "Tobby@com", "Tobby");
         //when
-        Customer actualCustomer = customerRepository.add(expectedCustomer);
+        Customer actualCustomer = customerRepository.create(expectedCustomer);
 
         //then
         assertCustomerEquals(expectedCustomer, actualCustomer);

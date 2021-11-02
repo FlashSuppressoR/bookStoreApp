@@ -11,10 +11,11 @@ import java.util.List;
 public class JDBCGenreRepository implements GenreRepository {
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
-    private static final String SELECT_ALL_QUERY = "SELECT * FROM book_store.genre";
-    private static final String INSERT_GENRE_QUERY = "INSERT INTO book_store.genre(name) VALUES (?)";
-    private static final String DELETE_GENRE_BY_ID_QUERY = "DELETE FROM book_store.genre where id = ?";
+    private static final String FIND_ALL_QUERY = "SELECT * FROM book_store.genre";
     private static final String FIND_GENRE_BY_ID_QUERY = "SELECT * FROM book_store.genre where id = ?";
+    private static final String CREATE_GENRE_QUERY = "INSERT INTO book_store.genre(name) VALUES (?)";
+    private static final String UPDATE_GENRE_QUERY = "UPDATE book_store.genre SET name = ? WHERE id = ?";
+    private static final String DELETE_GENRE_BY_ID_QUERY = "DELETE FROM book_store.genre where id = ?";
 
     private final DataSource dataSource;
 
@@ -27,7 +28,7 @@ public class JDBCGenreRepository implements GenreRepository {
         List<Genre> genres = new ArrayList<>();
         try (Connection con = dataSource.getConnection();
              Statement stm = con.createStatement();
-             ResultSet resultSet = stm.executeQuery(SELECT_ALL_QUERY)) {
+             ResultSet resultSet = stm.executeQuery(FIND_ALL_QUERY)) {
             while (resultSet.next()) {
                 Genre genre = new Genre();
                 genre.setId(resultSet.getInt(ID_COLUMN));
@@ -42,12 +43,21 @@ public class JDBCGenreRepository implements GenreRepository {
     }
 
     @Override
-    public Genre add(Genre genre) throws SQLException {
+    public Genre findById(int id) throws SQLException {
+        try (Connection conn = dataSource.getConnection()) {
+            return find(conn, id);
+        } catch (SQLException ex) {
+            throw new SQLException("Can't find Genre", ex);
+        }
+    }
+
+    @Override
+    public Genre create(Genre genre) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
             try {
                 Genre newGenre = null;
-                PreparedStatement preparedStatement = conn.prepareStatement(INSERT_GENRE_QUERY, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement preparedStatement = conn.prepareStatement(CREATE_GENRE_QUERY, Statement.RETURN_GENERATED_KEYS);
                 preparedStatement.setString(1, genre.getName());
                 int effectiveRows = preparedStatement.executeUpdate();
                 if (effectiveRows == 1) {
@@ -60,7 +70,7 @@ public class JDBCGenreRepository implements GenreRepository {
                 return newGenre;
             } catch (SQLException ex) {
                 conn.rollback();
-                throw new SQLException("Something was wrong with the additional operations", ex);
+                throw new SQLException("Something was wrong with the create operation", ex);
             } finally {
                 conn.setAutoCommit(true);
             }
@@ -70,7 +80,7 @@ public class JDBCGenreRepository implements GenreRepository {
     }
 
     @Override
-    public void addAll(List<Genre> genres) {
+    public void createAll(List<Genre> genres) {
         try (Connection con = dataSource.getConnection()) {
             con.setAutoCommit(false);
             try {
@@ -90,11 +100,45 @@ public class JDBCGenreRepository implements GenreRepository {
     }
 
     @Override
-    public Genre findById(int id) throws SQLException {
+    public Genre update(Genre genre) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
-            return find(conn, id);
+            Genre genreUpdate;
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_GENRE_QUERY);
+                preparedStatement.setString(1, genre.getName());
+                preparedStatement.setInt(2, genre.getId());
+                preparedStatement.execute();
+                genreUpdate = find(conn, genre.getId());
+                conn.commit();
+            } catch (SQLException ex) {
+                conn.rollback();
+                throw new SQLException("Can't update Genre", ex);
+            } finally {
+                conn.setAutoCommit(true);
+            }
+            return genreUpdate;
         } catch (SQLException ex) {
-            throw new SQLException("Can't find Author", ex);
+            throw new SQLException("Something was wrong with the connection", ex);
+        }
+    }
+
+    @Override
+    public boolean deleteById(int id) throws SQLException {
+        try (Connection conn = dataSource.getConnection()) {
+            boolean result;
+            try {
+                conn.setAutoCommit(false);
+                PreparedStatement preparedStatement = conn.prepareStatement(DELETE_GENRE_BY_ID_QUERY);
+                preparedStatement.setInt(1, id);
+                result = preparedStatement.executeUpdate() == 1;
+                conn.commit();
+            } catch (SQLException ex) {
+                conn.rollback();
+                throw new SQLException("Something was wrong with the deleteById operation", ex);
+            } finally {
+                conn.setAutoCommit(true);
+            }
+            return result;
         }
     }
 
@@ -117,28 +161,8 @@ public class JDBCGenreRepository implements GenreRepository {
         return genre;
     }
 
-    @Override
-    public boolean deleteById(int id) throws SQLException {
-        try (Connection conn = dataSource.getConnection()) {
-            boolean result;
-            try {
-                conn.setAutoCommit(false);
-                PreparedStatement preparedStatement = conn.prepareStatement(DELETE_GENRE_BY_ID_QUERY);
-                preparedStatement.setInt(1, id);
-                result = preparedStatement.executeUpdate() == 1;
-                conn.commit();
-            } catch (SQLException ex) {
-                conn.rollback();
-                throw new SQLException("Something was wrong with the additional operations", ex);
-            } finally {
-                conn.setAutoCommit(true);
-            }
-            return result;
-        }
-    }
-
     private void insertGenre(Genre genre, Connection con) throws SQLException {
-        try (PreparedStatement preparedStatement = con.prepareStatement(INSERT_GENRE_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = con.prepareStatement(CREATE_GENRE_QUERY, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, genre.getName());
 
             final int effectiveRows = preparedStatement.executeUpdate();

@@ -3,9 +3,7 @@ package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 import com.flashsuppressor.java.lab.entity.Purchase;
 import com.flashsuppressor.java.lab.repository.PurchaseRepository;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class HibernatePurchaseRepository implements PurchaseRepository {
@@ -17,77 +15,60 @@ public class HibernatePurchaseRepository implements PurchaseRepository {
     }
 
     @Override
-    public List<Purchase> findAll() throws SQLException {
-        List<Purchase> purchaseList;
-        try {
-            purchaseList = session.createQuery(FIND_ALL_PURCHASES_QUERY, Purchase.class).list();
-        } catch (Exception ex) {
-            throw new SQLException("Something was wrong in the purchases", ex);
-        }
-        return purchaseList;
+    public List<Purchase> findAll(){
+
+        return session.createQuery(FIND_ALL_PURCHASES_QUERY, Purchase.class).list();
     }
 
     @Override
-    public Purchase findById(int id) throws SQLException {
-        Purchase purchase;
-        try {
-            purchase = session.find(Purchase.class, id);
-        } catch (Exception ex) {
-            throw new SQLException("Can not find Purchase", ex);
-        }
-        return purchase;
+    public Purchase findById(int id) {
+
+        return  session.find(Purchase.class, id);
     }
 
     @Override
-    public Purchase add(Purchase purchase) throws SQLException {
+    public Purchase create(Purchase purchase) {
         Purchase newPurchase;
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
-            Integer newPurchaseId = (Integer) session.save("Purchase", purchase);
-            newPurchase = session.find(Purchase.class, newPurchaseId);
-            transaction.commit();
-        } catch (Exception ex) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            throw new SQLException("Something was wrong in the Purchase", ex);
-        }
+       session.beginTransaction();
+       Integer newPurchaseId = (Integer) session.save(purchase);
+       newPurchase = session.find(Purchase.class, newPurchaseId);
+       session.getTransaction().commit();
+
         return newPurchase;
     }
 
     @Override
-    public void addAll(List<Purchase> purchases) throws SQLException {
-        try {
-            for (Purchase purchase : purchases) {
-                session.save(purchase);
-            }
-        } catch (Exception ex) {
-            throw new SQLException("Something was wrong in the purchase", ex);
+    public void createAll(List<Purchase> purchases) {
+        for (Purchase purchase : purchases) {
+            session.save(purchase);
         }
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException {
-        boolean result;
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
-            Purchase purchase = session.find(Purchase.class, id);
+    public Purchase update(Purchase purchase) {
+        Purchase updatedPurchase;
+        session.beginTransaction();
+        session.update(purchase);
+        updatedPurchase = session.find(Purchase.class, purchase.getId());
+        session.getTransaction().commit();
 
-            if (purchase != null) {
-                session.delete(purchase);
-                result = (null == session.find(Purchase.class, id));
-            } else {
-                result = false;
-            }
-            transaction.commit();
-        } catch (Exception ex) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            throw new SQLException("Can not remove 'Purchase'", ex);
+        return updatedPurchase;
+    }
+
+    @Override
+    public boolean deleteById(int id) {
+        boolean result;
+        session.beginTransaction();
+        Purchase purchase = session.find(Purchase.class, id);
+
+        if (purchase != null) {
+            session.delete(purchase);
+            result = (null == session.find(Purchase.class, id));
+        } else {
+            result = false;
         }
+        session.getTransaction().commit();
+
         return result;
     }
 }

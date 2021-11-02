@@ -57,7 +57,7 @@ public class HibernatePurchaseRepositoryTest extends BaseRepositoryTest {
         //given
         Purchase expectedPurchase = new Purchase(4, new Customer(4, "Alex3", "Alexw3@com", "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0"));
         //when
-        Purchase actualPurchase = purchaseRepository.add(expectedPurchase);
+        Purchase actualPurchase = purchaseRepository.create(expectedPurchase);
         //then
         assertPurchaseEquals(expectedPurchase, actualPurchase);
     }
@@ -74,7 +74,7 @@ public class HibernatePurchaseRepositoryTest extends BaseRepositoryTest {
             add(new Purchase(null, new Customer(4, "Alex3", "Alexw3@com", "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
             add(new Purchase(null, new Customer(5, "Vell", "Vell@com", "vell"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
         }};
-        purchaseRepository.addAll(actualList);
+        purchaseRepository.createAll(actualList);
         //then
         for (int i = 0; i < expectedList.size(); i++) {
             assertPurchaseEquals(expectedList.get(i), actualList.get(i));

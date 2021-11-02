@@ -13,19 +13,28 @@ public class JDBCCustomerRepository implements CustomerRepository {
     private static final String NAME_COLUMN = "name";
     private static final String EMAIL_COLUMN = "email";
     private static final String PASSWORD_COLUMN = "password";
-    private static final String ADD_CUSTOMER_QUERY
-            = "INSERT INTO book_store.customer(name, email, password) VALUES (?, ?, ?)";
     private static final String FIND_ALL_CUSTOMERS_QUERY = "SELECT * FROM book_store.customer";
     private static final String FIND_CUSTOMER_BY_EMAIL_QUERY = "SELECT * FROM book_store.customer WHERE email = ?";
     private static final String FIND_CUSTOMER_BY_ID_QUERY = "SELECT * FROM book_store.customer where id = ?";
-    private static final String DELETE_CUSTOMER_BY_ID_QUERY = "DELETE FROM book_store.customer where id = ?";
+    private static final String CREATE_CUSTOMER_QUERY
+            = "INSERT INTO book_store.customer(name, email, password) VALUES (?, ?, ?)";
     private static final String UPDATE_CUSTOMER_BY_ID_QUERY
             = "UPDATE book_store.customer SET name = ?, email = ?, password = ? WHERE id = ?";
+    private static final String DELETE_CUSTOMER_BY_ID_QUERY = "DELETE FROM book_store.customer where id = ?";
 
     private final DataSource dataSource;
 
     public JDBCCustomerRepository(DataSource dataSource) {
         this.dataSource = dataSource;
+    }
+
+    @Override
+    public Customer findById(int id) throws SQLException {
+        try (Connection conn = dataSource.getConnection()) {
+            return find(conn, id);
+        } catch (SQLException ex) {
+            throw new SQLException("Can't find Customer", ex);
+        }
     }
 
     @Override
@@ -43,7 +52,7 @@ public class JDBCCustomerRepository implements CustomerRepository {
             }
             return customer;
         } catch (SQLException exception) {
-            throw new SQLException("Trouble with the repository");
+            throw new SQLException("Something was wrong in the repository");
         }
     }
 
@@ -58,95 +67,18 @@ public class JDBCCustomerRepository implements CustomerRepository {
                 customers.add(customer);
             }
         } catch (SQLException ex) {
-            throw new SQLException("Trouble with the repository");
+            throw new SQLException("Something was wrong in the repository");
         }
         return customers;
     }
 
-    private Customer createCustomer(ResultSet rs) throws SQLException {
-        Customer customer = new Customer();
-        customer.setId(rs.getInt(ID_COLUMN));
-        customer.setName(rs.getString(NAME_COLUMN));
-        customer.setPassword(rs.getString(PASSWORD_COLUMN));
-        customer.setEmail(rs.getString(EMAIL_COLUMN));
-
-        return customer;
-    }
-
     @Override
-    public Customer update(Customer customer) throws SQLException {
-        try (Connection conn = dataSource.getConnection()) {
-            Customer updatedCustomer;
-            conn.setAutoCommit(false);
-            try {
-                PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_CUSTOMER_BY_ID_QUERY);
-                preparedStatement.setString(1, customer.getName());
-                preparedStatement.setString(2, customer.getPassword());
-                preparedStatement.setString(3, customer.getEmail());
-                preparedStatement.setString(4, customer.getPassword());
-                preparedStatement.execute();
-                updatedCustomer = find(conn, customer.getId());
-                conn.commit();
-            } catch (SQLException ex) {
-                conn.rollback();
-                throw new SQLException("Something was wrong with the additional operations", ex);
-            } finally {
-                conn.setAutoCommit(true);
-            }
-            return updatedCustomer;
-        } catch (SQLException ex) {
-            throw new SQLException("Something was wrong with the connection", ex);
-        }
-    }
-
-    private Customer find(Connection conn, int id) throws SQLException {
-        Customer customer = null;
-        PreparedStatement preparedStatement = conn.prepareStatement(FIND_CUSTOMER_BY_ID_QUERY);
-        preparedStatement.setInt(1, id);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        if (resultSet.next()) {
-            customer = createCustomer(resultSet);
-        }
-        return customer;
-    }
-
-    @Override
-    public Customer findById(int id) throws SQLException {
-        try (Connection conn = dataSource.getConnection()) {
-            return find(conn, id);
-        } catch (SQLException ex) {
-            throw new SQLException("Can't find Customer", ex);
-        }
-    }
-
-    @Override
-    public boolean deleteById(int id) throws SQLException {
-        try (Connection conn = dataSource.getConnection()) {
-            boolean result;
-            try {
-                conn.setAutoCommit(false);
-
-                PreparedStatement preparedStatement = conn.prepareStatement(DELETE_CUSTOMER_BY_ID_QUERY);
-                preparedStatement.setInt(1, id);
-                result = preparedStatement.executeUpdate() == 1;
-                conn.commit();
-            } catch (SQLException ex) {
-                conn.rollback();
-                throw new SQLException("Something was wrong with the additional operations", ex);
-            } finally {
-                conn.setAutoCommit(true);
-            }
-            return result;
-        }
-    }
-
-    @Override
-    public Customer add(Customer customer) throws SQLException {
+    public Customer create(Customer customer) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
             try {
                 Customer newCustomer = null;
-                PreparedStatement preparedStatement = conn.prepareStatement(ADD_CUSTOMER_QUERY, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement preparedStatement = conn.prepareStatement(CREATE_CUSTOMER_QUERY, Statement.RETURN_GENERATED_KEYS);
                 preparedStatement.setString(1, customer.getName());
                 preparedStatement.setString(2, customer.getEmail());
                 preparedStatement.setString(3, customer.getPassword());
@@ -161,13 +93,81 @@ public class JDBCCustomerRepository implements CustomerRepository {
                 return newCustomer;
             } catch (SQLException ex) {
                 conn.rollback();
-                throw new SQLException("Something was wrong with the additional operations", ex);
+                throw new SQLException("Something was wrong with the create operation", ex);
             } finally {
                 conn.setAutoCommit(true);
             }
         } catch (SQLException ex) {
             throw new SQLException("Something was wrong with the connection", ex);
         }
+    }
+
+    @Override
+    public Customer update(Customer customer) throws SQLException {
+        try (Connection conn = dataSource.getConnection()) {
+            Customer updatedCustomer;
+            conn.setAutoCommit(false);
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_CUSTOMER_BY_ID_QUERY);
+                preparedStatement.setString(1, customer.getName());
+                preparedStatement.setString(2, customer.getEmail());
+                preparedStatement.setString(3, customer.getPassword());
+                preparedStatement.setInt(4, customer.getId());
+
+                preparedStatement.execute();
+                updatedCustomer = find(conn, customer.getId());
+                conn.commit();
+            } catch (SQLException ex) {
+                conn.rollback();
+                throw new SQLException("Something was wrong with the update operation", ex);
+            } finally {
+                conn.setAutoCommit(true);
+            }
+            return updatedCustomer;
+        } catch (SQLException ex) {
+            throw new SQLException("Something was wrong with the connection", ex);
+        }
+    }
+
+    @Override
+    public boolean deleteById(int id) throws SQLException {
+        try (Connection conn = dataSource.getConnection()) {
+            boolean result;
+            try {
+                conn.setAutoCommit(false);
+                PreparedStatement preparedStatement = conn.prepareStatement(DELETE_CUSTOMER_BY_ID_QUERY);
+                preparedStatement.setInt(1, id);
+                result = preparedStatement.executeUpdate() == 1;
+                conn.commit();
+            } catch (SQLException ex) {
+                conn.rollback();
+                throw new SQLException("Something was wrong with the deleteById operation", ex);
+            } finally {
+                conn.setAutoCommit(true);
+            }
+            return result;
+        }
+    }
+
+    private Customer createCustomer(ResultSet rs) throws SQLException {
+        Customer customer = new Customer();
+        customer.setId(rs.getInt(ID_COLUMN));
+        customer.setName(rs.getString(NAME_COLUMN));
+        customer.setPassword(rs.getString(PASSWORD_COLUMN));
+        customer.setEmail(rs.getString(EMAIL_COLUMN));
+
+        return customer;
+    }
+
+    private Customer find(Connection conn, int id) throws SQLException {
+        Customer customer = null;
+        PreparedStatement preparedStatement = conn.prepareStatement(FIND_CUSTOMER_BY_ID_QUERY);
+        preparedStatement.setInt(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            customer = createCustomer(resultSet);
+        }
+        return customer;
     }
 }
 
