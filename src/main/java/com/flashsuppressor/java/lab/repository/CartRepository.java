@@ -1,6 +1,7 @@
 package com.flashsuppressor.java.lab.repository;
 
 import com.flashsuppressor.java.lab.entity.Cart;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -11,7 +12,7 @@ public interface CartRepository {
 
     List<Cart> findAll() throws SQLException;
 
-    Cart create(Cart cart) throws SQLException;
+    void create(Cart cart) throws SQLException;
 
     Cart update(Cart cart) throws SQLException;
 

@@ -3,13 +3,20 @@ package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 import com.flashsuppressor.java.lab.entity.Review;
 import com.flashsuppressor.java.lab.repository.ReviewRepository;
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class HibernateReviewRepository implements ReviewRepository {
     private final Session session;
     private static final String FIND_ALL_REVIEWS_QUERY = "select r from Review r";
 
+    @Autowired
     public HibernateReviewRepository(Session session) {
         this.session = session;
     }
@@ -21,14 +28,8 @@ public class HibernateReviewRepository implements ReviewRepository {
     }
 
     @Override
-    public Review create(Review review) {
-        Review newReview;
-        session.beginTransaction();
-        Integer newReviewId = (Integer) session.save(review);
-        newReview = session.find(Review.class, newReviewId);
-        session.getTransaction().commit();
-
-        return newReview;
+    public void create(Review review) {
+        session.save(review);
     }
 
     @Override

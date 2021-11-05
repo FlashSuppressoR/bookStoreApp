@@ -3,15 +3,22 @@ package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 import com.flashsuppressor.java.lab.entity.Customer;
 import com.flashsuppressor.java.lab.repository.CustomerRepository;
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.List;
 
+@Repository
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class HibernateCustomerRepository implements CustomerRepository {
     private final Session session;
     private static final String FIND_CUSTOMER_BY_EMAIL_QUERY = "select c from Customer c where Customer.email = ?1";
     private static final String FIND_ALL_CUSTOMERS_QUERY = "select c from Customer c";
 
+    @Autowired
     public HibernateCustomerRepository(Session session) {
         this.session = session;
     }
@@ -36,14 +43,8 @@ public class HibernateCustomerRepository implements CustomerRepository {
     }
 
     @Override
-    public Customer create(Customer customer) {
-        Customer newCustomer;
-        session.beginTransaction();
-        Integer newCustomerId = (Integer) session.save(customer);
-        newCustomer = session.find(Customer.class, newCustomerId);
-        session.getTransaction().commit();
-
-        return newCustomer;
+    public void create(Customer customer) {
+       session.save(customer);
     }
 
     public Customer update(Customer customer) {

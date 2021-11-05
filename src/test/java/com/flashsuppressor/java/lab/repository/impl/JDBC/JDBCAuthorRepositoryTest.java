@@ -32,72 +32,61 @@ public class JDBCAuthorRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void findAllTest() throws SQLException {
-        //given
-        //when
+    public void findAllTest() {
         List<Author> actualAuthors = authorRepository.findAll();
-        assertEquals(expectedAuthors.size(), actualAuthors.size());
-        //then
+
         for (int i = 0; i < expectedAuthors.size(); i++) {
             assertAuthorEquals(expectedAuthors.get(i), actualAuthors.get(i));
         }
     }
 
     @Test
-    public void updateTest() throws SQLException {
-        //given
-        Author expectedUser = new Author(3, "Max Ew");
-        //when
-        Author actualAuthor = authorRepository.update(expectedUser);
-        //then
-        assertAuthorEquals(expectedUser, actualAuthor);
-    }
-
-    @Test
-    public void deleteByIdTest() throws SQLException {
-        //when
-        int authorId = 1;
-        //then
-        assertTrue(authorRepository.deleteById(authorId));
-    }
-
-    @Test
-    public void addTest() throws SQLException {
-        //given
-        Author expectedAuthor = new Author(4, "Roi Bard");
-        //when
-        Author actualAuthor = authorRepository.create(expectedAuthor);
-
-        //then
-        assertAuthorEquals(expectedAuthor, actualAuthor);
-    }
-
-    @Test
     public void findByIdTest() throws SQLException {
-        //given
         Author expectedAuthor = new Author(1, "Bred Dee");
-        //when
         Author actualAuthor = authorRepository.findById(1);
-        //then
+
         assertAuthorEquals(expectedAuthor, actualAuthor);
     }
 
     @Test
-    public void addAllTest() throws SQLException {
-        //given
+    public void createTest() throws SQLException {
+        Author expectedAuthor = new Author(4, "Roi Bard");
+        authorRepository.create(expectedAuthor);
+
+        assertEquals(4, authorRepository.findAll().size());
+    }
+
+    @Test
+    public void createAllTest() throws SQLException {
         List<Author> expectedList = new ArrayList<>() {{
             add(new Author(4, "Alexandrod"));
             add(new Author(5, "Bred Eqwex"));
         }};
-        //when
         List<Author> actualList = new ArrayList<>() {{
             add(new Author(null, "Alexandrod"));
             add(new Author(null, "Bred Eqwex"));
         }};
         authorRepository.createAll(actualList);
-        //then
+
         for (int i = 0; i < expectedList.size(); i++) {
             assertAuthorEquals(expectedList.get(i), actualList.get(i));
         }
     }
+
+    @Test
+    public void updateTest() throws SQLException {
+        Author expectedUser = new Author(3, "Max Ew");
+        Author actualAuthor = authorRepository.update(expectedUser);
+
+        assertAuthorEquals(expectedUser, actualAuthor);
+    }
+
+    @Test
+    public void deleteByIdTest() throws SQLException {
+        int authorId = 1;
+
+        assertTrue(authorRepository.deleteById(authorId));
+    }
+
+
 }

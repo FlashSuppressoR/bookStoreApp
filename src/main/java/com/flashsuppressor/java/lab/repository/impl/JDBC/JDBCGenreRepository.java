@@ -2,12 +2,18 @@ package com.flashsuppressor.java.lab.repository.impl.JDBC;
 
 import com.flashsuppressor.java.lab.entity.Genre;
 import com.flashsuppressor.java.lab.repository.GenreRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class JDBCGenreRepository implements GenreRepository {
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
@@ -19,6 +25,7 @@ public class JDBCGenreRepository implements GenreRepository {
 
     private final DataSource dataSource;
 
+    @Autowired
     public JDBCGenreRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -52,22 +59,11 @@ public class JDBCGenreRepository implements GenreRepository {
     }
 
     @Override
-    public Genre create(Genre genre) throws SQLException {
+    public void create(Genre genre) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
             try {
-                Genre newGenre = null;
-                PreparedStatement preparedStatement = conn.prepareStatement(CREATE_GENRE_QUERY, Statement.RETURN_GENERATED_KEYS);
-                preparedStatement.setString(1, genre.getName());
-                int effectiveRows = preparedStatement.executeUpdate();
-                if (effectiveRows == 1) {
-                    ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-                    if (generatedKeys.next()) {
-                        newGenre = find(conn, generatedKeys.getInt(ID_COLUMN));
-                    }
-                }
-                conn.commit();
-                return newGenre;
+                insertGenre(genre, conn);
             } catch (SQLException ex) {
                 conn.rollback();
                 throw new SQLException("Something was wrong with the create operation", ex);

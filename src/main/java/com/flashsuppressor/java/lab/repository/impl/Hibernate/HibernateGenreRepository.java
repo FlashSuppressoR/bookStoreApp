@@ -3,13 +3,20 @@ package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 import com.flashsuppressor.java.lab.entity.Genre;
 import com.flashsuppressor.java.lab.repository.GenreRepository;
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class HibernateGenreRepository implements GenreRepository {
     private final Session session;
     private static final String FIND_ALL_GENRE_QUERY = "select g from Genre g";
 
+    @Autowired
     public HibernateGenreRepository(Session session) {
         this.session = session;
     }
@@ -31,14 +38,8 @@ public class HibernateGenreRepository implements GenreRepository {
     }
 
     @Override
-    public Genre create(Genre genre) {
-        Genre newGenre;
-        session.beginTransaction();
-        Integer newGenreId = (Integer) session.save(genre);
-        newGenre = session.find(Genre.class, newGenreId);
-        session.getTransaction().commit();
-
-        return newGenre;
+    public void create(Genre genre) {
+        session.save(genre);
     }
 
     @Override

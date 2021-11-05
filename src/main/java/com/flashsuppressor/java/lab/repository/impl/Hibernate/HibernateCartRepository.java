@@ -4,13 +4,18 @@ import com.flashsuppressor.java.lab.entity.Cart;
 import com.flashsuppressor.java.lab.repository.CartRepository;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+@Repository
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class HibernateCartRepository implements CartRepository {
     private final Session session;
     private static final String FIND_CARTS_QUERY = "select c from Cart c ";
-
+    @Autowired
     public HibernateCartRepository(Session session) {
         this.session = session;
     }
@@ -28,14 +33,8 @@ public class HibernateCartRepository implements CartRepository {
     }
 
     @Override
-    public Cart create(Cart cart) {
-        Cart newCart;
-        Transaction transaction = session.beginTransaction();
-        Integer newBookId = (Integer) session.save(cart);
-        newCart = session.find(Cart.class, newBookId);
-        transaction.commit();
-
-        return newCart;
+    public void create(Cart cart) {
+        session.save(cart);
     }
 
     @Override

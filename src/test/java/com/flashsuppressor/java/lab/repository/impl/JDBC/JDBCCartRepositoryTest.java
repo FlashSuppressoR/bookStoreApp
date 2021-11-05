@@ -30,51 +30,42 @@ public class JDBCCartRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void findAllTest() throws SQLException {
-        //given
-        //when
         List<Cart> actualCarts = cartRepository.findAll();
-        //then
+
         for (int i = 0; i < expectedCarts.size(); i++) {
             assertCartEquals(expectedCarts.get(i), actualCarts.get(i));
         }
     }
 
     @Test
-    public void addTest() throws SQLException {
-        //given
+    public void findByIdTest() throws SQLException {
+        Cart expectedCart = new Cart(2, new Customer(2, "Alex", "Alex@com", "alex"), 2L, 1);
+        Cart actualCart = cartRepository.findById(2);
+
+        assertCartEquals(expectedCart, actualCart);
+    }
+
+    @Test
+    public void createTest() throws SQLException {
         Cart expectedCart = new Cart(4,
                 new Customer(4, "Max Offer", "MaxOf@com", "maxee3"), 2L, 1);
-        //when
-        Cart actualCart = cartRepository.create(expectedCart);
-        //then
-        assertCartEquals(expectedCart, actualCart);
+        cartRepository.create(expectedCart);
+
+        assertEquals(4, cartRepository.findAll().size());
     }
 
     @Test
     public void updateTest() throws SQLException {
-        //given
         Cart expectedCart = new Cart(1, new Customer(1, "Max", "Max@com", "max"), 1L, 2);
-        //when
         Cart actualCart = cartRepository.update(expectedCart);
-        //then
-        assertCartEquals(expectedCart, actualCart);
-    }
 
-    @Test
-    public void findByIdTest() throws SQLException {
-        //given
-        Cart expectedCart = new Cart(2, new Customer(2, "Alex", "Alex@com", "alex"), 2L, 1);
-        //when
-        Cart actualCart = cartRepository.findById(2);
-        //then
         assertCartEquals(expectedCart, actualCart);
     }
 
     @Test
     public void deleteByIdTest() throws SQLException {
-        //when
         int cartId = 1;
-        //then
+
         assertTrue(cartRepository.deleteById(cartId));
     }
 

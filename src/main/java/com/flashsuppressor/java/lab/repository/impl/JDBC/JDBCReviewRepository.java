@@ -3,12 +3,18 @@ package com.flashsuppressor.java.lab.repository.impl.JDBC;
 import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.entity.Review;
 import com.flashsuppressor.java.lab.repository.ReviewRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class JDBCReviewRepository implements ReviewRepository {
     private static final String ID_COLUMN = "id";
     private static final String MARK_COLUMN = "mark";
@@ -24,6 +30,7 @@ public class JDBCReviewRepository implements ReviewRepository {
 
     private final DataSource dataSource;
 
+    @Autowired
     public JDBCReviewRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -50,24 +57,11 @@ public class JDBCReviewRepository implements ReviewRepository {
     }
 
     @Override
-    public Review create(Review review) throws SQLException {
+    public void create(Review review) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
             try {
-                Review newReview = null;
-                PreparedStatement preparedStatement = conn.prepareStatement(CREATE_REVIEW_QUERY, Statement.RETURN_GENERATED_KEYS);
-                preparedStatement.setInt(1, review.getMark());
-                preparedStatement.setString(2, review.getComment());
-                preparedStatement.setObject(3, review.getBook());
-                int effectiveRows = preparedStatement.executeUpdate();
-                if (effectiveRows == 1) {
-                    ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-                    if (generatedKeys.next()) {
-                        newReview = find(conn, generatedKeys.getInt(ID_COLUMN));
-                    }
-                }
-                conn.commit();
-                return newReview;
+                insertReview(review, conn);
             } catch (SQLException ex) {
                 conn.rollback();
                 throw new SQLException("Something was wrong with the create operation", ex);

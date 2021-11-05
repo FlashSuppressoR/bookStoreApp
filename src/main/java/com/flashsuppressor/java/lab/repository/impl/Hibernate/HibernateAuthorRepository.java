@@ -3,13 +3,20 @@ package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 import com.flashsuppressor.java.lab.entity.Author;
 import com.flashsuppressor.java.lab.repository.AuthorRepository;
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class HibernateAuthorRepository implements AuthorRepository {
     private final Session session;
     private static final String FIND_AUTHORS_QUERY = "select a from  Author a";
 
+    @Autowired
     public HibernateAuthorRepository(Session session) {
         this.session = session;
     }
@@ -27,14 +34,8 @@ public class HibernateAuthorRepository implements AuthorRepository {
     }
 
     @Override
-    public Author create(Author author) {
-        Author newAuthor;
-        session.beginTransaction();
-        Integer newAuthorId = (Integer) session.save(author);
-        newAuthor = session.find(Author.class, newAuthorId);
-        session.getTransaction().commit();
-
-        return newAuthor;
+    public void create(Author author) {
+        session.save(author);
     }
 
     @Override

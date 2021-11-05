@@ -1,3 +1,4 @@
+
 -- INIT TABLE PUBLISHER --
 INSERT INTO book_store.publisher  (id, name) VALUES ( 1 , 'Big Daddy');
 INSERT INTO book_store.publisher  (id, name) VALUES ( 2 , 'Minsk prod' );
@@ -44,5 +45,3 @@ INSERT INTO book_store.book_author  (book_id, author_id) VALUES ( 2 , 2 );
 INSERT INTO book_store.book_author  (book_id, author_id) VALUES ( 3 , 3 );
 
 COMMIT ;
-
-

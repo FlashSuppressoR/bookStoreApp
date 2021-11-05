@@ -3,13 +3,20 @@ package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 import com.flashsuppressor.java.lab.entity.Purchase;
 import com.flashsuppressor.java.lab.repository.PurchaseRepository;
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class HibernatePurchaseRepository implements PurchaseRepository {
     private final Session session;
     private static final String FIND_ALL_PURCHASES_QUERY = "select p from Purchase p";
 
+    @Autowired
     public HibernatePurchaseRepository(Session session) {
         this.session = session;
     }
@@ -27,14 +34,8 @@ public class HibernatePurchaseRepository implements PurchaseRepository {
     }
 
     @Override
-    public Purchase create(Purchase purchase) {
-        Purchase newPurchase;
-       session.beginTransaction();
-       Integer newPurchaseId = (Integer) session.save(purchase);
-       newPurchase = session.find(Purchase.class, newPurchaseId);
-       session.getTransaction().commit();
-
-        return newPurchase;
+    public void create(Purchase purchase) {
+       session.save(purchase);
     }
 
     @Override

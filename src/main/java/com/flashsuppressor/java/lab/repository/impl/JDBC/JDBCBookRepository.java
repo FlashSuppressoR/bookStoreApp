@@ -4,12 +4,18 @@ import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.entity.Genre;
 import com.flashsuppressor.java.lab.entity.Publisher;
 import com.flashsuppressor.java.lab.repository.BookRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class JDBCBookRepository implements BookRepository {
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
@@ -26,6 +32,7 @@ public class JDBCBookRepository implements BookRepository {
 
     private final DataSource dataSource;
 
+    @Autowired
     public JDBCBookRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -43,6 +50,7 @@ public class JDBCBookRepository implements BookRepository {
                 book.setPrice(resultSet.getDouble(PRICE_COLUMN));
                 book.setPublisher((Publisher) resultSet.getObject(PUBLISHER_ID_COLUMN));
                 book.setGenre((Genre) resultSet.getObject(GENRE_ID_COLUMN));
+
                 books.add(book);
             }
         } catch (SQLException ex) {
@@ -61,29 +69,13 @@ public class JDBCBookRepository implements BookRepository {
     }
 
     @Override
-    public Book create(Book book) throws SQLException {
+    public void create(Book book) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
             try {
-                Book newBook = null;
-                PreparedStatement preparedStatement = conn.prepareStatement(CREATE_BOOK_QUERY, Statement.RETURN_GENERATED_KEYS);
-                preparedStatement.setString(1, book.getName());
-                preparedStatement.setDouble(2, book.getPrice());
-                preparedStatement.setObject(3, book.getPublisher());
-                preparedStatement.setObject(4, book.getGenre());
-
-                int effectiveRows = preparedStatement.executeUpdate();
-
-                if (effectiveRows == 1) {
-                    ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-                    if (generatedKeys.next()) {
-                        newBook = find(conn, generatedKeys.getLong(ID_COLUMN));
-                    }
-                }
-
-                conn.commit();
-                return newBook;
-            } catch (SQLException ex) {
+                insertBook(book, conn);
+            }
+            catch (SQLException ex) {
                 conn.rollback();
                 throw new SQLException("Something was wrong with the create operation", ex);
             } finally {
@@ -143,10 +135,10 @@ public class JDBCBookRepository implements BookRepository {
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException {
+    public boolean deleteById(Long id) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
             PreparedStatement preparedStatement = conn.prepareStatement(DELETE_BOOK_QUERY);
-            preparedStatement.setInt(1, id);
+            preparedStatement.setLong(1, id);
             return preparedStatement.executeUpdate() == 1;
         } catch (SQLException ex) {
             throw new SQLException("Can't delete Book", ex);

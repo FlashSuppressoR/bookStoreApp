@@ -3,13 +3,20 @@ package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 import com.flashsuppressor.java.lab.entity.Publisher;
 import com.flashsuppressor.java.lab.repository.PublisherRepository;
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class HibernatePublisherRepository implements PublisherRepository {
     private final Session session;
     private static final String FIND_ALL_PUBLISHERS_QUERY = "select p from Publisher p";
 
+    @Autowired
     public HibernatePublisherRepository(Session session) {
         this.session = session;
     }
@@ -27,14 +34,8 @@ public class HibernatePublisherRepository implements PublisherRepository {
     }
 
     @Override
-    public Publisher create(Publisher publisher) {
-        Publisher newPublisher;
-        session.beginTransaction();
-        Integer newPublisherId = (Integer) session.save(publisher);
-        newPublisher = session.find(Publisher.class, newPublisherId);
-        session.getTransaction().commit();
-
-        return newPublisher;
+    public void create(Publisher publisher) {
+       session.save(publisher);
     }
 
     @Override

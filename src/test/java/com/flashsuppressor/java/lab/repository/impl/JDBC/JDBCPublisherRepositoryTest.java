@@ -27,41 +27,34 @@ public class JDBCPublisherRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void findAllTest() throws SQLException {
-        //given
-        //when
+    public void findAllTest() {
         List<Publisher> actualPublishers = publisherRepository.findAll();
-        //then
+
         for (int i = 0; i < expectedPublishers.size(); i++) {
             assertPublisherEquals(expectedPublishers.get(i), actualPublishers.get(i));
         }
     }
 
     @Test
-    public void addTest() throws SQLException {
-        //given
+    public void createTest() throws SQLException {
         Publisher expectedPublisher = new Publisher(1, "Big Daddy");
-        //when
-        Publisher actualPublisher = publisherRepository.create(expectedPublisher);
+        publisherRepository.create(expectedPublisher);
 
-        //then
-        assertPublisherEquals(expectedPublisher, actualPublisher);
+        assertEquals(4, publisherRepository.findAll().size());
     }
 
     @Test
-    public void addAllTest() throws SQLException {
-        //given
+    public void createAllTest() {
         List<Publisher> expectedList = new ArrayList<>() {{
             add(new Publisher(4, "Ballads Writer"));
             add(new Publisher(5, "Third House"));
         }};
-        //when
         List<Publisher> actualList = new ArrayList<>() {{
             add(new Publisher(null, "Ballads Writer"));
             add(new Publisher(null, "Third House"));
         }};
         publisherRepository.createAll(actualList);
-        //then
+
         for (int i = 0; i < expectedList.size(); i++) {
             assertPublisherEquals(expectedList.get(i), actualList.get(i));
         }
@@ -69,9 +62,8 @@ public class JDBCPublisherRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void deleteByIdTest() throws SQLException {
-        //when
         int publisherId = 1;
-        //then
+
         assertTrue(publisherRepository.deleteById(publisherId));
     }
 

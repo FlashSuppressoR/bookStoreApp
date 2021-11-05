@@ -1,6 +1,7 @@
 package com.flashsuppressor.java.lab.repository;
 
 import com.flashsuppressor.java.lab.entity.Publisher;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -11,7 +12,7 @@ public interface PublisherRepository {
 
     List<Publisher> findAll();
 
-    Publisher create(Publisher publisher) throws SQLException;
+    void create(Publisher publisher) throws SQLException;
 
     void createAll(List<Publisher> publisher);
 

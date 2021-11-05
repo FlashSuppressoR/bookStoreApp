@@ -2,12 +2,18 @@ package com.flashsuppressor.java.lab.repository.impl.JDBC;
 
 import com.flashsuppressor.java.lab.entity.Author;
 import com.flashsuppressor.java.lab.repository.AuthorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class JDBCAuthorRepository implements AuthorRepository {
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
@@ -19,6 +25,7 @@ public class JDBCAuthorRepository implements AuthorRepository {
 
     private final DataSource dataSource;
 
+    @Autowired
     public JDBCAuthorRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -49,23 +56,11 @@ public class JDBCAuthorRepository implements AuthorRepository {
     }
 
     @Override
-    public Author create(Author author) throws SQLException {
+    public void create(Author author) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
             try {
-                conn.setAutoCommit(false);
-                PreparedStatement preparedStatement = conn.prepareStatement(CREATE_AUTHOR_QUERY, Statement.RETURN_GENERATED_KEYS);
-                preparedStatement.setString(1, author.getName());
-
-                int effectiveRaws = preparedStatement.executeUpdate();
-
-                Author newAuthor = null;
-                if (effectiveRaws == 1) {
-                    ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-                    if (generatedKeys.next()) {
-                        newAuthor = find(conn, generatedKeys.getInt(ID_COLUMN));
-                    }
-                }
-                return newAuthor;
+                insertAuthor(author, conn);
             } catch (SQLException ex) {
                 conn.rollback();
                 throw new SQLException("Something was wrong with the create operation", ex);
@@ -151,9 +146,7 @@ public class JDBCAuthorRepository implements AuthorRepository {
     private void insertAuthor(Author author, Connection con) throws SQLException {
         try (PreparedStatement preparedStatement = con.prepareStatement(CREATE_AUTHOR_QUERY, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, author.getName());
-
             final int effectiveRows = preparedStatement.executeUpdate();
-
             if (effectiveRows == 1) {
                 try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {

@@ -27,41 +27,34 @@ public class JDBCGenreRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void findAllTest() throws SQLException {
-        //given
-        //when
+    public void findAllTest()  {
         List<Genre> actualGenres = genreRepository.findAll();
-        //then
+
         for (int i = 0; i < expectedGenres.size(); i++) {
             assertGenreEquals(expectedGenres.get(i), actualGenres.get(i));
         }
     }
 
-
     @Test
-    public void addTest() throws SQLException {
-        //given
+    public void createTest() throws SQLException {
         Genre expectedGenre = new Genre(4, "Love story");
-        //when
-        Genre actualGenre = genreRepository.create(expectedGenre);
-        //then
-        assertGenreEquals(expectedGenre, actualGenre);
+        genreRepository.create(expectedGenre);
+
+        assertEquals(4, genreRepository.findAll().size());
     }
 
     @Test
-    public void addAllTest() throws SQLException {
-        //given
+    public void createAllTest() {
         List<Genre> expectedList = new ArrayList<>() {{
             add(new Genre(4, "Ballad"));
             add(new Genre(5, "Thriller"));
         }};
-        //when
         List<Genre> actualList = new ArrayList<>() {{
             add(new Genre(null, "Ballad"));
             add(new Genre(null, "Thriller"));
         }};
         genreRepository.createAll(actualList);
-        //then
+
         for (int i = 0; i < expectedList.size(); i++) {
             assertGenreEquals(expectedList.get(i), actualList.get(i));
         }
@@ -69,9 +62,8 @@ public class JDBCGenreRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void deleteByIdTest() throws SQLException {
-        //when
         int genreId = 1;
-        //then
+
         assertTrue(genreRepository.deleteById(genreId));
     }
 

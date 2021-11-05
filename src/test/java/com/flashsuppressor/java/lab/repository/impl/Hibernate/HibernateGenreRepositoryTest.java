@@ -27,21 +27,9 @@ public class HibernateGenreRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void updateTest() throws SQLException {
-        //given
-        Genre expectedGenre = new Genre(3, "Max Ew");
-        //when
-        Genre actualGenre = genreRepository.update(expectedGenre);
-        //then
-        assertGenreEquals(expectedGenre, actualGenre);
-    }
-
-    @Test
-    public void findAll() throws SQLException {
-        //given
-        //when
+    public void findAll(){
         List<Genre> actualGenres = genreRepository.findAll();
-        //then
+
         for (int i = 0; i < expectedGenres.size(); i++) {
             assertGenreEquals(expectedGenres.get(i), actualGenres.get(i));
         }
@@ -49,48 +37,49 @@ public class HibernateGenreRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void findById() throws SQLException {
-        //given
         Genre expected = expectedGenres.get(0);
-        //when
         Genre actual = genreRepository.findById(expected.getId());
-        //then
+
         assertGenreEquals(expected, actual);
     }
 
     @Test
-    public void add() throws SQLException {
-        //given
+    public void createTest() throws SQLException {
         Genre expectedGenre = new Genre(4, "Love story");
-        //when
-        Genre actualGenre = genreRepository.create(expectedGenre);
-        //then
-        assertGenreEquals(expectedGenre, actualGenre);
+        genreRepository.create(expectedGenre);
+
+        assertEquals(4, genreRepository.findAll().size());
     }
 
     @Test
-    public void addAll() throws SQLException {
-        //given
+    public void createAllTest() {
         List<Genre> expectedList = new ArrayList<>() {{
             add(new Genre(4, "Ballad"));
             add(new Genre(5, "Thriller"));
         }};
-        //when
         List<Genre> actualList = new ArrayList<>() {{
             add(new Genre(null, "Ballad"));
             add(new Genre(null, "Thriller"));
         }};
         genreRepository.createAll(actualList);
-        //then
+
         for (int i = 0; i < expectedList.size(); i++) {
             assertGenreEquals(expectedList.get(i), actualList.get(i));
         }
     }
 
     @Test
-    public void deleteById() throws SQLException {
-        //when
+    public void updateTest() throws SQLException {
+        Genre expectedGenre = new Genre(3, "Max Ew");
+        Genre actualGenre = genreRepository.update(expectedGenre);
+
+        assertGenreEquals(expectedGenre, actualGenre);
+    }
+
+    @Test
+    public void deleteByIdTest() throws SQLException {
         int genreId = 1;
-        //then
+
         assertTrue(genreRepository.deleteById(genreId));
     }
 

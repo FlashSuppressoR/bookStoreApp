@@ -25,63 +25,47 @@ public class HibernateBookRepositoryTest extends BaseRepositoryTest {
             add(new Book(1L, "Little Bee", 3.22,
                     new Publisher(1, "Big Daddy"), new Genre(1, "Fantasy"), 0));
             add(new Book(2L, "Big system Black Sun", 2.33,
-                    new Publisher(2, "Minsk prod"), new Genre(2, "Horror"), 0));
+                    new Publisher(2, "Minsk prod"), new Genre(1, "Fantasy"), 0));
             add(new Book(3L, "Alex Green", 13.22,
-                    new Publisher(3, "New Town"), new Genre(3, "Humor"), 0));
+                    new Publisher(1, "New Town"), new Genre(3, "Humor"), 0));
         }};
     }
 
     @Test
-    public void deleteById() throws SQLException {
-        //when
-        int bookId = 1;
-        //then
-        assertTrue(bookRepository.deleteById(bookId));
-    }
-
-    @Test
-    public void findById() throws SQLException {
-        //given
+    public void findByIdTest() throws SQLException {
         Book expectedBook = new Book(1L, "Little Bee", 3.22,
                 new Publisher(1, "Big Daddy"), new Genre(1, "Fantasy"), 0);
-        //when
         Book actualBook = bookRepository.findById(1L);
-        //then
+
         assertBookEquals(expectedBook, actualBook);
     }
 
     @Test
-    public void findAll() throws SQLException {
-        //given
-        //when
+    public void findAllTest() {
         List<Book> actualBooks = bookRepository.findAll();
-        //then
+
         for (int i = 0; i < expectedBooks.size(); i++) {
             assertBookEquals(expectedBooks.get(i), actualBooks.get(i));
         }
     }
 
     @Test
-    public void add() throws SQLException {
-        //given
+    public void createTest() throws SQLException {
         Book expectedBook = new Book(4L, "My mind", 132.22,
                 new Publisher(4, "Boss ex"), new Genre(4, "Publish"), 0);
-        //when
-        Book actualBook = bookRepository.create(expectedBook);
-        //then
-        assertBookEquals(expectedBook, actualBook);
+        bookRepository.create(expectedBook);
+
+        assertEquals(4, bookRepository.findAll().size());
     }
 
     @Test
-    public void addAll() throws SQLException {
-        //given
+    public void createAllTest() {
         List<Book> expectedList = new ArrayList<>() {{
             add(new Book(4L, "My mind", 132.22,
                     new Publisher(4, "Boss ex"), new Genre(4, "Publish"), 0));
             add(new Book(5L, "My World", 32.32,
                     new Publisher(4, "World Wild"), new Genre(5, "History"), 0));
         }};
-        //when
         List<Book> actualList = new ArrayList<>() {{
             add(new Book(null, "My mind", 132.22,
                     new Publisher(4, "Boss ex"), new Genre(4, "Publish"), 0));
@@ -89,21 +73,26 @@ public class HibernateBookRepositoryTest extends BaseRepositoryTest {
                     new Publisher(4, "World Wild"), new Genre(5, "History"), 0));
         }};
         bookRepository.createAll(actualList);
-        //then
+
         for (int i = 0; i < expectedList.size(); i++) {
             assertBookEquals(expectedList.get(i), actualList.get(i));
         }
     }
 
     @Test
-    public void update() throws SQLException {
-        //given
+    public void updateTest() throws SQLException {
         Book expectedBook = new Book(1L, "Dark Night", 3.22,
                 new Publisher(1, "Big Daddy"), new Genre(1, "Fantasy"), 0);
-        //when
         Book actualBook = bookRepository.update(expectedBook);
-        //then
+
         assertBookEquals(expectedBook, actualBook);
+    }
+
+    @Test
+    public void deleteByIdTest() throws SQLException {
+        Long bookId = 1L;
+
+        assertTrue(bookRepository.deleteById(bookId));
     }
 
     private void assertBookEquals(Book expectedBook, Book actualBook) {

@@ -33,50 +33,43 @@ public class HibernateReviewRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void findAll() throws SQLException {
-        //given
-        //when
+    public void findAllTest() {
         List<Review> actualReviews = reviewRepository.findAll();
-        //then
+
         for (int i = 0; i < expectedReviews.size(); i++) {
             assertReviewEquals(expectedReviews.get(i), actualReviews.get(i));
         }
     }
 
     @Test
-    public void add() throws SQLException {
-        //given
+    public void createTest() throws SQLException {
         Review expectedReview = new Review( 4 , 5, "cool", thirdIdBook);
-        //when
-        Review actualReview = reviewRepository.create(expectedReview);
+        reviewRepository.create(expectedReview);
 
-        //then
-        assertReviewEquals(expectedReview, actualReview);
+        assertEquals(4, reviewRepository.findAll().size());
     }
 
     @Test
-    public void addAll() throws SQLException {
+    public void createAllTest() throws SQLException {
         List<Review> expectedList = new ArrayList<>(){{
             add(new Review( 1 , 5, "Perfecto!", firstIdBook));
             add(new Review( 2 , 3, "pfff", firstIdBook));
         }};
-        //when
         List<Review> actualList = new ArrayList<>(){{
             add(new Review( 1 , 5, "Perfecto!", firstIdBook));
             add(new Review( 2 , 3, "pfff", firstIdBook));
         }};
         reviewRepository.createAll(actualList);
-        //then
+
         for (int i = 0; i < expectedList.size(); i++) {
             assertReviewEquals(expectedList.get(i), actualList.get(i));
         }
     }
 
     @Test
-    public void deleteById() throws SQLException {
-        //when
+    public void deleteByIdTest() throws SQLException {
         int reviewId = 1;
-        //then
+
         assertTrue(reviewRepository.deleteById(reviewId));
     }
 

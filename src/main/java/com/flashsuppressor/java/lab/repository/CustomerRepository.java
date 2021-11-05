@@ -1,6 +1,7 @@
 package com.flashsuppressor.java.lab.repository;
 
 import com.flashsuppressor.java.lab.entity.Customer;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -13,7 +14,7 @@ public interface CustomerRepository {
 
     List<Customer> findAll() throws SQLException;
 
-    Customer create(Customer customer) throws SQLException;
+    void create(Customer customer) throws SQLException;
 
     Customer update(Customer customer) throws SQLException;
 

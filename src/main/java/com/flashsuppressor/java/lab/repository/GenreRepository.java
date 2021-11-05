@@ -1,6 +1,7 @@
 package com.flashsuppressor.java.lab.repository;
 
 import com.flashsuppressor.java.lab.entity.Genre;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -11,7 +12,7 @@ public interface GenreRepository {
 
     List<Genre> findAll();
 
-    Genre create(Genre genre) throws SQLException;
+    void create(Genre genre) throws SQLException;
 
     void createAll(List<Genre> genres);
 
