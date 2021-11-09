@@ -1,6 +1,7 @@
 package com.flashsuppressor.java.lab.repository.impl.JDBC;
 
 import com.flashsuppressor.java.lab.entity.Publisher;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -49,16 +50,16 @@ public class JDBCPublisherRepository implements PublisherRepository {
     }
 
     @Override
-    public Publisher findById(int id) throws SQLException {
+    public Publisher findById(int id) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             return find(conn, id);
         } catch (SQLException ex) {
-            throw new SQLException("Can't find Publisher", ex);
+            throw new RepositoryException("Can't find Publisher");
         }
     }
 
     @Override
-    public void create(Publisher publisher) throws SQLException {
+    public void create(Publisher publisher) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
             try {
@@ -70,7 +71,7 @@ public class JDBCPublisherRepository implements PublisherRepository {
                 conn.setAutoCommit(true);
             }
         } catch (SQLException ex) {
-            throw new SQLException("Something was wrong with the connection", ex);
+            throw new RepositoryException("Something was wrong with the connection");
         }
     }
 
@@ -95,7 +96,7 @@ public class JDBCPublisherRepository implements PublisherRepository {
     }
 
     @Override
-    public Publisher update(Publisher publisher) throws SQLException {
+    public Publisher update(Publisher publisher) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             Publisher publisherUpdate;
             try {
@@ -113,12 +114,12 @@ public class JDBCPublisherRepository implements PublisherRepository {
             }
             return publisherUpdate;
         } catch (SQLException ex) {
-            throw new SQLException("Something was wrong with the connection", ex);
+            throw new RepositoryException("Something was wrong with the connection");
         }
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException {
+    public boolean deleteById(int id) throws RepositoryException, SQLException {
         try (Connection conn = dataSource.getConnection()) {
             boolean result;
             try {
@@ -129,7 +130,7 @@ public class JDBCPublisherRepository implements PublisherRepository {
                 conn.commit();
             } catch (SQLException ex) {
                 conn.rollback();
-                throw new SQLException("Something was wrong with the deleteById operation", ex);
+                throw new RepositoryException("Something was wrong with the deleteById operation");
             } finally {
                 conn.setAutoCommit(true);
             }

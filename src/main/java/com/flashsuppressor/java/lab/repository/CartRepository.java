@@ -1,20 +1,20 @@
 package com.flashsuppressor.java.lab.repository;
 
 import com.flashsuppressor.java.lab.entity.Cart;
-import org.springframework.stereotype.Repository;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public interface CartRepository {
 
-    Cart findById(int id) throws SQLException;
+    Cart findById(int id) throws RepositoryException;
 
-    List<Cart> findAll() throws SQLException;
+    List<Cart> findAll() throws RepositoryException;
 
-    void create(Cart cart) throws SQLException;
+    void create(Cart cart) throws RepositoryException;
 
-    Cart update(Cart cart) throws SQLException;
+    Cart update(Cart cart) throws RepositoryException;
 
-    boolean deleteById(int id) throws SQLException;
+    boolean deleteById(int id) throws RepositoryException, SQLException;
 }

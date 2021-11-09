@@ -1,9 +1,12 @@
 package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 
 import com.flashsuppressor.java.lab.entity.Author;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.AuthorRepository;
 import com.flashsuppressor.java.lab.repository.BaseRepositoryTest;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,21 +15,19 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class HibernateAuthorRepositoryTest extends BaseRepositoryTest {
-    AuthorRepository authorRepository;
-    private final List<Author> expectedAuthors;
 
-    public HibernateAuthorRepositoryTest() {
-        super();
-        this.authorRepository = new HibernateAuthorRepository(getSessionFactory().openSession());
-        expectedAuthors = new ArrayList<>() {{
-            add(new Author(1, "Bred Dee"));
-            add(new Author(2, "John Serb"));
-            add(new Author(3, "Alex Green"));
-        }};
-    }
+    @Qualifier("hibernateAuthorRepository")
+    @Autowired
+    AuthorRepository authorRepository;
+
+    private final List<Author> expectedAuthors = new ArrayList<>() {{
+        add(new Author(1, "Bred Dee"));
+        add(new Author(2, "John Serb"));
+        add(new Author(3, "Alex Green"));
+    }};
 
     @Test
-    public void findAllTest() {
+    public void findAllTest() throws RepositoryException {
         List<Author> actualAuthors = authorRepository.findAll();
         assertEquals(expectedAuthors.size(), actualAuthors.size());
 
@@ -36,15 +37,15 @@ public class HibernateAuthorRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void findByIdTest() throws SQLException {
-        Author expectedAuthor = expectedAuthors.get(1);
+    public void findByIdTest() throws RepositoryException {
+        Author expectedAuthor = expectedAuthors.get(0);
         Author actualAuthor = authorRepository.findById(1);
 
         assertAuthorEquals(expectedAuthor, actualAuthor);
     }
 
     @Test
-    public void createTest() throws SQLException {
+    public void createTest() throws RepositoryException {
         Author expectedAuthor = new Author(4, "Roi Bard");
         authorRepository.create(expectedAuthor);
 
@@ -52,7 +53,7 @@ public class HibernateAuthorRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void createAllTest() throws SQLException {
+    public void createAllTest() throws RepositoryException {
         List<Author> expectedList = new ArrayList<>() {{
             add(new Author(4, "Alexandrod"));
             add(new Author(5, "Bred Eqwex"));
@@ -69,15 +70,21 @@ public class HibernateAuthorRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void updateTest() throws SQLException {
+    public void updateTest() throws RepositoryException{
         Author expectedUser = new Author(3, "Max Ew");
-        Author actualAuthor = authorRepository.update(expectedUser);
+        Author actualAuthor = null;
+        try {
+            actualAuthor = authorRepository.update(expectedUser);
+        } catch (RepositoryException | SQLException ex) {
+            ex.printStackTrace();
+        }
 
+        assert actualAuthor != null;
         assertAuthorEquals(expectedUser, actualAuthor);
     }
 
     @Test
-    public void deleteByIdTest() throws SQLException {
+    public void deleteByIdTest() throws RepositoryException {
         int authorId = 1;
 
         assertTrue(authorRepository.deleteById(authorId));

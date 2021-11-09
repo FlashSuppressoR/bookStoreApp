@@ -1,9 +1,12 @@
 package com.flashsuppressor.java.lab.repository.impl.JDBC;
 
 import com.flashsuppressor.java.lab.entity.Genre;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.BaseRepositoryTest;
 import com.flashsuppressor.java.lab.repository.GenreRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,18 +16,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JDBCGenreRepositoryTest extends BaseRepositoryTest {
-    private final GenreRepository genreRepository;
-    private final List<Genre> expectedGenres;
 
-    public JDBCGenreRepositoryTest() {
-        super();
-        genreRepository = new JDBCGenreRepository(getConnectionPool());
-        expectedGenres = new ArrayList<>() {{
-            add(new Genre(1, "Fantasy"));
-            add(new Genre(2, "Horror"));
-            add(new Genre(3, "Humor"));
-        }};
-    }
+    @Qualifier("JDBCGenreRepository")
+    @Autowired
+    private GenreRepository genreRepository;
+    private final List<Genre>    expectedGenres = new ArrayList<>() {{
+        add(new Genre(1, "Fantasy"));
+        add(new Genre(2, "Horror"));
+        add(new Genre(3, "Humor"));
+    }};
 
     @Test
     public void findAllTest()  {
@@ -36,7 +36,7 @@ public class JDBCGenreRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void createTest() throws SQLException {
+    public void createTest() throws RepositoryException {
         Genre expectedGenre = new Genre(4, "Love story");
         genreRepository.create(expectedGenre);
 
@@ -44,7 +44,7 @@ public class JDBCGenreRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void createAllTest() {
+    public void createAllTest() throws RepositoryException {
         List<Genre> expectedList = new ArrayList<>() {{
             add(new Genre(4, "Ballad"));
             add(new Genre(5, "Thriller"));
@@ -61,10 +61,14 @@ public class JDBCGenreRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void deleteByIdTest() throws SQLException {
+    public void deleteByIdTest() throws RepositoryException{
         int genreId = 1;
 
-        assertTrue(genreRepository.deleteById(genreId));
+        try {
+            assertTrue(genreRepository.deleteById(genreId));
+        } catch (RepositoryException | SQLException ex) {
+           ex.printStackTrace();
+        }
     }
 
     private void assertGenreEquals(Genre expectedGenre, Genre actualGenre) {

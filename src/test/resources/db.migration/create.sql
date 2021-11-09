@@ -1,6 +1,5 @@
+drop schema if exists book_store cascade;
 CREATE SCHEMA IF NOT EXISTS BOOK_STORE;
-
-COMMIT;
 
 CREATE TABLE IF NOT EXISTS book_store.publisher
 (

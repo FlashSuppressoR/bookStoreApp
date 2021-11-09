@@ -1,15 +1,19 @@
 package com.flashsuppressor.java.lab.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
+@Data
 @Table(name = "purchase", schema = "book_store")
 public class Purchase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
     @ManyToOne

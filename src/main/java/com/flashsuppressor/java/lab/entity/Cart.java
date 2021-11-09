@@ -1,14 +1,18 @@
 package com.flashsuppressor.java.lab.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Data
 @Table(name = "cart", schema = "book_store")
 public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
     @OneToOne(cascade = CascadeType.ALL)

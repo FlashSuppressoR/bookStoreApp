@@ -1,46 +1,49 @@
 package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 
 import com.flashsuppressor.java.lab.entity.Book;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.BookRepository;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Repository
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = RepositoryException.class)
 public class HibernateBookRepository implements BookRepository {
-    private final Session session;
+    private final SessionFactory sessionFactory;
     private static final String FIND_BOOKS_QUERY = "select b from Book b ";
 
     @Autowired
-    public HibernateBookRepository(Session session) {
-        this.session = session;
+    public HibernateBookRepository(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public Book findById(Long id) throws SQLException {
-
+    public Book findById(Long id) throws RepositoryException {
+        Session session = sessionFactory.getCurrentSession();
         return session.find(Book.class, id);
     }
 
     @Override
     public List<Book> findAll() {
-
+        Session session = sessionFactory.getCurrentSession();
         return session.createQuery(FIND_BOOKS_QUERY, Book.class).list();
     }
 
     @Override
     public void create(Book book) {
+        Session session = sessionFactory.getCurrentSession();
         session.save(book);
     }
 
     @Override
     public void createAll(List<Book> books) {
+        Session session = sessionFactory.getCurrentSession();
         for (Book book : books) {
             session.save(book);
         }
@@ -48,6 +51,7 @@ public class HibernateBookRepository implements BookRepository {
 
     @Override
     public Book update(Book book) {
+        Session session = sessionFactory.getCurrentSession();
         Book updatedBook;
         session.beginTransaction();
         session.update(book);
@@ -58,7 +62,8 @@ public class HibernateBookRepository implements BookRepository {
     }
 
     @Override
-    public boolean deleteById(Long id) throws SQLException {
+    public boolean deleteById(Long id) throws RepositoryException {
+        Session session = sessionFactory.getCurrentSession();
         boolean result;
         session.beginTransaction();
         Book book = session.find(Book.class, id);

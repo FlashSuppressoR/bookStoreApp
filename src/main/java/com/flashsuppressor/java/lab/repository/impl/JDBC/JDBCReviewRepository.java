@@ -2,6 +2,7 @@ package com.flashsuppressor.java.lab.repository.impl.JDBC;
 
 import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.entity.Review;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -57,7 +58,7 @@ public class JDBCReviewRepository implements ReviewRepository {
     }
 
     @Override
-    public void create(Review review) throws SQLException {
+    public void create(Review review) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
             try {
@@ -69,7 +70,7 @@ public class JDBCReviewRepository implements ReviewRepository {
                 conn.setAutoCommit(true);
             }
         } catch (SQLException ex) {
-            throw new SQLException("Something was wrong with the connection", ex);
+            throw new RepositoryException("Something was wrong with the connection");
         }
     }
 
@@ -94,7 +95,7 @@ public class JDBCReviewRepository implements ReviewRepository {
     }
 
     @Override
-    public Review update(Review review) throws SQLException {
+    public Review update(Review review) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             Review reviewUpdate;
             try {
@@ -114,12 +115,12 @@ public class JDBCReviewRepository implements ReviewRepository {
             }
             return reviewUpdate;
         } catch (SQLException ex) {
-            throw new SQLException("Something was wrong with the connection", ex);
+            throw new RepositoryException("Something was wrong with the connection");
         }
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException {
+    public boolean deleteById(int id) throws RepositoryException, SQLException {
         try (Connection conn = dataSource.getConnection()) {
             boolean result;
             try {
@@ -130,7 +131,7 @@ public class JDBCReviewRepository implements ReviewRepository {
                 conn.commit();
             } catch (SQLException ex) {
                 conn.rollback();
-                throw new SQLException("Something was wrong with the deleteById operation", ex);
+                throw new RepositoryException("Something was wrong with the deleteById operation");
             } finally {
                 conn.setAutoCommit(true);
             }

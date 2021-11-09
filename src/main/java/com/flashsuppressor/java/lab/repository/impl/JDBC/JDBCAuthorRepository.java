@@ -1,6 +1,7 @@
 package com.flashsuppressor.java.lab.repository.impl.JDBC;
 
 import com.flashsuppressor.java.lab.entity.Author;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -31,11 +32,11 @@ public class JDBCAuthorRepository implements AuthorRepository {
     }
 
     @Override
-    public Author findById(int id) throws SQLException {
+    public Author findById(int id) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             return find(conn, id);
         } catch (SQLException ex) {
-            throw new SQLException("Can't find Author", ex);
+            throw new RepositoryException("Can't find Author");
         }
     }
 
@@ -56,7 +57,7 @@ public class JDBCAuthorRepository implements AuthorRepository {
     }
 
     @Override
-    public void create(Author author) throws SQLException {
+    public Author create(Author author) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
             try {
@@ -68,12 +69,13 @@ public class JDBCAuthorRepository implements AuthorRepository {
                 conn.setAutoCommit(true);
             }
         } catch (SQLException ex) {
-            throw new SQLException("Something was wrong with the connection", ex);
+            throw new RepositoryException("Something was wrong with the connection");
         }
+        return author;
     }
 
     @Override
-    public void createAll(List<Author> authors) throws SQLException {
+    public void createAll(List<Author> authors) throws RepositoryException {
         try (Connection con = dataSource.getConnection()) {
             con.setAutoCommit(false);
             try {
@@ -88,12 +90,12 @@ public class JDBCAuthorRepository implements AuthorRepository {
                 con.setAutoCommit(true);
             }
         } catch (SQLException ex) {
-            throw new SQLException("Something was wrong with the createAll operation");
+            throw new RepositoryException("Something was wrong with the createAll operation");
         }
     }
 
     @Override
-    public Author update(Author author) throws SQLException {
+    public Author update(Author author) throws RepositoryException, SQLException {
         try (Connection conn = dataSource.getConnection()) {
             Author updatedAuthor;
             try {
@@ -105,7 +107,7 @@ public class JDBCAuthorRepository implements AuthorRepository {
                 conn.commit();
             } catch (SQLException ex) {
                 conn.rollback();
-                throw new SQLException("Can't update Author", ex);
+                throw new RepositoryException("Can't update Author");
             } finally {
                 conn.setAutoCommit(true);
             }
@@ -114,13 +116,13 @@ public class JDBCAuthorRepository implements AuthorRepository {
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException {
+    public boolean deleteById(int id) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             PreparedStatement preparedStatement = conn.prepareStatement(DELETE_AUTHOR_QUERY);
             preparedStatement.setInt(1, id);
             return preparedStatement.executeUpdate() == 1;
         } catch (SQLException ex) {
-            throw new SQLException("Can't delete Author", ex);
+            throw new RepositoryException("Can't delete Author");
         }
     }
 

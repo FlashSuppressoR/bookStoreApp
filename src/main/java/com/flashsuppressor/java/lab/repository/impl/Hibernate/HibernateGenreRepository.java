@@ -1,49 +1,54 @@
 package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 
 import com.flashsuppressor.java.lab.entity.Genre;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.GenreRepository;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = RepositoryException.class)
 public class HibernateGenreRepository implements GenreRepository {
-    private final Session session;
+    private final SessionFactory sessionFactory;
     private static final String FIND_ALL_GENRE_QUERY = "select g from Genre g";
 
     @Autowired
-    public HibernateGenreRepository(Session session) {
-        this.session = session;
+    public HibernateGenreRepository(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     @Override
     public List<Genre> findAll() {
-
+        Session session = sessionFactory.getCurrentSession();
         return session.createQuery(FIND_ALL_GENRE_QUERY, Genre.class).list();
     }
 
     public Genre findById(Long id) {
+        Session session = sessionFactory.getCurrentSession();
         return session.find(Genre.class, id);
     }
 
     @Override
     public Genre findById(int id) {
-
+        Session session = sessionFactory.getCurrentSession();
         return session.find(Genre.class, id);
     }
 
     @Override
     public void create(Genre genre) {
+        Session session = sessionFactory.getCurrentSession();
         session.save(genre);
     }
 
     @Override
     public void createAll(List<Genre> genres) {
+        Session session = sessionFactory.getCurrentSession();
         for (Genre genre : genres) {
             session.save(genre);
         }
@@ -51,6 +56,7 @@ public class HibernateGenreRepository implements GenreRepository {
 
     @Override
     public Genre update(Genre genre) {
+        Session session = sessionFactory.getCurrentSession();
         Genre updatedGenre;
         session.beginTransaction();
         session.update(genre);
@@ -62,6 +68,7 @@ public class HibernateGenreRepository implements GenreRepository {
 
     @Override
     public boolean deleteById(int id) {
+        Session session = sessionFactory.getCurrentSession();
         boolean result;
         session.beginTransaction();
         Genre genre = session.find(Genre.class, id);

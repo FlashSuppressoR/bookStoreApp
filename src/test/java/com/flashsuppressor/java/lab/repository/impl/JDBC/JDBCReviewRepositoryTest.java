@@ -1,9 +1,12 @@
 package com.flashsuppressor.java.lab.repository.impl.JDBC;
 
 import com.flashsuppressor.java.lab.entity.*;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.BaseRepositoryTest;
 import com.flashsuppressor.java.lab.repository.ReviewRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,24 +16,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JDBCReviewRepositoryTest extends BaseRepositoryTest {
-    private final ReviewRepository reviewRepository;
-    private final List<Review> expectedReviews;
+
+    @Qualifier("JDBCReviewRepository")
+    @Autowired
+    private ReviewRepository reviewRepository;
+    private final List<Review> expectedReviews = new ArrayList<>() {{
+        add(new Review(1, 5, "Perfect book!", firstIdBook));
+        add(new Review(2, 3, "So-so", secondIdBook));
+        add(new Review(3, 4, "So cool", thirdIdBook));
+    }};
+
     private final Book firstIdBook = (new Book(1L, "Little Bee", 3.22,
             new Publisher(1, "Big Daddy"), new Genre(1, "Fantasy"), 0));
     private final Book secondIdBook = (new Book(2L, "Big system Black Sun", 2.33,
             new Publisher(2, "Minsk prod"), new Genre(2, "Horror"), 0));
     private final Book thirdIdBook = (new Book(3L, "Alex Green", 13.22,
             new Publisher(3, "New Town"), new Genre(3, "Humor"), 0));
-
-    public JDBCReviewRepositoryTest() {
-        super();
-        reviewRepository = new JDBCReviewRepository(getConnectionPool());
-        expectedReviews = new ArrayList<>() {{
-            add(new Review(1, 5, "Perfect book!", firstIdBook));
-            add(new Review(2, 3, "So-so", secondIdBook));
-            add(new Review(3, 4, "So cool", thirdIdBook));
-        }};
-    }
 
     @Test
     public void findAllTest() {
@@ -42,7 +43,7 @@ public class JDBCReviewRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void createTest() throws SQLException {
+    public void createTest() throws RepositoryException {
         Review expectedReview = new Review( 4 , 5, "cool", thirdIdBook);
         reviewRepository.create(expectedReview);
 
@@ -50,7 +51,7 @@ public class JDBCReviewRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void createAllTest() {
+    public void createAllTest() throws RepositoryException{
         List<Review> expectedList = new ArrayList<>() {{
             add(new Review(1, 5, "Perfecto!", firstIdBook));
             add(new Review(2, 3, "pfff", firstIdBook));
@@ -67,10 +68,14 @@ public class JDBCReviewRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void deleteByIdTest() throws SQLException {
+    public void deleteByIdTest() throws RepositoryException {
         int reviewId = 1;
 
-        assertTrue(reviewRepository.deleteById(reviewId));
+        try {
+            assertTrue(reviewRepository.deleteById(reviewId));
+        } catch (RepositoryException | SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void assertReviewEquals(Review expectedReview, Review actualReview) {

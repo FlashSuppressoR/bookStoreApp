@@ -1,21 +1,29 @@
 package com.flashsuppressor.java.lab.entity;
 
+import lombok.*;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "author", schema = "book_store")
 public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
+    @Column(name = "name")
     private String name;
 
     @ManyToMany(mappedBy = "authors")
     private Set<Book> books = new HashSet<>();
+
 
     public Author() {
     }

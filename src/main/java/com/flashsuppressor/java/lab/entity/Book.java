@@ -1,23 +1,30 @@
 package com.flashsuppressor.java.lab.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Data
 @Table(name = "book", schema = "book_store")
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "price")
     private double price;
 
     @ManyToOne
     @JoinColumn(name = "publisher_id")
     private Publisher publisher;
 
+    @Column(name = "amount")
     private int amount;
 
     @ManyToOne

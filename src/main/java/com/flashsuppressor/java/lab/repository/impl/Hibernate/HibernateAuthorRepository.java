@@ -1,52 +1,58 @@
 package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 
 import com.flashsuppressor.java.lab.entity.Author;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.AuthorRepository;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = RepositoryException.class)
 public class HibernateAuthorRepository implements AuthorRepository {
-    private final Session session;
+    private final SessionFactory sessionFactory;
     private static final String FIND_AUTHORS_QUERY = "select a from  Author a";
 
     @Autowired
-    public HibernateAuthorRepository(Session session) {
-        this.session = session;
+    public HibernateAuthorRepository(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public Author findById(int id) {
-
+    public Author findById(int id) throws RepositoryException{
+        Session session = sessionFactory.getCurrentSession();
         return session.find(Author.class, id);
     }
 
     @Override
-    public List<Author> findAll() {
-
+    public List<Author> findAll() throws RepositoryException{
+        Session session = sessionFactory.getCurrentSession();
         return session.createQuery(FIND_AUTHORS_QUERY, Author.class).list();
     }
 
     @Override
-    public void create(Author author) {
+    public Author create(Author author) throws RepositoryException{
+        Session session = sessionFactory.getCurrentSession();
         session.save(author);
+        return author;
     }
 
     @Override
-    public void createAll(List<Author> authors) {
+    public void createAll(List<Author> authors) throws RepositoryException{
+        Session session = sessionFactory.getCurrentSession();
         for (Author author : authors) {
             session.save(author);
         }
     }
 
     @Override
-    public Author update(Author author) {
+    public Author update(Author author) throws RepositoryException{
+        Session session = sessionFactory.getCurrentSession();
         Author updatedAuthor;
         session.beginTransaction();
         session.update(author);
@@ -57,7 +63,8 @@ public class HibernateAuthorRepository implements AuthorRepository {
     }
 
     @Override
-    public boolean deleteById(int id) {
+    public boolean deleteById(int id) throws RepositoryException{
+        Session session = sessionFactory.getCurrentSession();
         boolean result = false;
         session.beginTransaction();
         Author author = session.find(Author.class, id);

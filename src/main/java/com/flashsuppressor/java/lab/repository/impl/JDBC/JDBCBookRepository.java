@@ -3,6 +3,7 @@ package com.flashsuppressor.java.lab.repository.impl.JDBC;
 import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.entity.Genre;
 import com.flashsuppressor.java.lab.entity.Publisher;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -23,7 +24,7 @@ public class JDBCBookRepository implements BookRepository {
     private static final String PUBLISHER_ID_COLUMN = "publisher_id";
     private static final String GENRE_ID_COLUMN = "genre_id";
     private static final String FIND_BOOK_BY_ID_QUERY = "SELECT * FROM book_store.book where id = ?";
-    private static final String FIND_ALL_QUERY = "SELECT * FROM book";
+    private static final String FIND_ALL_QUERY = "SELECT * FROM book_store.book";
     private static final String CREATE_BOOK_QUERY =
             "INSERT INTO book_store.book(name, price,publisher_id, genre_id) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_BOOK_QUERY =
@@ -60,16 +61,16 @@ public class JDBCBookRepository implements BookRepository {
     }
 
     @Override
-    public Book findById(Long id) throws SQLException {
+    public Book findById(Long id) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             return find(conn, id);
         } catch (SQLException ex) {
-            throw new SQLException("Can't find Book", ex);
+            throw new RepositoryException("Can't find Book");
         }
     }
 
     @Override
-    public void create(Book book) throws SQLException {
+    public void create(Book book) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
             try {
@@ -82,7 +83,7 @@ public class JDBCBookRepository implements BookRepository {
                 conn.setAutoCommit(true);
             }
         } catch (SQLException ex) {
-            throw new SQLException("Something was wrong with the connection", ex);
+            throw new RepositoryException("Something was wrong with the connection");
         }
     }
 
@@ -107,7 +108,7 @@ public class JDBCBookRepository implements BookRepository {
     }
 
     @Override
-    public Book update(Book book) throws SQLException {
+    public Book update(Book book) throws RepositoryException{
         try (Connection conn = dataSource.getConnection()) {
             Book updatedBook;
             try {
@@ -130,18 +131,18 @@ public class JDBCBookRepository implements BookRepository {
             }
             return updatedBook;
         } catch (SQLException ex) {
-            throw new SQLException("Can't update Book", ex);
+            throw new RepositoryException("Can't update Book");
         }
     }
 
     @Override
-    public boolean deleteById(Long id) throws SQLException {
+    public boolean deleteById(Long id) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             PreparedStatement preparedStatement = conn.prepareStatement(DELETE_BOOK_QUERY);
             preparedStatement.setLong(1, id);
             return preparedStatement.executeUpdate() == 1;
         } catch (SQLException ex) {
-            throw new SQLException("Can't delete Book", ex);
+            throw new RepositoryException("Can't delete Book");
         }
     }
 

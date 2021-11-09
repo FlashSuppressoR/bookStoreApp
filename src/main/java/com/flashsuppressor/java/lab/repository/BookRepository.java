@@ -1,22 +1,21 @@
 package com.flashsuppressor.java.lab.repository;
 
 import com.flashsuppressor.java.lab.entity.Book;
-import org.springframework.stereotype.Repository;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface BookRepository {
 
-    Book findById(Long id) throws SQLException;
+    Book findById(Long id) throws RepositoryException;
 
-    List<Book> findAll();
+    List<Book> findAll() throws RepositoryException;
 
-    void create(Book book) throws SQLException;
+    void create(Book book) throws RepositoryException;
 
-    void createAll(List<Book> books);
+    void createAll(List<Book> books) throws RepositoryException;
 
-    Book update(Book book) throws SQLException;
+    Book update(Book book) throws RepositoryException;
 
-    boolean deleteById(Long id) throws SQLException;
+    boolean deleteById(Long id) throws RepositoryException;
 }

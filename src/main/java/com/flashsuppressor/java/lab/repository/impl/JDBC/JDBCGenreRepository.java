@@ -1,6 +1,7 @@
 package com.flashsuppressor.java.lab.repository.impl.JDBC;
 
 import com.flashsuppressor.java.lab.entity.Genre;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -50,16 +51,16 @@ public class JDBCGenreRepository implements GenreRepository {
     }
 
     @Override
-    public Genre findById(int id) throws SQLException {
+    public Genre findById(int id) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             return find(conn, id);
         } catch (SQLException ex) {
-            throw new SQLException("Can't find Genre", ex);
+            throw new RepositoryException("Can't find Genre");
         }
     }
 
     @Override
-    public void create(Genre genre) throws SQLException {
+    public void create(Genre genre) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
             try {
@@ -71,7 +72,7 @@ public class JDBCGenreRepository implements GenreRepository {
                 conn.setAutoCommit(true);
             }
         } catch (SQLException ex) {
-            throw new SQLException("Something was wrong with the connection", ex);
+            throw new RepositoryException("Something was wrong with the connection");
         }
     }
 
@@ -96,7 +97,7 @@ public class JDBCGenreRepository implements GenreRepository {
     }
 
     @Override
-    public Genre update(Genre genre) throws SQLException {
+    public Genre update(Genre genre) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             Genre genreUpdate;
             try {
@@ -114,12 +115,12 @@ public class JDBCGenreRepository implements GenreRepository {
             }
             return genreUpdate;
         } catch (SQLException ex) {
-            throw new SQLException("Something was wrong with the connection", ex);
+            throw new RepositoryException("Something was wrong with the connection");
         }
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException {
+    public boolean deleteById(int id) throws RepositoryException, SQLException {
         try (Connection conn = dataSource.getConnection()) {
             boolean result;
             try {
@@ -130,7 +131,7 @@ public class JDBCGenreRepository implements GenreRepository {
                 conn.commit();
             } catch (SQLException ex) {
                 conn.rollback();
-                throw new SQLException("Something was wrong with the deleteById operation", ex);
+                throw new RepositoryException("Something was wrong with the deleteById operation");
             } finally {
                 conn.setAutoCommit(true);
             }

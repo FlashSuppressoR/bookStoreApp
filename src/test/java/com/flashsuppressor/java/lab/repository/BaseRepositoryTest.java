@@ -1,39 +1,31 @@
 package com.flashsuppressor.java.lab.repository;
 
-import com.flashsuppressor.java.lab.service.FlywayService;
-import com.flashsuppressor.java.lab.util.JdbcUtil;
-import org.h2.jdbcx.JdbcConnectionPool;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = TestRepositoryConfiguration.class)
+@ActiveProfiles("test")
+@TestPropertySource(locations = "classpath:application-test.properties")
 public abstract class BaseRepositoryTest {
-    private final FlywayService flywayService;
-    private final JdbcConnectionPool connectionPool;
-    private final SessionFactory sessionFactory;
 
-    public BaseRepositoryTest() {
-        flywayService = new FlywayService(true);
-        connectionPool = JdbcUtil.INSTANCE.getJdbcConnectionPool();
-        sessionFactory = new Configuration().configure().buildSessionFactory();
-    }
+    @Autowired
+    private Flyway flyway;
 
     @BeforeEach
     public void initDB() {
-        flywayService.migrate();
+        flyway.migrate();
     }
 
     @AfterEach
     public void cleanDB() {
-        flywayService.clean();
-    }
-
-    public JdbcConnectionPool getConnectionPool() {
-        return connectionPool;
-    }
-
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
+        flyway.clean();
     }
 }

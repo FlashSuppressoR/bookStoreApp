@@ -2,9 +2,12 @@ package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 
 import com.flashsuppressor.java.lab.entity.Customer;
 import com.flashsuppressor.java.lab.entity.Purchase;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.BaseRepositoryTest;
 import com.flashsuppressor.java.lab.repository.PurchaseRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -15,24 +18,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HibernatePurchaseRepositoryTest extends BaseRepositoryTest {
-    private final PurchaseRepository purchaseRepository;
-    private final List<Purchase> expectedPurchases;
 
-    public HibernatePurchaseRepositoryTest() {
-        super();
-        this.purchaseRepository = new HibernatePurchaseRepository(getSessionFactory().openSession());
-        expectedPurchases = new ArrayList<>() {{
-            add(new Purchase(1, new Customer(2, "Alex", "Alex@com", "alex"),
-                    Timestamp.valueOf("2007-09-10 00:00:00.0")));
-            add(new Purchase(2, new Customer(3, "Rus", "Rus@com", "rus"),
-                    Timestamp.valueOf("2007-09-10 00:00:00.0")));
-            add(new Purchase(3, new Customer(1, "Max", "Max@com", "max"),
-                    Timestamp.valueOf("2007-09-10 00:00:00.0")));
-        }};
-    }
+    @Qualifier("hibernatePurchaseRepository")
+    @Autowired
+    private PurchaseRepository purchaseRepository;
+    private final List<Purchase> expectedPurchases = new ArrayList<>() {{
+        add(new Purchase(1, new Customer(2, "Alex", "Alex@com", "alex"),
+                Timestamp.valueOf("2007-09-10 00:00:00.0")));
+        add(new Purchase(2, new Customer(3, "Rus", "Rus@com", "rus"),
+                Timestamp.valueOf("2007-09-10 00:00:00.0")));
+        add(new Purchase(3, new Customer(1, "Max", "Max@com", "max"),
+                Timestamp.valueOf("2007-09-10 00:00:00.0")));
+    }};
 
     @Test
-    public void findAll() {
+    public void findAll() throws RepositoryException {
         List<Purchase> actualPurchases = purchaseRepository.findAll();
 
         for (int i = 0; i < expectedPurchases.size(); i++) {
@@ -41,7 +41,7 @@ public class HibernatePurchaseRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void findById() throws SQLException {
+    public void findById() throws RepositoryException {
         Purchase expected = expectedPurchases.get(0);
         Purchase actual = purchaseRepository.findById(expected.getId());
 
@@ -49,7 +49,7 @@ public class HibernatePurchaseRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void createTest() throws SQLException {
+    public void createTest() throws RepositoryException {
         Purchase expectedPurchase = new Purchase(4, new Customer(4, "Alex3", "Alexw3@com", "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0"));
         purchaseRepository.create(expectedPurchase);
 
@@ -57,7 +57,7 @@ public class HibernatePurchaseRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void createAllTest() throws SQLException {
+    public void createAllTest() throws RepositoryException {
         List<Purchase> expectedList = new ArrayList<>() {{
             add(new Purchase(4, new Customer(4, "Alex3", "Alexw3@com", "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
             add(new Purchase(5, new Customer(5, "Vell", "Vell@com", "vell"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
@@ -74,10 +74,14 @@ public class HibernatePurchaseRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void deleteByIdTest() throws SQLException {
+    public void deleteByIdTest() throws RepositoryException{
         int purchaseId = 1;
 
-        assertTrue(purchaseRepository.deleteById(purchaseId));
+        try {
+            assertTrue(purchaseRepository.deleteById(purchaseId));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void assertPurchaseEquals(Purchase expectedPurchase, Purchase actualPurchase) {

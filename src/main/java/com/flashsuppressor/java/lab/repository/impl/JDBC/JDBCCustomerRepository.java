@@ -1,6 +1,7 @@
 package com.flashsuppressor.java.lab.repository.impl.JDBC;
 
 import com.flashsuppressor.java.lab.entity.Customer;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -36,18 +37,18 @@ public class JDBCCustomerRepository implements CustomerRepository {
     }
 
     @Override
-    public Customer findById(int id) throws SQLException {
+    public Customer findById(int id) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             return find(conn, id);
         } catch (SQLException ex) {
-            throw new SQLException("Can't find Customer", ex);
+            throw new RepositoryException("Can't find Customer");
         }
     }
 
     @Override
-    public Customer findByEmail(String email) throws SQLException {
+    public Customer findByEmail(String email) throws RepositoryException {
         if (email == null) {
-            throw new SQLException("Customer field 'email' must not be null!");
+            throw new RepositoryException("Customer field 'email' must not be null!");
         }
         try (Connection con = dataSource.getConnection()) {
             PreparedStatement preparedStatement = con.prepareStatement(FIND_CUSTOMER_BY_EMAIL_QUERY);
@@ -59,12 +60,12 @@ public class JDBCCustomerRepository implements CustomerRepository {
             }
             return customer;
         } catch (SQLException exception) {
-            throw new SQLException("Something was wrong in the repository");
+            throw new RepositoryException("Something was wrong in the repository");
         }
     }
 
     @Override
-    public List<Customer> findAll() throws SQLException {
+    public List<Customer> findAll() throws RepositoryException {
         List<Customer> customers = new ArrayList<>();
         try (Connection con = dataSource.getConnection();
              Statement stm = con.createStatement();
@@ -74,13 +75,13 @@ public class JDBCCustomerRepository implements CustomerRepository {
                 customers.add(customer);
             }
         } catch (SQLException ex) {
-            throw new SQLException("Something was wrong in the repository");
+            throw new RepositoryException("Something was wrong in the repository");
         }
         return customers;
     }
 
     @Override
-    public void create(Customer customer) throws SQLException {
+    public void create(Customer customer) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
             try {
@@ -103,12 +104,12 @@ public class JDBCCustomerRepository implements CustomerRepository {
                 conn.setAutoCommit(true);
             }
         } catch (SQLException ex) {
-            throw new SQLException("Something was wrong with the connection", ex);
+            throw new RepositoryException("Something was wrong with the connection");
         }
     }
 
     @Override
-    public Customer update(Customer customer) throws SQLException {
+    public Customer update(Customer customer) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             Customer updatedCustomer;
             conn.setAutoCommit(false);
@@ -130,12 +131,12 @@ public class JDBCCustomerRepository implements CustomerRepository {
             }
             return updatedCustomer;
         } catch (SQLException ex) {
-            throw new SQLException("Something was wrong with the connection", ex);
+            throw new RepositoryException("Something was wrong with the connection");
         }
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException {
+    public boolean deleteById(int id) throws RepositoryException, SQLException {
         try (Connection conn = dataSource.getConnection()) {
             boolean result;
             try {
@@ -146,7 +147,7 @@ public class JDBCCustomerRepository implements CustomerRepository {
                 conn.commit();
             } catch (SQLException ex) {
                 conn.rollback();
-                throw new SQLException("Something was wrong with the deleteById operation", ex);
+                throw new RepositoryException("Something was wrong with the deleteById operation");
             } finally {
                 conn.setAutoCommit(true);
             }

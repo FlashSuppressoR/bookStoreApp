@@ -1,37 +1,36 @@
 package com.flashsuppressor.java.lab;
 
-import com.flashsuppressor.java.lab.config.HibernateContextConfiguration;
-import com.flashsuppressor.java.lab.config.JdbcContextConfiguration;
+import com.flashsuppressor.java.lab.config.ApplicationContextConfiguration;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
+import com.flashsuppressor.java.lab.exception.ServiceException;
 import com.flashsuppressor.java.lab.repository.AuthorRepository;
-import com.flashsuppressor.java.lab.service.FlywayService;
+import com.flashsuppressor.java.lab.service.AuthorService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.sql.*;
-
 public class Runner {
-    private static AnnotationConfigApplicationContext ctx;
 
+    public static void main(String[] args) {
+        ApplicationContext ctx = new AnnotationConfigApplicationContext(ApplicationContextConfiguration.class);
+        System.out.println("==== HIBERNATE REPO ====");
+        try {
+            System.out.println(ctx.getBean("hibernateAuthorRepository", AuthorRepository.class).findById(1));
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        }
 
-    public static void main(String[] args) throws SQLException {
+        System.out.println("\n==== JDBC REPO ====");
+        try {
+            System.out.println(ctx.getBean("JDBCAuthorRepository", AuthorRepository.class).findById(1));
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        }
 
-        findAuthorHibernateConfig();
-//        findAuthorJdbcConfig();
-
-        AuthorRepository authorRepository = ctx.getBean(AuthorRepository.class);
-        FlywayService flywayService = ctx.getBean(FlywayService.class);
-        flywayService.migrate();
-
-        System.out.println(authorRepository.findById(1));
+        System.out.println("\n==== SERVICE ====");
+        try {
+            System.out.println(ctx.getBean(AuthorService.class).findById(1));
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
     }
-
-    public static void findAuthorHibernateConfig(){
-        ctx = new AnnotationConfigApplicationContext(HibernateContextConfiguration.class);
-
-    }
-
-    public static void findAuthorJdbcConfig(){
-        ctx = new AnnotationConfigApplicationContext(JdbcContextConfiguration.class);
-    }
-
 }

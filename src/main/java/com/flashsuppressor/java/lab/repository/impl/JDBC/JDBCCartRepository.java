@@ -2,6 +2,7 @@ package com.flashsuppressor.java.lab.repository.impl.JDBC;
 
 import com.flashsuppressor.java.lab.entity.Cart;
 import com.flashsuppressor.java.lab.entity.Customer;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -36,7 +37,7 @@ public class JDBCCartRepository implements CartRepository {
     }
 
     @Override
-    public List<Cart> findAll() throws SQLException {
+    public List<Cart> findAll() throws RepositoryException {
         List<Cart> carts = new ArrayList<>();
         try (Connection con = dataSource.getConnection();
              Statement stm = con.createStatement();
@@ -50,22 +51,22 @@ public class JDBCCartRepository implements CartRepository {
                 carts.add(cart);
             }
         } catch (SQLException ex) {
-            throw new SQLException("Something was wrong in the repository", ex);
+            throw new RepositoryException("Something was wrong in the repository");
         }
         return carts;
     }
 
     @Override
-    public Cart findById(int id) throws SQLException {
+    public Cart findById(int id) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             return find(conn, id);
         } catch (SQLException ex) {
-            throw new SQLException("Can't find Cart", ex);
+            throw new RepositoryException("Can't find Cart");
         }
     }
 
     @Override
-    public void create(Cart cart) throws SQLException {
+    public void create(Cart cart) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
             try {
@@ -88,12 +89,12 @@ public class JDBCCartRepository implements CartRepository {
                 conn.setAutoCommit(true);
             }
         } catch (SQLException ex) {
-            throw new SQLException("Something was wrong with the connection", ex);
+            throw new RepositoryException("Something was wrong with the connection");
         }
     }
 
     @Override
-    public Cart update(Cart cart) throws SQLException {
+    public Cart update(Cart cart) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             Cart updatedCart;
             try {
@@ -113,12 +114,12 @@ public class JDBCCartRepository implements CartRepository {
             }
             return updatedCart;
         } catch (SQLException ex) {
-            throw new SQLException("Can't update Cart", ex);
+            throw new RepositoryException("Can't update Cart");
         }
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException {
+    public boolean deleteById(int id) throws RepositoryException, SQLException {
         try (Connection conn = dataSource.getConnection()) {
             boolean result;
             try {
@@ -129,7 +130,7 @@ public class JDBCCartRepository implements CartRepository {
                 conn.commit();
             } catch (SQLException ex) {
                 conn.rollback();
-                throw new SQLException("Something was wrong with the deleteById operation", ex);
+                throw new RepositoryException("Something was wrong with the deleteById operation");
             } finally {
                 conn.setAutoCommit(true);
             }

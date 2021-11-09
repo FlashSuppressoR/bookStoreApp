@@ -1,9 +1,12 @@
 package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 
 import com.flashsuppressor.java.lab.entity.Genre;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.BaseRepositoryTest;
 import com.flashsuppressor.java.lab.repository.GenreRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,21 +16,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HibernateGenreRepositoryTest extends BaseRepositoryTest {
-    private final GenreRepository genreRepository;
-    private final List<Genre> expectedGenres;
 
-    public HibernateGenreRepositoryTest() {
-        super();
-        this.genreRepository = new HibernateGenreRepository(getSessionFactory().openSession());
-        expectedGenres = new ArrayList<>() {{
-            add(new Genre(1, "Fantasy"));
-            add(new Genre(2, "Horror"));
-            add(new Genre(3, "Humor"));
-        }};
-    }
+    @Qualifier("hibernateGenreRepository")
+    @Autowired
+    private GenreRepository genreRepository;
+    private final List<Genre> expectedGenres = new ArrayList<>() {{
+        add(new Genre(1, "Fantasy"));
+        add(new Genre(2, "Horror"));
+        add(new Genre(3, "Humor"));
+    }};
 
     @Test
-    public void findAll(){
+    public void findAll() throws RepositoryException {
         List<Genre> actualGenres = genreRepository.findAll();
 
         for (int i = 0; i < expectedGenres.size(); i++) {
@@ -36,7 +36,7 @@ public class HibernateGenreRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void findById() throws SQLException {
+    public void findById() throws RepositoryException {
         Genre expected = expectedGenres.get(0);
         Genre actual = genreRepository.findById(expected.getId());
 
@@ -44,7 +44,7 @@ public class HibernateGenreRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void createTest() throws SQLException {
+    public void createTest() throws RepositoryException {
         Genre expectedGenre = new Genre(4, "Love story");
         genreRepository.create(expectedGenre);
 
@@ -52,7 +52,7 @@ public class HibernateGenreRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void createAllTest() {
+    public void createAllTest() throws RepositoryException{
         List<Genre> expectedList = new ArrayList<>() {{
             add(new Genre(4, "Ballad"));
             add(new Genre(5, "Thriller"));
@@ -69,7 +69,7 @@ public class HibernateGenreRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void updateTest() throws SQLException {
+    public void updateTest() throws RepositoryException {
         Genre expectedGenre = new Genre(3, "Max Ew");
         Genre actualGenre = genreRepository.update(expectedGenre);
 
@@ -77,10 +77,14 @@ public class HibernateGenreRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void deleteByIdTest() throws SQLException {
+    public void deleteByIdTest() throws RepositoryException {
         int genreId = 1;
 
-        assertTrue(genreRepository.deleteById(genreId));
+        try {
+            assertTrue(genreRepository.deleteById(genreId));
+        } catch (RepositoryException | SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void assertGenreEquals(Genre expectedGenre, Genre actualGenre) {

@@ -1,18 +1,25 @@
 package com.flashsuppressor.java.lab.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Data
 @Table(name = "customer", schema = "book_store")
 public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "email")
     private String email;
+    @Column(name = "password")
     private String password;
 
     @OneToOne(mappedBy = "customer")

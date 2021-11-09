@@ -1,53 +1,56 @@
 package com.flashsuppressor.java.lab.repository.impl.Hibernate;
 
 import com.flashsuppressor.java.lab.entity.Customer;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.CustomerRepository;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Repository
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = RepositoryException.class)
 public class HibernateCustomerRepository implements CustomerRepository {
-    private final Session session;
+    private final SessionFactory sessionFactory;
     private static final String FIND_CUSTOMER_BY_EMAIL_QUERY = "select c from Customer c where Customer.email = ?1";
     private static final String FIND_ALL_CUSTOMERS_QUERY = "select c from Customer c";
 
     @Autowired
-    public HibernateCustomerRepository(Session session) {
-        this.session = session;
+    public HibernateCustomerRepository(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     @Override
     public Customer findByEmail(String email) {
-
+        Session session = sessionFactory.getCurrentSession();
         return session.createQuery(FIND_CUSTOMER_BY_EMAIL_QUERY, Customer.class)
                 .setParameter(1, email).uniqueResult();
     }
 
     @Override
     public List<Customer> findAll() {
-
+        Session session = sessionFactory.getCurrentSession();
        return session.createQuery(FIND_ALL_CUSTOMERS_QUERY, Customer.class).list();
     }
 
     @Override
-    public Customer findById(int id) throws SQLException {
-
+    public Customer findById(int id) throws RepositoryException {
+        Session session = sessionFactory.getCurrentSession();
         return session.find(Customer.class, id);
     }
 
     @Override
     public void create(Customer customer) {
-       session.save(customer);
+        Session session = sessionFactory.getCurrentSession();
+        session.save(customer);
     }
 
     public Customer update(Customer customer) {
+        Session session = sessionFactory.getCurrentSession();
         Customer updatedCustomer;
         session.beginTransaction();
         session.update(customer);
@@ -59,6 +62,7 @@ public class HibernateCustomerRepository implements CustomerRepository {
 
     @Override
     public boolean deleteById(int id) {
+        Session session = sessionFactory.getCurrentSession();
         boolean result = false;
         session.beginTransaction();
         Customer customer = session.find(Customer.class, id);

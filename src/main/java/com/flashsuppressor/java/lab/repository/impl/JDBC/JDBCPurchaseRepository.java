@@ -2,6 +2,7 @@ package com.flashsuppressor.java.lab.repository.impl.JDBC;
 
 import com.flashsuppressor.java.lab.entity.Customer;
 import com.flashsuppressor.java.lab.entity.Purchase;
+import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.PurchaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -55,16 +56,16 @@ public class JDBCPurchaseRepository implements PurchaseRepository {
     }
 
     @Override
-    public Purchase findById(int id) throws SQLException {
+    public Purchase findById(int id) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             return find(conn, id);
         } catch (SQLException ex) {
-            throw new SQLException("Can't find Purchase", ex);
+            throw new RepositoryException("Can't find Purchase");
         }
     }
 
     @Override
-    public void create(Purchase purchase) throws SQLException {
+    public void create(Purchase purchase) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
             try {
@@ -76,7 +77,7 @@ public class JDBCPurchaseRepository implements PurchaseRepository {
                 conn.setAutoCommit(true);
             }
         } catch (SQLException ex) {
-            throw new SQLException("Something was wrong with the connection", ex);
+            throw new RepositoryException("Something was wrong with the connection");
         }
     }
 
@@ -101,7 +102,7 @@ public class JDBCPurchaseRepository implements PurchaseRepository {
     }
 
     @Override
-    public Purchase update(Purchase purchase) throws SQLException {
+    public Purchase update(Purchase purchase) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             Purchase purchaseUpdate;
             try {
@@ -120,12 +121,12 @@ public class JDBCPurchaseRepository implements PurchaseRepository {
             }
             return purchaseUpdate;
         } catch (SQLException ex) {
-            throw new SQLException("Something was wrong with the connection", ex);
+            throw new RepositoryException("Something was wrong with the connection");
         }
     }
 
     @Override
-    public boolean deleteById(int id) throws SQLException {
+    public boolean deleteById(int id) throws RepositoryException, SQLException {
         try (Connection conn = dataSource.getConnection()) {
             boolean result;
             try {
@@ -136,7 +137,7 @@ public class JDBCPurchaseRepository implements PurchaseRepository {
                 conn.commit();
             } catch (SQLException ex) {
                 conn.rollback();
-                throw new SQLException("Something was wrong with the deleteById operation", ex);
+                throw new RepositoryException("Something was wrong with the deleteById operation");
             } finally {
                 conn.setAutoCommit(true);
             }
