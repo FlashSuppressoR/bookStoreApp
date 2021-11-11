@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    @Transactional
     public GenreDTO findById(int id) throws ServiceException {
         GenreDTO genreDTO = null;
         try{
@@ -43,6 +45,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    @Transactional
     public List<GenreDTO> findAll() throws ServiceException{
         List<GenreDTO> genreDTOs = new ArrayList<>();
         List<Genre> genres = repository.findAll();
@@ -53,6 +56,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    @Transactional
     public void create(Genre genre) throws ServiceException {
         try {
             repository.create(genre);
@@ -62,6 +66,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    @Transactional
     public void createAll(List<Genre> genres) throws ServiceException {
         try {
             for (Genre genre : genres){
@@ -73,6 +78,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    @Transactional
     public GenreDTO update(Genre genre) throws ServiceException {
         GenreDTO updatedGenreDTO = null;
         try {
@@ -87,6 +93,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    @Transactional
     public boolean deleteById(int id) throws ServiceException {
         boolean result;
         try {

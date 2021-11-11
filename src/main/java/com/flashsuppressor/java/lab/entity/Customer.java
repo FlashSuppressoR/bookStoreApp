@@ -1,5 +1,6 @@
 package com.flashsuppressor.java.lab.entity;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.util.Set;
 @Entity
 @Data
 @Table(name = "customer", schema = "book_store")
+@Builder
 public class Customer {
 
     @Id

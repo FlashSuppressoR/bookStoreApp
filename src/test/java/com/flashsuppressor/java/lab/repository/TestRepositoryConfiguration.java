@@ -4,19 +4,25 @@ import java.util.Properties;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.flywaydb.core.Flyway;
 import org.h2.jdbcx.JdbcConnectionPool;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
+import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
+
 @Configuration
-@ComponentScan("com.flashsuppressor.java.lab.repository")
-@PropertySource("classpath:/application-test.properties")
 @Profile("test")
+@ComponentScan("com.flashsuppressor.java.lab.repository")
+@TestPropertySource(locations = "classpath:/application-test.properties",
+        properties = "baeldung.testpropertysource.one=other-property-value")
 @EnableTransactionManagement
 public class TestRepositoryConfiguration {
 
@@ -58,6 +64,18 @@ public class TestRepositoryConfiguration {
     }
 
     @Bean
+    @DependsOn("flyway")
+    public DataSource dataSource() {
+        BasicDataSource dataSource = new BasicDataSource();
+        dataSource.setDriverClassName(driverClassName);
+        dataSource.setUrl(url);
+        dataSource.setUsername(login);
+        dataSource.setPassword(password);
+
+        return dataSource;
+    }
+
+    @Bean
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
@@ -65,18 +83,6 @@ public class TestRepositoryConfiguration {
         sessionFactory.setHibernateProperties(hibernateProperties());
 
         return sessionFactory;
-    }
-
-    @Bean
-    @DependsOn("flyway")
-    public DataSource dataSource() {
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(driverClassName);
-        dataSource.setUrl("jdbc:h2:mem:test;MODE=Mysql;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS BOOK_STORE;");
-        dataSource.setUsername(login);
-        dataSource.setPassword(password);
-
-        return dataSource;
     }
 
     @Bean
@@ -92,7 +98,18 @@ public class TestRepositoryConfiguration {
         hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
         hibernateProperties.setProperty("show_sql", "true");
         hibernateProperties.setProperty("format_sql", "true");
-
+//        "jdbc:h2:mem:test;MODE=Mysql;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS BOOK_STORE;"
         return hibernateProperties;
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STRICT)
+                .setFieldMatchingEnabled(true)
+                .setSkipNullEnabled(true)
+                .setFieldAccessLevel(PRIVATE);
+        return mapper;
     }
 }

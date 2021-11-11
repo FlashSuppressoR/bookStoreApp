@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
+    @Transactional
     public PurchaseDTO findById(int id) throws ServiceException {
         PurchaseDTO purchaseDTO = null;
         try{
@@ -42,6 +44,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
+    @Transactional
     public List<PurchaseDTO> findAll() throws ServiceException {
         List<PurchaseDTO> purchaseDTOs = new ArrayList<>();
         List<Purchase> purchases = repository.findAll();
@@ -52,6 +55,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
+    @Transactional
     public void create(Purchase purchase) throws ServiceException {
         try {
             repository.create(purchase);
@@ -61,6 +65,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
+    @Transactional
     public void createAll(List<Purchase> purchases) throws ServiceException {
         try {
             for (Purchase purchase : purchases){
@@ -72,6 +77,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
+    @Transactional
     public PurchaseDTO update(Purchase purchase) throws ServiceException {
         PurchaseDTO updatedPurchaseDTO = null;
         try {
@@ -86,6 +92,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
+    @Transactional
     public boolean deleteById(int id) throws ServiceException {
         boolean result;
         try {

@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional
     public CartDTO findById(int id) throws ServiceException {
         CartDTO cartDTO = null;
         try{
@@ -42,6 +44,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional
     public List<CartDTO> findAll() throws ServiceException{
         List<CartDTO> cartDTOs = new ArrayList<>();
         List<Cart> carts = null;
@@ -57,6 +60,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional
     public void create(Cart cart) throws ServiceException {
         try {
             repository.create(cart);
@@ -66,6 +70,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional
     public CartDTO update(Cart cart) throws ServiceException {
         CartDTO updatedCartDTO = null;
         try {
@@ -80,6 +85,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional
     public boolean deleteById(int id) throws ServiceException {
         boolean result;
         try {

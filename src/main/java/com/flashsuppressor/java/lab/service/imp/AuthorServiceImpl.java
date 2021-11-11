@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @Transactional
     public AuthorDTO findById(int id) throws ServiceException {
         AuthorDTO authorDTO = null;
         try{
@@ -43,7 +45,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-
+    @Transactional
     public List<AuthorDTO> findAll() throws ServiceException{
         List<AuthorDTO> authorDTOs = new ArrayList<>();
         List<Author> contracts = null;
@@ -59,6 +61,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @Transactional
     public AuthorDTO create(Author author) throws ServiceException {
         AuthorDTO newAuthorDTO = null;
         try {
@@ -77,6 +80,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @Transactional
     public void createAll(List<Author> authors) throws ServiceException{
         try {
             for (Author author : authors){
@@ -88,6 +92,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @Transactional
     public AuthorDTO update(Author author) throws ServiceException {
         AuthorDTO updatedAuthorDTO = null;
         try {
@@ -102,6 +107,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @Transactional
     public boolean deleteById(int id) throws ServiceException {
         boolean result;
         try {

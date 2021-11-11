@@ -8,10 +8,14 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Data
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "author", schema = "book_store")
+@Builder
 public class Author {
 
     @Id
@@ -24,8 +28,8 @@ public class Author {
     @ManyToMany(mappedBy = "authors")
     private Set<Book> books = new HashSet<>();
 
+    public Author(){
 
-    public Author() {
     }
 
     public Author(Integer id, String name) {
@@ -47,6 +51,14 @@ public class Author {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
     }
 
     @Override

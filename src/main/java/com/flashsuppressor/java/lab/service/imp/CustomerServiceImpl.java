@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
+    @Transactional
     public CustomerDTO findByEmail(String email) throws ServiceException {
         CustomerDTO customerDTO = null;
         try{
@@ -42,6 +44,7 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
+    @Transactional
     public CustomerDTO findById(int id) throws ServiceException {
         CustomerDTO customerDTO = null;
         try{
@@ -55,6 +58,7 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
+    @Transactional
     public List<CustomerDTO> findAll() throws ServiceException{
         List<CustomerDTO> customerDTOs = new ArrayList<>();
         List<Customer> customers = null;
@@ -70,6 +74,7 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
+    @Transactional
     public void create(Customer customer) throws ServiceException {
         try {
             repository.create(customer);
@@ -79,6 +84,7 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
+    @Transactional
     public CustomerDTO update(Customer customer) throws ServiceException {
         CustomerDTO updatedCustomerDTO = null;
         try {
@@ -93,6 +99,7 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
+    @Transactional
     public boolean deleteById(int id) throws ServiceException {
         boolean result;
         try {

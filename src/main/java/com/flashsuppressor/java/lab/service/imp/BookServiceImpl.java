@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public BookDTO findById(Long id) throws ServiceException {
         BookDTO bookDTO = null;
         try{
@@ -41,6 +43,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public List<BookDTO> findAll() throws ServiceException{
         List<BookDTO> bookDTOs = new ArrayList<>();
         List<Book> contracts = null;
@@ -56,6 +59,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public void create(Book book) throws ServiceException {
         try {
             repository.create(book);
@@ -65,6 +69,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public void createAll(List<Book> books) {
         try {
             for (Book book : books){
@@ -76,6 +81,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public BookDTO update(Book book) throws ServiceException {
         BookDTO updatedBookDTO = null;
         try {
@@ -90,6 +96,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public boolean deleteById(Long id) throws ServiceException {
         boolean result;
         try {

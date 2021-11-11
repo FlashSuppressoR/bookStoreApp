@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    @Transactional
     public PublisherDTO findById(int id) throws ServiceException {
         PublisherDTO publisherDTO = null;
         try{
@@ -42,6 +44,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    @Transactional
     public List<PublisherDTO> findAll() throws ServiceException{
         List<PublisherDTO> publisherDTOs = new ArrayList<>();
         List<Publisher> publishers = repository.findAll();
@@ -52,6 +55,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    @Transactional
     public void create(Publisher publisher) throws ServiceException {
         try {
             repository.create(publisher);
@@ -61,6 +65,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    @Transactional
     public void createAll(List<Publisher> publishers) throws ServiceException {
         try {
             for (Publisher publisher : publishers){
@@ -72,6 +77,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    @Transactional
     public PublisherDTO update(Publisher publisher) throws ServiceException {
         PublisherDTO updatedPublisherDTO = null;
         try {
@@ -86,6 +92,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    @Transactional
     public boolean deleteById(int id) throws ServiceException {
         boolean result;
         try {

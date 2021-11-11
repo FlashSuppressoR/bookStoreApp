@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional
     public List<ReviewDTO> findAll() {
         List<ReviewDTO> reviewDTOs = new ArrayList<>();
         List<Review> reviews = repository.findAll();
@@ -39,6 +41,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional
     public void create(Review review) throws ServiceException {
         try {
             repository.create(review);
@@ -48,6 +51,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional
     public void createAll(List<Review> reviews) {
         try {
             for (Review review : reviews){
@@ -59,6 +63,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional
     public ReviewDTO update(Review review) throws ServiceException {
         ReviewDTO updatedReviewDTO = null;
         try {
@@ -73,6 +78,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional
     public boolean deleteById(int id) throws ServiceException {
         boolean result;
         try {

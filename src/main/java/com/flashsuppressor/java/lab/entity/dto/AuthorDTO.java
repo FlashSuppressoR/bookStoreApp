@@ -5,10 +5,10 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class AuthorDTO{
     int id;
     String name;
-
 
     @Override
     public String toString() {
