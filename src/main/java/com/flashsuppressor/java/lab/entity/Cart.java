@@ -1,15 +1,24 @@
 package com.flashsuppressor.java.lab.entity;
 
-import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.*;
-import java.util.Objects;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 
 @Entity
 @Data
 @Table(name = "cart", schema = "book_store")
-@Builder
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@Builder
 public class Cart {
 
     @Id
@@ -67,29 +76,5 @@ public class Cart {
 
     public void setBookCounter(Integer bookCounter) {
         this.bookCounter = bookCounter;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, customer, bookId, bookCounter);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Cart cart = (Cart) obj;
-        return id == cart.id && customer == cart.customer &&
-                bookId == cart.bookId && bookCounter == cart.bookCounter;
-    }
-
-    @Override
-    public String toString() {
-        return "Cart{" +
-                "id=" + id +
-                ", customerId=" + customer +
-                ", bookId=" + bookId +
-                ", bookCounter=" + bookCounter +
-                '}';
     }
 }

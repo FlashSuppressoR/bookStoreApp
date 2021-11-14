@@ -2,21 +2,20 @@ package com.flashsuppressor.java.lab.service;
 
 import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.entity.dto.BookDTO;
-import com.flashsuppressor.java.lab.exception.ServiceException;
 
 import java.util.List;
 
 public interface BookService {
 
-    BookDTO findById(Long id) throws ServiceException;
+    BookDTO findById(Long id);
 
-    List<BookDTO> findAll() throws ServiceException;
+    List<BookDTO> findAll();
 
-    void create(Book book) throws ServiceException;
+    void create(Book book);
 
-    void createAll(List<Book> books) throws ServiceException;
+    void createAll(List<Book> books);
 
-    BookDTO update(Book book) throws ServiceException;
+    BookDTO update(Book book);
 
-    boolean deleteById(Long id) throws ServiceException;
+    boolean deleteById(Long id);
 }

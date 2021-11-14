@@ -1,15 +1,22 @@
 package com.flashsuppressor.java.lab.entity;
 
-import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.*;
-import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Data
 @Table(name = "review", schema = "book_store")
-@Builder
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@Builder
 public class Review {
 
     @Id
@@ -65,28 +72,5 @@ public class Review {
 
     public void setBook(Book book) {
         this.book = book;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, mark, comment, book);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Review review = (Review) obj;
-        return id == review.id && mark == review.mark & comment.equals(review.comment) && book.equals(review.book);
-    }
-
-    @Override
-    public String toString() {
-        return "Review{" +
-                "id=" + id +
-                ", mark=" + mark +
-                ", comment='" + comment + '\'' +
-                ", bookId=" + book +
-                '}';
     }
 }

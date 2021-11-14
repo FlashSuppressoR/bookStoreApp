@@ -20,6 +20,7 @@ import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 @Configuration
 @ComponentScan("com.flashsuppressor.java.lab")
 @PropertySource("classpath:/application.properties")
+@EnableAspectJAutoProxy
 @EnableTransactionManagement
 public class ApplicationContextConfiguration {
 
@@ -99,10 +100,6 @@ public class ApplicationContextConfiguration {
         return mapper;
     }
 
-//    @Bean
-//    public ModelMapper modelMapper() {
-//        return new ModelMapper();
-//    }
 
     private Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();

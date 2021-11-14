@@ -2,21 +2,20 @@ package com.flashsuppressor.java.lab.service;
 
 import com.flashsuppressor.java.lab.entity.Publisher;
 import com.flashsuppressor.java.lab.entity.dto.PublisherDTO;
-import com.flashsuppressor.java.lab.exception.ServiceException;
 
 import java.util.List;
 
 public interface PublisherService {
 
-    PublisherDTO findById(int id) throws ServiceException;
+    PublisherDTO findById(int id);
 
-    List<PublisherDTO> findAll() throws ServiceException;
+    List<PublisherDTO> findAll();
 
-    void create(Publisher publisher) throws ServiceException;
+    void create(Publisher publisher);
 
-    void createAll(List<Publisher> publisher) throws ServiceException;
+    void createAll(List<Publisher> publisher);
 
-    PublisherDTO update(Publisher publisher) throws ServiceException;
+    PublisherDTO update(Publisher publisher);
 
-    boolean deleteById(int id) throws ServiceException;
+    boolean deleteById(int id);
 }

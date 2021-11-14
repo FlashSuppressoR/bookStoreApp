@@ -1,16 +1,13 @@
-package com.flashsuppressor.java.lab.repository.impl.Hibernate;
+package com.flashsuppressor.java.lab.repository.impl;
 
 import com.flashsuppressor.java.lab.entity.Customer;
 import com.flashsuppressor.java.lab.entity.Purchase;
-import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.BaseRepositoryTest;
 import com.flashsuppressor.java.lab.repository.PurchaseRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Transactional
 public class HibernatePurchaseRepositoryTest extends BaseRepositoryTest {
 
-    @Qualifier("hibernatePurchaseRepository")
     @Autowired
     private PurchaseRepository purchaseRepository;
     private final List<Purchase> expectedPurchases = new ArrayList<>() {{
@@ -34,7 +30,7 @@ public class HibernatePurchaseRepositoryTest extends BaseRepositoryTest {
     }};
 
     @Test
-    public void findAll() throws RepositoryException {
+    public void findAll() {
         List<Purchase> actualPurchases = purchaseRepository.findAll();
 
         for (int i = 0; i < expectedPurchases.size(); i++) {
@@ -43,7 +39,7 @@ public class HibernatePurchaseRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void findById() throws RepositoryException {
+    public void findById() {
         Purchase expected = expectedPurchases.get(0);
         Purchase actual = purchaseRepository.findById(expected.getId());
 
@@ -51,7 +47,7 @@ public class HibernatePurchaseRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void createTest() throws RepositoryException {
+    public void createTest() {
         Purchase expectedPurchase = new Purchase(4, new Customer(4, "Alex3", "Alexw3@com", "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0"));
         purchaseRepository.create(expectedPurchase);
 
@@ -59,7 +55,7 @@ public class HibernatePurchaseRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void createAllTest() throws RepositoryException {
+    public void createAllTest() {
         List<Purchase> expectedList = new ArrayList<>() {{
             add(new Purchase(4, new Customer(4, "Alex3", "Alexw3@com", "alex33"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
             add(new Purchase(5, new Customer(5, "Vell", "Vell@com", "vell"), Timestamp.valueOf("2007-09-10 00:00:00.0")));
@@ -76,14 +72,10 @@ public class HibernatePurchaseRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void deleteByIdTest() throws RepositoryException{
+    public void deleteByIdTest() {
         int purchaseId = 1;
 
-        try {
-            assertTrue(purchaseRepository.deleteById(purchaseId));
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
+        assertTrue(purchaseRepository.deleteById(purchaseId));
     }
 
     private void assertPurchaseEquals(Purchase expectedPurchase, Purchase actualPurchase) {

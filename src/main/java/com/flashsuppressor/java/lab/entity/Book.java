@@ -1,16 +1,27 @@
 package com.flashsuppressor.java.lab.entity;
 
-import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.*;
-import java.util.Objects;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.Set;
 
 @Entity
 @Data
 @Table(name = "book", schema = "book_store")
-@Builder
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@Builder
 public class Book {
 
     @Id
@@ -22,7 +33,7 @@ public class Book {
     @Column(name = "price")
     private double price;
 
-    @ManyToOne
+    @javax.persistence.ManyToOne
     @JoinColumn(name = "publisher_id")
     private Publisher publisher;
 
@@ -100,31 +111,5 @@ public class Book {
 
     public void setAmount(int amount) {
         this.amount = amount;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, price, publisher, genre, amount);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Book book = (Book) obj;
-        return id == book.id && name.equals(book.name) &&
-                price == book.price && publisher.equals(book.publisher) && genre.equals(book.genre);
-    }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", publisherId=" + publisher +
-                ", genreId=" + genre +
-                ", amount=" + amount +
-                '}';
     }
 }

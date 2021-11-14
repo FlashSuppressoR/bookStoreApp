@@ -2,8 +2,6 @@ package com.flashsuppressor.java.lab.service.imp;
 
 import com.flashsuppressor.java.lab.entity.Cart;
 import com.flashsuppressor.java.lab.entity.dto.CartDTO;
-import com.flashsuppressor.java.lab.exception.RepositoryException;
-import com.flashsuppressor.java.lab.exception.ServiceException;
 import com.flashsuppressor.java.lab.repository.CartRepository;
 import com.flashsuppressor.java.lab.service.CartService;
 import org.modelmapper.ModelMapper;
@@ -12,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,79 +21,58 @@ public class CartServiceImpl implements CartService {
 
     @Autowired
     public CartServiceImpl(@Qualifier("hibernateCartRepository")
-                                     CartRepository repository, ModelMapper modelMapper) {
+                                   CartRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
         this.modelMapper = modelMapper;
     }
 
     @Override
     @Transactional
-    public CartDTO findById(int id) throws ServiceException {
-        CartDTO cartDTO = null;
-        try{
-            Cart cart = repository.findById(1);
-            cartDTO = convertToCartDTO(cart);
-        }
-        catch (RepositoryException ex){
-            throw new ServiceException(ex.getMessage());
-        }
-        return cartDTO;
+    public CartDTO findById(int id) {
+        Cart cart = repository.findById(id);
+
+        return convertToCartDTO(cart);
     }
 
     @Override
     @Transactional
-    public List<CartDTO> findAll() throws ServiceException{
+    public List<CartDTO> findAll() {
         List<CartDTO> cartDTOs = new ArrayList<>();
-        List<Cart> carts = null;
-        try {
-            carts = repository.findAll();
-        } catch (RepositoryException ex) {
-            ex.printStackTrace();
-        }
+        List<Cart> carts = repository.findAll();
         if (carts.size() > 0) {
             cartDTOs = carts.stream().map(this::convertToCartDTO).collect(Collectors.toList());
         }
+
         return cartDTOs;
     }
 
     @Override
     @Transactional
-    public void create(Cart cart) throws ServiceException {
-        try {
-            repository.create(cart);
-        } catch (RepositoryException ex) {
-            ex.printStackTrace();
-        }
+    public void create(Cart cart) {
+        repository.create(cart);
     }
 
     @Override
     @Transactional
-    public CartDTO update(Cart cart) throws ServiceException {
+    public CartDTO update(Cart cart) {
         CartDTO updatedCartDTO = null;
-        try {
-            Cart updatedCart = repository.update(cart);
-            if (updatedCart != null) {
-                updatedCartDTO = convertToCartDTO(updatedCart);
-            }
-        } catch (RepositoryException ex) {
-            ex.printStackTrace();
+        Cart updatedCart = repository.update(cart);
+        if (updatedCart != null) {
+            updatedCartDTO = convertToCartDTO(updatedCart);
         }
+
         return updatedCartDTO;
     }
 
     @Override
     @Transactional
-    public boolean deleteById(int id) throws ServiceException {
-        boolean result;
-        try {
-            result = repository.deleteById(id);
-        } catch (RepositoryException | SQLException ex) {
-            throw new ServiceException(ex.getMessage());
-        }
-        return result;
+    public boolean deleteById(int id) {
+
+        return repository.deleteById(id);
     }
 
     private CartDTO convertToCartDTO(Cart cart) {
+
         return modelMapper.map(cart, CartDTO.class);
     }
 }

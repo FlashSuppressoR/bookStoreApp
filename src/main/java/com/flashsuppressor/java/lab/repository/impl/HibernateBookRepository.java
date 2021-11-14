@@ -1,7 +1,6 @@
-package com.flashsuppressor.java.lab.repository.impl.Hibernate;
+package com.flashsuppressor.java.lab.repository.impl;
 
 import com.flashsuppressor.java.lab.entity.Book;
-import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.BookRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-@Transactional(propagation = Propagation.REQUIRED, rollbackFor = RepositoryException.class)
+@Transactional(propagation = Propagation.REQUIRED)
 public class HibernateBookRepository implements BookRepository {
     private final SessionFactory sessionFactory;
     private static final String FIND_BOOKS_QUERY = "select b from Book b ";
@@ -24,7 +23,7 @@ public class HibernateBookRepository implements BookRepository {
     }
 
     @Override
-    public Book findById(Long id) throws RepositoryException {
+    public Book findById(Long id) {
         Session session = sessionFactory.getCurrentSession();
         return session.find(Book.class, id);
     }
@@ -62,7 +61,7 @@ public class HibernateBookRepository implements BookRepository {
     }
 
     @Override
-    public boolean deleteById(Long id) throws RepositoryException {
+    public boolean deleteById(Long id) {
         Session session = sessionFactory.getCurrentSession();
         boolean result;
         session.beginTransaction();

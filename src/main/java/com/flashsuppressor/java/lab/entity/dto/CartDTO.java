@@ -14,6 +14,4 @@ public class CartDTO {
     private int customerId;
     private long bookId;
     private int bookCounter;
-
-
 }

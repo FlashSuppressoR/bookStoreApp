@@ -1,23 +1,21 @@
-package com.flashsuppressor.java.lab.repository.impl.JDBC;
+package com.flashsuppressor.java.lab.repository.impl;
 
 import com.flashsuppressor.java.lab.entity.Publisher;
-import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.BaseRepositoryTest;
 import com.flashsuppressor.java.lab.repository.PublisherRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class JDBCPublisherRepositoryTest extends BaseRepositoryTest {
+@Transactional
+public class HibernatePublisherRepositoryTest extends BaseRepositoryTest {
 
-    @Qualifier("JDBCPublisherRepository")
     @Autowired
     private PublisherRepository publisherRepository;
     private final List<Publisher> expectedPublishers = new ArrayList<>() {{
@@ -36,7 +34,15 @@ public class JDBCPublisherRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void createTest() throws RepositoryException {
+    public void findByIdTest() {
+        Publisher expected = expectedPublishers.get(0);
+        Publisher actual = publisherRepository.findById(expected.getId());
+
+        assertPublisherEquals(expected, actual);
+    }
+
+    @Test
+    public void createTest() {
         Publisher expectedPublisher = new Publisher(1, "Big Daddy");
         publisherRepository.create(expectedPublisher);
 
@@ -44,7 +50,7 @@ public class JDBCPublisherRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void createAllTest() throws RepositoryException {
+    public void createAllTest() {
         List<Publisher> expectedList = new ArrayList<>() {{
             add(new Publisher(4, "Ballads Writer"));
             add(new Publisher(5, "Third House"));
@@ -61,14 +67,10 @@ public class JDBCPublisherRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void deleteByIdTest() throws RepositoryException {
+    public void deleteByIdTest() {
         int publisherId = 1;
 
-        try {
-            assertTrue(publisherRepository.deleteById(publisherId));
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
+        assertTrue(publisherRepository.deleteById(publisherId));
     }
 
     private void assertPublisherEquals(Publisher expectedPublisher, Publisher actualPublisher) {

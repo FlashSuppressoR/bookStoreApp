@@ -2,19 +2,18 @@ package com.flashsuppressor.java.lab.service;
 
 import com.flashsuppressor.java.lab.entity.Review;
 import com.flashsuppressor.java.lab.entity.dto.ReviewDTO;
-import com.flashsuppressor.java.lab.exception.ServiceException;
 
 import java.util.List;
 
 public interface ReviewService {
 
-    List<ReviewDTO> findAll() throws ServiceException;
+    List<ReviewDTO> findAll();
 
-    void create(Review review) throws ServiceException;
+    void create(Review review);
 
-    void createAll(List<Review> reviews) throws ServiceException;
+    void createAll(List<Review> reviews);
 
-    ReviewDTO update(Review review) throws ServiceException;
+    ReviewDTO update(Review review);
 
-    boolean deleteById(int id) throws ServiceException;
+    boolean deleteById(int id);
 }

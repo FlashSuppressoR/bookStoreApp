@@ -1,22 +1,19 @@
 package com.flashsuppressor.java.lab.repository;
 
 import com.flashsuppressor.java.lab.entity.Genre;
-import com.flashsuppressor.java.lab.exception.RepositoryException;
-
-import java.sql.SQLException;
 import java.util.List;
 
 public interface GenreRepository {
 
-    Genre findById(int id) throws RepositoryException;
+    Genre findById(int id);
 
     List<Genre> findAll();
 
-    void create(Genre genre) throws RepositoryException;
+    void create(Genre genre);
 
     void createAll(List<Genre> genres);
 
-    Genre update(Genre genre) throws RepositoryException;
+    Genre update(Genre genre);
 
-    boolean deleteById(int id) throws RepositoryException, SQLException;
+    boolean deleteById(int id);
 }

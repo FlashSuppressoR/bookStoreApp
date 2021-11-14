@@ -2,18 +2,14 @@ package com.flashsuppressor.java.lab.service.imp;
 
 import com.flashsuppressor.java.lab.entity.Genre;
 import com.flashsuppressor.java.lab.entity.dto.GenreDTO;
-import com.flashsuppressor.java.lab.exception.RepositoryException;
-import com.flashsuppressor.java.lab.exception.ServiceException;
 import com.flashsuppressor.java.lab.repository.GenreRepository;
 import com.flashsuppressor.java.lab.service.GenreService;
-import lombok.Setter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,86 +21,66 @@ public class GenreServiceImpl implements GenreService {
 
     @Autowired
     public GenreServiceImpl(@Qualifier("hibernateGenreRepository")
-                                       GenreRepository repository, ModelMapper modelMapper) {
+                                    GenreRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
         this.modelMapper = modelMapper;
     }
 
     @Override
     @Transactional
-    public GenreDTO findById(int id) throws ServiceException {
-        GenreDTO genreDTO = null;
-        try{
-            Genre genre = repository.findById(1);
-            genreDTO = convertToGenreDTO(genre);
-        }
-        catch (RepositoryException ex){
-            throw new ServiceException(ex.getMessage());
-        }
-        return genreDTO;
+    public GenreDTO findById(int id) {
+        Genre genre = repository.findById(id);
+
+        return convertToGenreDTO(genre);
     }
 
     @Override
     @Transactional
-    public List<GenreDTO> findAll() throws ServiceException{
+    public List<GenreDTO> findAll() {
         List<GenreDTO> genreDTOs = new ArrayList<>();
         List<Genre> genres = repository.findAll();
         if (genres != null && genres.size() > 0) {
             genreDTOs = genres.stream().map(this::convertToGenreDTO).collect(Collectors.toList());
         }
+
         return genreDTOs;
     }
 
     @Override
     @Transactional
-    public void create(Genre genre) throws ServiceException {
-        try {
+    public void create(Genre genre) {
+        repository.create(genre);
+    }
+
+    @Override
+    @Transactional
+    public void createAll(List<Genre> genres) {
+        for (Genre genre : genres) {
             repository.create(genre);
-        } catch (RepositoryException ex) {
-            ex.printStackTrace();
         }
     }
 
     @Override
     @Transactional
-    public void createAll(List<Genre> genres) throws ServiceException {
-        try {
-            for (Genre genre : genres){
-                repository.create(genre);
-            }
-        } catch (RepositoryException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Override
-    @Transactional
-    public GenreDTO update(Genre genre) throws ServiceException {
+    public GenreDTO update(Genre genre) {
         GenreDTO updatedGenreDTO = null;
-        try {
-            Genre updatedGenre = repository.update(genre);
-            if (updatedGenre != null) {
-                updatedGenreDTO = convertToGenreDTO(updatedGenre);
-            }
-        } catch (RepositoryException ex) {
-            ex.printStackTrace();
+        Genre updatedGenre = repository.update(genre);
+        if (updatedGenre != null) {
+            updatedGenreDTO = convertToGenreDTO(updatedGenre);
         }
+
         return updatedGenreDTO;
     }
 
     @Override
     @Transactional
-    public boolean deleteById(int id) throws ServiceException {
-        boolean result;
-        try {
-            result = repository.deleteById(id);
-        } catch (RepositoryException | SQLException ex) {
-            throw new ServiceException(ex.getMessage());
-        }
-        return result;
+    public boolean deleteById(int id) {
+
+        return repository.deleteById(id);
     }
 
     private GenreDTO convertToGenreDTO(Genre genre) {
+
         return modelMapper.map(genre, GenreDTO.class);
     }
 }

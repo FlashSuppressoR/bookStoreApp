@@ -1,20 +1,18 @@
 package com.flashsuppressor.java.lab.repository;
 
 import com.flashsuppressor.java.lab.entity.Review;
-import com.flashsuppressor.java.lab.exception.RepositoryException;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface ReviewRepository {
 
     List<Review> findAll();
 
-    void create(Review review) throws RepositoryException;
+    void create(Review review);
 
     void createAll(List<Review> reviews);
 
-    Review update(Review review) throws RepositoryException;
+    Review update(Review review);
 
-    boolean deleteById(int id) throws RepositoryException, SQLException;
+    boolean deleteById(int id);
 }

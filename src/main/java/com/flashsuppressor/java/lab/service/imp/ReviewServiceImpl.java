@@ -2,8 +2,6 @@ package com.flashsuppressor.java.lab.service.imp;
 
 import com.flashsuppressor.java.lab.entity.Review;
 import com.flashsuppressor.java.lab.entity.dto.ReviewDTO;
-import com.flashsuppressor.java.lab.exception.RepositoryException;
-import com.flashsuppressor.java.lab.exception.ServiceException;
 import com.flashsuppressor.java.lab.repository.ReviewRepository;
 import com.flashsuppressor.java.lab.service.ReviewService;
 import org.modelmapper.ModelMapper;
@@ -12,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +21,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Autowired
     public ReviewServiceImpl(@Qualifier("hibernateReviewRepository")
-                                       ReviewRepository repository, ModelMapper modelMapper) {
+                                     ReviewRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
         this.modelMapper = modelMapper;
     }
@@ -42,54 +39,39 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public void create(Review review) throws ServiceException {
-        try {
-            repository.create(review);
-        } catch (RepositoryException ex) {
-            ex.printStackTrace();
-        }
+    public void create(Review review) {
+        repository.create(review);
     }
 
     @Override
     @Transactional
     public void createAll(List<Review> reviews) {
-        try {
-            for (Review review : reviews){
-                repository.create(review);
-            }
-        } catch (RepositoryException ex) {
-            ex.printStackTrace();
+        for (Review review : reviews) {
+            repository.create(review);
         }
     }
 
     @Override
     @Transactional
-    public ReviewDTO update(Review review) throws ServiceException {
+    public ReviewDTO update(Review review) {
         ReviewDTO updatedReviewDTO = null;
-        try {
-            Review updatedReview = repository.update(review);
-            if (updatedReview != null) {
-                updatedReviewDTO = convertToReviewDTO(updatedReview);
-            }
-        } catch (RepositoryException ex) {
-            ex.printStackTrace();
+        Review updatedReview = repository.update(review);
+        if (updatedReview != null) {
+            updatedReviewDTO = convertToReviewDTO(updatedReview);
         }
+
         return updatedReviewDTO;
     }
 
     @Override
     @Transactional
-    public boolean deleteById(int id) throws ServiceException {
-        boolean result;
-        try {
-            result = repository.deleteById(id);
-        } catch (RepositoryException | SQLException ex) {
-            throw new ServiceException(ex.getMessage());
-        }
-        return result;
+    public boolean deleteById(int id) {
+
+        return repository.deleteById(id);
     }
 
     private ReviewDTO convertToReviewDTO(Review review) {
+
         return modelMapper.map(review, ReviewDTO.class);
     }
 }

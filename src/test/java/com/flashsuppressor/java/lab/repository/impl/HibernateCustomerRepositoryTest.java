@@ -1,17 +1,12 @@
-package com.flashsuppressor.java.lab.repository.impl.Hibernate;
+package com.flashsuppressor.java.lab.repository.impl;
 
 import com.flashsuppressor.java.lab.entity.Customer;
-import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.BaseRepositoryTest;
 import com.flashsuppressor.java.lab.repository.CustomerRepository;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Transactional
 public class HibernateCustomerRepositoryTest extends BaseRepositoryTest {
 
-    @Qualifier("hibernateCustomerRepository")
     @Autowired
     CustomerRepository customerRepository;
 
@@ -32,7 +26,7 @@ public class HibernateCustomerRepositoryTest extends BaseRepositoryTest {
     }};
 
     @Test
-    public void findByEmailTest() throws RepositoryException {
+    public void findByEmailTest() {
         Customer expectedCustomer = expectedCustomers.get(0);
         Customer actualCustomer = customerRepository.findByEmail("Max@com");
 
@@ -40,7 +34,7 @@ public class HibernateCustomerRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void findAllTest() throws RepositoryException {
+    public void findAllTest() {
         List<Customer> actualCustomers = customerRepository.findAll();
 
         for (int i = 0; i < expectedCustomers.size(); i++) {
@@ -49,7 +43,7 @@ public class HibernateCustomerRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void findByIdTest() throws RepositoryException {
+    public void findByIdTest() {
         Customer expected = expectedCustomers.get(0);
         Customer actual = customerRepository.findById(expected.getId());
 
@@ -57,7 +51,7 @@ public class HibernateCustomerRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void createTest() throws RepositoryException {
+    public void createTest() {
         Customer expectedCustomer = new Customer(4, "Jim", "Jim@com", "23ax");
         customerRepository.create(expectedCustomer);
 
@@ -65,7 +59,7 @@ public class HibernateCustomerRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void updateTest() throws RepositoryException {
+    public void updateTest() {
         Customer expectedCustomer = new Customer(1, "MaxPower", "Max@com", "max");
         Customer actualCustomer = customerRepository.update(expectedCustomer);
 
@@ -73,14 +67,10 @@ public class HibernateCustomerRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void deleteByIdTest() throws RepositoryException {
+    public void deleteByIdTest() {
         int customerId = 1;
 
-        try {
-            assertTrue(customerRepository.deleteById(customerId));
-        } catch (RepositoryException | SQLException ex) {
-            ex.printStackTrace();
-        }
+        assertTrue(customerRepository.deleteById(customerId));
     }
 
     private void assertCustomerEquals(Customer expectedCustomer, Customer actualCustomer) {

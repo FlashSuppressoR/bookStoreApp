@@ -1,16 +1,23 @@
 package com.flashsuppressor.java.lab.entity;
 
-import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.*;
-import java.util.Objects;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.Set;
 
 @Entity
 @Data
 @Table(name = "genre", schema = "book_store")
-@Builder
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@Builder
 public class Genre {
 
     @Id
@@ -45,26 +52,5 @@ public class Genre {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Genre genre = (Genre) obj;
-        return id == genre.id && name.equals(genre.name);
-    }
-
-    @Override
-    public String toString() {
-        return "Genre{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
     }
 }

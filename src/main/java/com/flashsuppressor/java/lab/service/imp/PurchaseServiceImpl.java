@@ -2,8 +2,6 @@ package com.flashsuppressor.java.lab.service.imp;
 
 import com.flashsuppressor.java.lab.entity.Purchase;
 import com.flashsuppressor.java.lab.entity.dto.PurchaseDTO;
-import com.flashsuppressor.java.lab.exception.RepositoryException;
-import com.flashsuppressor.java.lab.exception.ServiceException;
 import com.flashsuppressor.java.lab.repository.PurchaseRepository;
 import com.flashsuppressor.java.lab.service.PurchaseService;
 import org.modelmapper.ModelMapper;
@@ -12,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,86 +21,66 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Autowired
     public PurchaseServiceImpl(@Qualifier("hibernatePurchaseRepository")
-                                        PurchaseRepository repository, ModelMapper modelMapper) {
+                                       PurchaseRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
         this.modelMapper = modelMapper;
     }
 
     @Override
     @Transactional
-    public PurchaseDTO findById(int id) throws ServiceException {
-        PurchaseDTO purchaseDTO = null;
-        try{
-            Purchase purchase = repository.findById(1);
-            purchaseDTO = convertToPurchaseDTO(purchase);
-        }
-        catch (RepositoryException ex){
-            throw new ServiceException(ex.getMessage());
-        }
-        return purchaseDTO;
+    public PurchaseDTO findById(int id) {
+        Purchase purchase = repository.findById(id);
+
+        return convertToPurchaseDTO(purchase);
     }
 
     @Override
     @Transactional
-    public List<PurchaseDTO> findAll() throws ServiceException {
+    public List<PurchaseDTO> findAll() {
         List<PurchaseDTO> purchaseDTOs = new ArrayList<>();
         List<Purchase> purchases = repository.findAll();
         if (purchases != null && purchases.size() > 0) {
             purchaseDTOs = purchases.stream().map(this::convertToPurchaseDTO).collect(Collectors.toList());
         }
+
         return purchaseDTOs;
     }
 
     @Override
     @Transactional
-    public void create(Purchase purchase) throws ServiceException {
-        try {
+    public void create(Purchase purchase) {
+        repository.create(purchase);
+    }
+
+    @Override
+    @Transactional
+    public void createAll(List<Purchase> purchases) {
+        for (Purchase purchase : purchases) {
             repository.create(purchase);
-        } catch (RepositoryException ex) {
-            ex.printStackTrace();
         }
     }
 
     @Override
     @Transactional
-    public void createAll(List<Purchase> purchases) throws ServiceException {
-        try {
-            for (Purchase purchase : purchases){
-                repository.create(purchase);
-            }
-        } catch (RepositoryException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Override
-    @Transactional
-    public PurchaseDTO update(Purchase purchase) throws ServiceException {
+    public PurchaseDTO update(Purchase purchase) {
         PurchaseDTO updatedPurchaseDTO = null;
-        try {
-            Purchase updatedPurchase = repository.update(purchase);
-            if (updatedPurchase != null) {
-                updatedPurchaseDTO = convertToPurchaseDTO(updatedPurchase);
-            }
-        } catch (RepositoryException ex) {
-            ex.printStackTrace();
+        Purchase updatedPurchase = repository.update(purchase);
+        if (updatedPurchase != null) {
+            updatedPurchaseDTO = convertToPurchaseDTO(updatedPurchase);
         }
+
         return updatedPurchaseDTO;
     }
 
     @Override
     @Transactional
-    public boolean deleteById(int id) throws ServiceException {
-        boolean result;
-        try {
-            result = repository.deleteById(id);
-        } catch (RepositoryException | SQLException ex) {
-            throw new ServiceException(ex.getMessage());
-        }
-        return result;
+    public boolean deleteById(int id) {
+
+        return repository.deleteById(id);
     }
 
     private PurchaseDTO convertToPurchaseDTO(Purchase purchase) {
+
         return modelMapper.map(purchase, PurchaseDTO.class);
     }
 }

@@ -1,7 +1,6 @@
-package com.flashsuppressor.java.lab.repository.impl.Hibernate;
+package com.flashsuppressor.java.lab.repository.impl;
 
 import com.flashsuppressor.java.lab.entity.Review;
-import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.ReviewRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-@Transactional(propagation = Propagation.REQUIRED, rollbackFor = RepositoryException.class)
+@Transactional(propagation = Propagation.REQUIRED)
 public class HibernateReviewRepository implements ReviewRepository {
     private final SessionFactory sessionFactory;
     private static final String FIND_ALL_REVIEWS_QUERY = "select r from Review r";

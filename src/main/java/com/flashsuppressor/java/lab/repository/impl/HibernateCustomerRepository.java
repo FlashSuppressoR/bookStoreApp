@@ -1,7 +1,6 @@
-package com.flashsuppressor.java.lab.repository.impl.Hibernate;
+package com.flashsuppressor.java.lab.repository.impl;
 
 import com.flashsuppressor.java.lab.entity.Customer;
-import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.CustomerRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-@Transactional(propagation = Propagation.REQUIRED, rollbackFor = RepositoryException.class)
+@Transactional(propagation = Propagation.REQUIRED)
 public class HibernateCustomerRepository implements CustomerRepository {
     private final SessionFactory sessionFactory;
     private static final String FIND_CUSTOMER_BY_EMAIL_QUERY = "select c from Customer c where Customer.email = ?1";
@@ -38,7 +37,7 @@ public class HibernateCustomerRepository implements CustomerRepository {
     }
 
     @Override
-    public Customer findById(int id) throws RepositoryException {
+    public Customer findById(int id) {
         Session session = sessionFactory.getCurrentSession();
         return session.find(Customer.class, id);
     }

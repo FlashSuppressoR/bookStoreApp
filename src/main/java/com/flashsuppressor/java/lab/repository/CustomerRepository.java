@@ -1,22 +1,20 @@
 package com.flashsuppressor.java.lab.repository;
 
 import com.flashsuppressor.java.lab.entity.Customer;
-import com.flashsuppressor.java.lab.exception.RepositoryException;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface CustomerRepository {
 
-    Customer findByEmail(String email) throws RepositoryException;
+    Customer findByEmail(String email);
 
-    Customer findById(int id) throws RepositoryException;
+    Customer findById(int id);
 
-    List<Customer> findAll() throws RepositoryException;
+    List<Customer> findAll();
 
-    void create(Customer customer) throws RepositoryException;
+    void create(Customer customer);
 
-    Customer update(Customer customer) throws RepositoryException;
+    Customer update(Customer customer);
 
-    boolean deleteById(int id) throws RepositoryException, SQLException;
+    boolean deleteById(int id);
 }

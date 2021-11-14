@@ -1,16 +1,24 @@
 package com.flashsuppressor.java.lab.entity;
 
-import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.*;
-import java.util.Objects;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.Set;
 
 @Entity
 @Data
 @Table(name = "customer", schema = "book_store")
-@Builder
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@Builder
 public class Customer {
 
     @Id
@@ -70,29 +78,5 @@ public class Customer {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, password, email);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Customer customer = (Customer) obj;
-        return id == customer.id && name.equals(customer.name) &&
-                password.equals(customer.password) && email.equals(customer.email);
-    }
-
-    @Override
-    public String toString() {
-        return "\nCustomer{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                "}";
     }
 }

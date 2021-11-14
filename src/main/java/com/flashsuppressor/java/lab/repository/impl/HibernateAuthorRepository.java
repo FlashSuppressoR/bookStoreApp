@@ -1,7 +1,6 @@
-package com.flashsuppressor.java.lab.repository.impl.Hibernate;
+package com.flashsuppressor.java.lab.repository.impl;
 
 import com.flashsuppressor.java.lab.entity.Author;
-import com.flashsuppressor.java.lab.exception.RepositoryException;
 import com.flashsuppressor.java.lab.repository.AuthorRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-@Transactional(propagation = Propagation.REQUIRED, rollbackFor = RepositoryException.class)
+@Transactional(propagation = Propagation.REQUIRED)
 public class HibernateAuthorRepository implements AuthorRepository {
     private final SessionFactory sessionFactory;
     private static final String FIND_AUTHORS_QUERY = "select a from  Author a";
@@ -24,26 +23,26 @@ public class HibernateAuthorRepository implements AuthorRepository {
     }
 
     @Override
-    public Author findById(int id) throws RepositoryException{
+    public Author findById(int id){
         Session session = sessionFactory.getCurrentSession();
         return session.find(Author.class, id);
     }
 
     @Override
-    public List<Author> findAll() throws RepositoryException{
+    public List<Author> findAll() {
         Session session = sessionFactory.getCurrentSession();
         return session.createQuery(FIND_AUTHORS_QUERY, Author.class).list();
     }
 
     @Override
-    public Author create(Author author) throws RepositoryException{
+    public Author create(Author author){
         Session session = sessionFactory.getCurrentSession();
         session.save(author);
         return author;
     }
 
     @Override
-    public void createAll(List<Author> authors) throws RepositoryException{
+    public void createAll(List<Author> authors){
         Session session = sessionFactory.getCurrentSession();
         for (Author author : authors) {
             session.save(author);
@@ -51,7 +50,7 @@ public class HibernateAuthorRepository implements AuthorRepository {
     }
 
     @Override
-    public Author update(Author author) throws RepositoryException{
+    public Author update(Author author){
         Session session = sessionFactory.getCurrentSession();
         Author updatedAuthor;
         session.beginTransaction();
@@ -63,7 +62,7 @@ public class HibernateAuthorRepository implements AuthorRepository {
     }
 
     @Override
-    public boolean deleteById(int id) throws RepositoryException{
+    public boolean deleteById(int id){
         Session session = sessionFactory.getCurrentSession();
         boolean result = false;
         session.beginTransaction();

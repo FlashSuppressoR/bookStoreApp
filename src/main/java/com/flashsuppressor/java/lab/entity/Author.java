@@ -1,21 +1,23 @@
 package com.flashsuppressor.java.lab.entity;
 
-import lombok.*;
+import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Data
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@RequiredArgsConstructor
 @Table(name = "author", schema = "book_store")
-@Builder
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@Builder
 public class Author {
 
     @Id
@@ -28,8 +30,7 @@ public class Author {
     @ManyToMany(mappedBy = "authors")
     private Set<Book> books = new HashSet<>();
 
-    public Author(){
-
+    public Author() {
     }
 
     public Author(Integer id, String name) {
@@ -59,19 +60,6 @@ public class Author {
 
     public void setBooks(Set<Book> books) {
         this.books = books;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Author author = (Author) obj;
-        return id == author.id && name.equals(author.name);
     }
 
     @Override

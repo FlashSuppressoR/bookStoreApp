@@ -1,15 +1,15 @@
-package com.flashsuppressor.java.lab.repository.impl.Hibernate;
+package com.flashsuppressor.java.lab.repository.impl;
 
-import com.flashsuppressor.java.lab.entity.*;
-import com.flashsuppressor.java.lab.exception.RepositoryException;
+import com.flashsuppressor.java.lab.entity.Book;
+import com.flashsuppressor.java.lab.entity.Genre;
+import com.flashsuppressor.java.lab.entity.Publisher;
+import com.flashsuppressor.java.lab.entity.Review;
 import com.flashsuppressor.java.lab.repository.BaseRepositoryTest;
 import com.flashsuppressor.java.lab.repository.ReviewRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Transactional
 public class HibernateReviewRepositoryTest extends BaseRepositoryTest {
 
-    @Qualifier("hibernateReviewRepository")
     @Autowired
     private ReviewRepository reviewRepository;
     private final List<Review> expectedReviews = new ArrayList<>() {{
@@ -36,7 +35,7 @@ public class HibernateReviewRepositoryTest extends BaseRepositoryTest {
             new Publisher(3 , "New Town"), new Genre( 3 , "Humor"),0));
 
     @Test
-    public void findAllTest() throws RepositoryException {
+    public void findAllTest() {
         List<Review> actualReviews = reviewRepository.findAll();
 
         for (int i = 0; i < expectedReviews.size(); i++) {
@@ -45,7 +44,7 @@ public class HibernateReviewRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void createTest() throws RepositoryException {
+    public void createTest() {
         Review expectedReview = new Review( 4 , 5, "cool", thirdIdBook);
         reviewRepository.create(expectedReview);
 
@@ -53,7 +52,7 @@ public class HibernateReviewRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void createAllTest() throws RepositoryException {
+    public void createAllTest() {
         List<Review> expectedList = new ArrayList<>(){{
             add(new Review( 1 , 5, "Perfecto!", firstIdBook));
             add(new Review( 2 , 3, "pfff", firstIdBook));
@@ -70,14 +69,10 @@ public class HibernateReviewRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void deleteByIdTest() throws  RepositoryException{
+    public void deleteByIdTest() {
         int reviewId = 1;
 
-        try {
-            assertTrue(reviewRepository.deleteById(reviewId));
-        } catch (RepositoryException | SQLException ex) {
-            ex.printStackTrace();
-        }
+        assertTrue(reviewRepository.deleteById(reviewId));
     }
 
     private void assertReviewEquals(Review expectedReview, Review actualReview) {

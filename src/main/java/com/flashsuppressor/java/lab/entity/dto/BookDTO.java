@@ -15,5 +15,4 @@ public class BookDTO {
     private double price;
     private int publisherId;
     private int genreId;
-
 }
