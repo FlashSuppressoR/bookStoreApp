@@ -3,7 +3,6 @@ package com.flashsuppressor.java.lab;
 import com.flashsuppressor.java.lab.config.ApplicationContextConfiguration;
 import com.flashsuppressor.java.lab.repository.AuthorRepository;
 import com.flashsuppressor.java.lab.service.AuthorService;
-import com.flashsuppressor.java.lab.service.imp.AuthorServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -15,10 +14,7 @@ public class Runner {
         ctx = new AnnotationConfigApplicationContext(ApplicationContextConfiguration.class);
 
 //        findByIdHibernate();
-//        findByIdService();
-
-        AuthorService authorService = ctx.getBean(AuthorServiceImpl.class);
-//        log.info("\n\nFile  :  " + authorService.getClass().getName() + "\n");
+        findByIdService();
     }
 
     public static void findByIdHibernate(){

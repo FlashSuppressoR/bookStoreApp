@@ -6,7 +6,12 @@ import org.h2.jdbcx.JdbcConnectionPool;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -100,6 +105,10 @@ public class ApplicationContextConfiguration {
         return mapper;
     }
 
+//    @Bean
+//    public Logger logger(){
+//        return LoggerFactory.getLogger(this.getClass().getName());
+//    }
 
     private Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
