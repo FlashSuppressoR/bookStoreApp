@@ -20,14 +20,14 @@ public class CartServiceImpl implements CartService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public CartServiceImpl(@Qualifier("hibernateCartRepository")
+    public CartServiceImpl(@Qualifier("cartRepositoryImpl")
                                    CartRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
         this.modelMapper = modelMapper;
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly=true)
     public CartDTO findById(int id) {
         Cart cart = repository.findById(id);
 
@@ -35,7 +35,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly=true)
     public List<CartDTO> findAll() {
         List<CartDTO> cartDTOs = new ArrayList<>();
         List<Cart> carts = repository.findAll();

@@ -13,13 +13,14 @@ import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class HibernateCustomerRepository implements CustomerRepository {
+//@AllArgsConstructor
+public class CustomerRepositoryImpl implements CustomerRepository {
     private final SessionFactory sessionFactory;
     private static final String FIND_CUSTOMER_BY_EMAIL_QUERY = "select c from Customer c where Customer.email = ?1";
     private static final String FIND_ALL_CUSTOMERS_QUERY = "select c from Customer c";
 
     @Autowired
-    public HibernateCustomerRepository(SessionFactory sessionFactory) {
+    public CustomerRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -53,7 +54,7 @@ public class HibernateCustomerRepository implements CustomerRepository {
         Customer updatedCustomer;
         session.beginTransaction();
         session.update(customer);
-        updatedCustomer = session.find(Customer.class, customer.getId());
+        updatedCustomer = session.find(Customer.class, customer);
         session.getTransaction().commit();
 
         return updatedCustomer;

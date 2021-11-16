@@ -32,7 +32,7 @@ public class Review {
     @JoinColumn(name = "book_id")
     private Book book;
 
-    public Review() {
+    public Review(){
     }
 
     public Review(Integer id, Integer mark, String comment, Book book) {

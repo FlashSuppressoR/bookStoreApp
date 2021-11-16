@@ -20,14 +20,14 @@ public class CustomerServiceImpl implements CustomerService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public CustomerServiceImpl(@Qualifier("hibernateCustomerRepository")
+    public CustomerServiceImpl(@Qualifier("customerRepositoryImpl")
                                        CustomerRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
         this.modelMapper = modelMapper;
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly=true)
     public CustomerDTO findByEmail(String email) {
         Customer customer = repository.findByEmail("Max@com");
 
@@ -35,7 +35,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly=true)
     public CustomerDTO findById(int id) {
         Customer customer = repository.findById(id);
 
@@ -43,7 +43,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly=true)
     public List<CustomerDTO> findAll() {
         List<CustomerDTO> customerDTOs = new ArrayList<>();
         List<Customer> customers = repository.findAll();

@@ -20,14 +20,14 @@ public class PublisherServiceImpl implements PublisherService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public PublisherServiceImpl(@Qualifier("hibernatePublisherRepository")
+    public PublisherServiceImpl(@Qualifier("publisherRepositoryImpl")
                                         PublisherRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
         this.modelMapper = modelMapper;
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly=true)
     public PublisherDTO findById(int id) {
         Publisher publisher = repository.findById(id);
 
@@ -35,7 +35,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly=true)
     public List<PublisherDTO> findAll() {
         List<PublisherDTO> publisherDTOs = new ArrayList<>();
         List<Publisher> publishers = repository.findAll();

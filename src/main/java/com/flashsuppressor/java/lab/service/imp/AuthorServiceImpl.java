@@ -4,7 +4,6 @@ import com.flashsuppressor.java.lab.entity.Author;
 import com.flashsuppressor.java.lab.entity.dto.AuthorDTO;
 import com.flashsuppressor.java.lab.repository.AuthorRepository;
 import com.flashsuppressor.java.lab.service.AuthorService;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,21 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
+//@Slf4j
 @Service
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository repository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public AuthorServiceImpl(@Qualifier("hibernateAuthorRepository")
+    public AuthorServiceImpl(@Qualifier("authorRepositoryImpl")
                                      AuthorRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
         this.modelMapper = modelMapper;
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly=true)
     public AuthorDTO findById(int id) {
         Author author = repository.findById(id);
 
@@ -38,7 +37,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly=true)
     public List<AuthorDTO> findAll() {
         List<AuthorDTO> authorDTOs = new ArrayList<>();
         List<Author> authors = repository.findAll();
@@ -51,7 +50,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Transactional
-    public AuthorDTO create(Author author) {
+    public AuthorDTO create(Author author){
         AuthorDTO newAuthorDTO = null;
         Author newAuthor = repository.create(author);
         if (newAuthor != null) {

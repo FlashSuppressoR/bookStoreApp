@@ -21,14 +21,14 @@ public class BookServiceImpl implements BookService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public BookServiceImpl(@Qualifier("hibernateBookRepository")
+    public BookServiceImpl(@Qualifier("bookRepositoryImpl")
                                    BookRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
         this.modelMapper = modelMapper;
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly=true)
     public BookDTO findById(Long id) {
         Book book = repository.findById(id);
 
@@ -36,7 +36,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly=true)
     public List<BookDTO> findAll() {
         List<BookDTO> bookDTOs = new ArrayList<>();
         List<Book> books = repository.findAll();

@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @Builder
 public class PurchaseDTO {
     private int id;
-    private int customerId;
+    private CustomerDTO customerDTO;
     private Timestamp purchaseTime;
 
 }

@@ -38,14 +38,15 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private Set<Purchase> purchases;
 
-    public Customer() {
+    public Customer(){
     }
 
-    public Customer(Integer id, String name, String email, String password) {
+    public Customer(Integer id, String name, String email, String password, Cart cart) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+        this.cart = cart;
     }
 
     public Integer getId() {
@@ -78,5 +79,13 @@ public class Customer {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 }

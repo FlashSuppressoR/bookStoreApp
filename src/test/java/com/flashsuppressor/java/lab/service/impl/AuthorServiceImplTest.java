@@ -6,24 +6,24 @@ import com.flashsuppressor.java.lab.service.AuthorService;
 import com.flashsuppressor.java.lab.service.TestServiceConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = TestServiceConfiguration.class)
 public class AuthorServiceImplTest {
 
-    @Autowired
-    private AuthorRepository repository;
-    @Autowired
+    @Mock
     private AuthorService service;
+    @Mock
+    private AuthorRepository repository;
 
     @Test
     void findAllTest() {

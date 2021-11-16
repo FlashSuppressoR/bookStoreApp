@@ -20,14 +20,14 @@ public class GenreServiceImpl implements GenreService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public GenreServiceImpl(@Qualifier("hibernateGenreRepository")
+    public GenreServiceImpl(@Qualifier("genreRepositoryImpl")
                                     GenreRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
         this.modelMapper = modelMapper;
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly=true)
     public GenreDTO findById(int id) {
         Genre genre = repository.findById(id);
 
@@ -35,7 +35,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly=true)
     public List<GenreDTO> findAll() {
         List<GenreDTO> genreDTOs = new ArrayList<>();
         List<Genre> genres = repository.findAll();

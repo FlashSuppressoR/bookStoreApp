@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Transactional
-public class HibernateCartRepositoryTest extends BaseRepositoryTest {
+public class CartRepositoryImplTest extends BaseRepositoryTest {
 
     @Autowired
     private CartRepository cartRepository;

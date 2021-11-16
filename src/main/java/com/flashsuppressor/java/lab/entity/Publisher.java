@@ -30,7 +30,7 @@ public class Publisher {
     @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL)
     private Set<Book> books;
 
-    public Publisher() {
+    public Publisher(){
     }
 
     public Publisher(Integer id, String name) {

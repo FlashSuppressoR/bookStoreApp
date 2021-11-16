@@ -1,7 +1,7 @@
 package com.flashsuppressor.java.lab.repository.impl;
 
-import com.flashsuppressor.java.lab.entity.Book;
-import com.flashsuppressor.java.lab.repository.BookRepository;
+import com.flashsuppressor.java.lab.entity.Publisher;
+import com.flashsuppressor.java.lab.repository.PublisherRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,62 +13,63 @@ import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class HibernateBookRepository implements BookRepository {
+//@AllArgsConstructor
+public class PublisherRepositoryImpl implements PublisherRepository {
     private final SessionFactory sessionFactory;
-    private static final String FIND_BOOKS_QUERY = "select b from Book b ";
+    private static final String FIND_ALL_PUBLISHERS_QUERY = "select p from Publisher p";
 
     @Autowired
-    public HibernateBookRepository(SessionFactory sessionFactory) {
+    public PublisherRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public Book findById(Long id) {
+    public List<Publisher> findAll() {
         Session session = sessionFactory.getCurrentSession();
-        return session.find(Book.class, id);
+        return session.createQuery(FIND_ALL_PUBLISHERS_QUERY, Publisher.class).list();
     }
 
     @Override
-    public List<Book> findAll() {
+    public Publisher findById(int id) {
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery(FIND_BOOKS_QUERY, Book.class).list();
+        return session.find(Publisher.class, id);
     }
 
     @Override
-    public void create(Book book) {
+    public void create(Publisher publisher) {
         Session session = sessionFactory.getCurrentSession();
-        session.save(book);
+        session.save(publisher);
     }
 
     @Override
-    public void createAll(List<Book> books) {
+    public void createAll(List<Publisher> publishers) {
         Session session = sessionFactory.getCurrentSession();
-        for (Book book : books) {
-            session.save(book);
+        for (Publisher publisher : publishers) {
+            session.save(publisher);
         }
     }
 
     @Override
-    public Book update(Book book) {
+    public Publisher update(Publisher publisher) {
         Session session = sessionFactory.getCurrentSession();
-        Book updatedBook;
+        Publisher updatedPublisher;
         session.beginTransaction();
-        session.update(book);
-        updatedBook = session.find(Book.class, book.getId());
+        session.update(publisher);
+        updatedPublisher = session.find(Publisher.class, publisher);
         session.getTransaction().commit();
 
-        return updatedBook;
+        return updatedPublisher;
     }
 
     @Override
-    public boolean deleteById(Long id) {
+    public boolean deleteById(int id) {
         Session session = sessionFactory.getCurrentSession();
         boolean result;
         session.beginTransaction();
-        Book book = session.find(Book.class, id);
-        if (book != null) {
-            session.delete(book);
-            result = (null == session.find(Book.class, id));
+        Publisher publisher = session.find(Publisher.class, id);
+        if (publisher != null) {
+            session.delete(publisher);
+            result = (null == session.find(Publisher.class, id));
         } else {
             result = false;
         }

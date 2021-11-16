@@ -13,6 +13,5 @@ public class ReviewDTO {
     private int id;
     private int mark;
     private String comment;
-//    private long bookId;
-
+    private BookDTO bookDTO;
 }

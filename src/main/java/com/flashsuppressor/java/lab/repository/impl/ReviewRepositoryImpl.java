@@ -13,12 +13,13 @@ import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class HibernateReviewRepository implements ReviewRepository {
+//@AllArgsConstructor
+public class ReviewRepositoryImpl implements ReviewRepository {
     private final SessionFactory sessionFactory;
     private static final String FIND_ALL_REVIEWS_QUERY = "select r from Review r";
 
     @Autowired
-    public HibernateReviewRepository(SessionFactory sessionFactory) {
+    public ReviewRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -48,7 +49,7 @@ public class HibernateReviewRepository implements ReviewRepository {
         Review updatedReview;
         session.beginTransaction();
         session.update(review);
-        updatedReview = session.find(Review.class, review.getId());
+        updatedReview = session.find(Review.class, review);
         session.getTransaction().commit();
 
         return updatedReview;

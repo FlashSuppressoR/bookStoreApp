@@ -1,7 +1,7 @@
 package com.flashsuppressor.java.lab.repository.impl;
 
-import com.flashsuppressor.java.lab.entity.Publisher;
-import com.flashsuppressor.java.lab.repository.PublisherRepository;
+import com.flashsuppressor.java.lab.entity.Purchase;
+import com.flashsuppressor.java.lab.repository.PurchaseRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,51 +13,52 @@ import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class HibernatePublisherRepository implements PublisherRepository {
+//@AllArgsConstructor
+public class PurchaseRepositoryImpl implements PurchaseRepository {
     private final SessionFactory sessionFactory;
-    private static final String FIND_ALL_PUBLISHERS_QUERY = "select p from Publisher p";
+    private static final String FIND_ALL_PURCHASES_QUERY = "select p from Purchase p";
 
     @Autowired
-    public HibernatePublisherRepository(SessionFactory sessionFactory) {
+    public PurchaseRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public List<Publisher> findAll() {
+    public List<Purchase> findAll(){
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery(FIND_ALL_PUBLISHERS_QUERY, Publisher.class).list();
+        return session.createQuery(FIND_ALL_PURCHASES_QUERY, Purchase.class).list();
     }
 
     @Override
-    public Publisher findById(int id) {
+    public Purchase findById(int id) {
         Session session = sessionFactory.getCurrentSession();
-        return session.find(Publisher.class, id);
+        return  session.find(Purchase.class, id);
     }
 
     @Override
-    public void create(Publisher publisher) {
+    public void create(Purchase purchase) {
         Session session = sessionFactory.getCurrentSession();
-        session.save(publisher);
+        session.save(purchase);
     }
 
     @Override
-    public void createAll(List<Publisher> publishers) {
+    public void createAll(List<Purchase> purchases) {
         Session session = sessionFactory.getCurrentSession();
-        for (Publisher publisher : publishers) {
-            session.save(publisher);
+        for (Purchase purchase : purchases) {
+            session.save(purchase);
         }
     }
 
     @Override
-    public Publisher update(Publisher publisher) {
+    public Purchase update(Purchase purchase) {
         Session session = sessionFactory.getCurrentSession();
-        Publisher updatedPublisher;
+        Purchase updatedPurchase;
         session.beginTransaction();
-        session.update(publisher);
-        updatedPublisher = session.find(Publisher.class, publisher.getId());
+        session.update(purchase);
+        updatedPurchase = session.find(Purchase.class, purchase);
         session.getTransaction().commit();
 
-        return updatedPublisher;
+        return updatedPurchase;
     }
 
     @Override
@@ -65,10 +66,11 @@ public class HibernatePublisherRepository implements PublisherRepository {
         Session session = sessionFactory.getCurrentSession();
         boolean result;
         session.beginTransaction();
-        Publisher publisher = session.find(Publisher.class, id);
-        if (publisher != null) {
-            session.delete(publisher);
-            result = (null == session.find(Publisher.class, id));
+        Purchase purchase = session.find(Purchase.class, id);
+
+        if (purchase != null) {
+            session.delete(purchase);
+            result = (null == session.find(Purchase.class, id));
         } else {
             result = false;
         }

@@ -20,14 +20,14 @@ public class ReviewServiceImpl implements ReviewService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public ReviewServiceImpl(@Qualifier("hibernateReviewRepository")
+    public ReviewServiceImpl(@Qualifier("reviewRepositoryImpl")
                                      ReviewRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
         this.modelMapper = modelMapper;
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly=true)
     public List<ReviewDTO> findAll() {
         List<ReviewDTO> reviewDTOs = new ArrayList<>();
         List<Review> reviews = repository.findAll();

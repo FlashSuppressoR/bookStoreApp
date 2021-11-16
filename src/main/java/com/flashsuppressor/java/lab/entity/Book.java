@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,27 +34,27 @@ public class Book {
     @Column(name = "price")
     private double price;
 
-    @javax.persistence.ManyToOne
+    @ManyToOne
     @JoinColumn(name = "publisher_id")
     private Publisher publisher;
-
-    @Column(name = "amount")
-    private int amount;
 
     @ManyToOne
     @JoinColumn(name = "genre_id")
     private Genre genre;
 
+    @Column(name = "amount")
+    private int amount;
+
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private Set<Review> reviews;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "book_author",
             joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "author_id", referencedColumnName = "id"))
     private Set<Author> authors;
 
-    public Book() {
+    public Book(){
     }
 
     public Book(Long id, String name, double price, Publisher publisher, Genre genre, int amount) {
@@ -89,20 +90,20 @@ public class Book {
         this.price = price;
     }
 
-    public Genre getGenre() {
-        return genre;
-    }
-
-    public void setGenre(Genre genre) {
-        this.genre = genre;
-    }
-
     public Publisher getPublisher() {
         return publisher;
     }
 
     public void setPublisher(Publisher publisher) {
         this.publisher = publisher;
+    }
+
+    public Genre getGenre() {
+        return genre;
+    }
+
+    public void setGenre(Genre genre) {
+        this.genre = genre;
     }
 
     public int getAmount() {

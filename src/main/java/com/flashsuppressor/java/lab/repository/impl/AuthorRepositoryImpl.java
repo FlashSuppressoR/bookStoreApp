@@ -13,12 +13,14 @@ import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class HibernateAuthorRepository implements AuthorRepository {
+//@AllArgsConstructor
+public class AuthorRepositoryImpl implements AuthorRepository {
+
     private final SessionFactory sessionFactory;
     private static final String FIND_AUTHORS_QUERY = "select a from  Author a";
 
     @Autowired
-    public HibernateAuthorRepository(SessionFactory sessionFactory) {
+    public AuthorRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -55,7 +57,7 @@ public class HibernateAuthorRepository implements AuthorRepository {
         Author updatedAuthor;
         session.beginTransaction();
         session.update(author);
-        updatedAuthor = session.find(Author.class, author.getId());
+        updatedAuthor = session.find(Author.class, author);
         session.getTransaction().commit();
 
         return updatedAuthor;

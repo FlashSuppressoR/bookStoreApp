@@ -1,7 +1,7 @@
 package com.flashsuppressor.java.lab.repository.impl;
 
-import com.flashsuppressor.java.lab.entity.Purchase;
-import com.flashsuppressor.java.lab.repository.PurchaseRepository;
+import com.flashsuppressor.java.lab.entity.Genre;
+import com.flashsuppressor.java.lab.repository.GenreRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,51 +13,57 @@ import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class HibernatePurchaseRepository implements PurchaseRepository {
+//@AllArgsConstructor
+public class GenreRepositoryImpl implements GenreRepository {
     private final SessionFactory sessionFactory;
-    private static final String FIND_ALL_PURCHASES_QUERY = "select p from Purchase p";
+    private static final String FIND_ALL_GENRE_QUERY = "select g from Genre g";
 
     @Autowired
-    public HibernatePurchaseRepository(SessionFactory sessionFactory) {
+    public GenreRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public List<Purchase> findAll(){
+    public List<Genre> findAll() {
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery(FIND_ALL_PURCHASES_QUERY, Purchase.class).list();
+        return session.createQuery(FIND_ALL_GENRE_QUERY, Genre.class).list();
+    }
+
+    public Genre findById(Long id) {
+        Session session = sessionFactory.getCurrentSession();
+        return session.find(Genre.class, id);
     }
 
     @Override
-    public Purchase findById(int id) {
+    public Genre findById(int id) {
         Session session = sessionFactory.getCurrentSession();
-        return  session.find(Purchase.class, id);
+        return session.find(Genre.class, id);
     }
 
     @Override
-    public void create(Purchase purchase) {
+    public void create(Genre genre) {
         Session session = sessionFactory.getCurrentSession();
-        session.save(purchase);
+        session.save(genre);
     }
 
     @Override
-    public void createAll(List<Purchase> purchases) {
+    public void createAll(List<Genre> genres) {
         Session session = sessionFactory.getCurrentSession();
-        for (Purchase purchase : purchases) {
-            session.save(purchase);
+        for (Genre genre : genres) {
+            session.save(genre);
         }
     }
 
     @Override
-    public Purchase update(Purchase purchase) {
+    public Genre update(Genre genre) {
         Session session = sessionFactory.getCurrentSession();
-        Purchase updatedPurchase;
+        Genre updatedGenre;
         session.beginTransaction();
-        session.update(purchase);
-        updatedPurchase = session.find(Purchase.class, purchase.getId());
+        session.update(genre);
+        updatedGenre = session.find(Genre.class, genre);
         session.getTransaction().commit();
 
-        return updatedPurchase;
+        return updatedGenre;
     }
 
     @Override
@@ -65,11 +71,10 @@ public class HibernatePurchaseRepository implements PurchaseRepository {
         Session session = sessionFactory.getCurrentSession();
         boolean result;
         session.beginTransaction();
-        Purchase purchase = session.find(Purchase.class, id);
-
-        if (purchase != null) {
-            session.delete(purchase);
-            result = (null == session.find(Purchase.class, id));
+        Genre genre = session.find(Genre.class, id);
+        if (genre != null) {
+            session.delete(genre);
+            result = (null == session.find(Genre.class, id));
         } else {
             result = false;
         }

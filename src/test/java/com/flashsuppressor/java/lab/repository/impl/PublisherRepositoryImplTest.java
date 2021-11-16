@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Transactional
-public class HibernatePublisherRepositoryTest extends BaseRepositoryTest {
+public class PublisherRepositoryImplTest extends BaseRepositoryTest {
 
     @Autowired
     private PublisherRepository publisherRepository;

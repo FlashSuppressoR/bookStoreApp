@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CartDTO {
     private int id;
-    private int customerId;
+    private CustomerDTO customerDTO;
     private long bookId;
     private int bookCounter;
 }

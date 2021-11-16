@@ -20,14 +20,14 @@ public class PurchaseServiceImpl implements PurchaseService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public PurchaseServiceImpl(@Qualifier("hibernatePurchaseRepository")
+    public PurchaseServiceImpl(@Qualifier("purchaseRepositoryImpl")
                                        PurchaseRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
         this.modelMapper = modelMapper;
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly=true)
     public PurchaseDTO findById(int id) {
         Purchase purchase = repository.findById(id);
 
@@ -35,7 +35,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly=true)
     public List<PurchaseDTO> findAll() {
         List<PurchaseDTO> purchaseDTOs = new ArrayList<>();
         List<Purchase> purchases = repository.findAll();

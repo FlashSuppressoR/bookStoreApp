@@ -32,7 +32,7 @@ public class Purchase {
     @Column(name = "purchase_time")
     private Timestamp purchaseTime;
 
-    public Purchase() {
+    public  Purchase(){
     }
 
     public Purchase(Integer id, Customer customer, Timestamp purchaseTime) {

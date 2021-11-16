@@ -4,11 +4,11 @@ import com.flashsuppressor.java.lab.repository.BookRepository;
 import com.flashsuppressor.java.lab.service.BookService;
 import com.flashsuppressor.java.lab.service.TestServiceConfiguration;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = TestServiceConfiguration.class)
 public class BookServiceImplTest {
 

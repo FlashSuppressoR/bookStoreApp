@@ -11,13 +11,15 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class HibernateCartRepository implements CartRepository {
+//@AllArgsConstructor
+public class CartRepositoryImpl implements CartRepository {
     private final SessionFactory sessionFactory;
     private static final String FIND_CARTS_QUERY = "select c from Cart c ";
     @Autowired
-    public HibernateCartRepository(SessionFactory sessionFactory) {
+    public CartRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -45,7 +47,7 @@ public class HibernateCartRepository implements CartRepository {
         Cart updatedCart;
         Transaction transaction = session.beginTransaction();
         session.update(cart);
-        updatedCart = session.find(Cart.class, cart.getId());
+        updatedCart = session.find(Cart.class, cart);
         transaction.commit();
 
         return updatedCart;
