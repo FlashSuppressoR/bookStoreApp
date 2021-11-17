@@ -1,16 +1,20 @@
 package com.flashsuppressor.java.lab.config;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.flywaydb.core.Flyway;
 import org.h2.jdbcx.JdbcConnectionPool;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -18,6 +22,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
 
 import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
@@ -105,10 +112,10 @@ public class ApplicationContextConfiguration {
         return mapper;
     }
 
-//    @Bean
-//    public Logger logger(){
-//        return LoggerFactory.getLogger(this.getClass().getName());
-//    }
+    @Bean
+    public Logger logger(){
+        return LoggerFactory.getLogger(this.getClass().getName());
+    }
 
     private Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
@@ -117,5 +124,33 @@ public class ApplicationContextConfiguration {
         hibernateProperties.setProperty("show_sql", "true");
         hibernateProperties.setProperty("format_sql", "true");
         return hibernateProperties;
+    }
+
+    @Bean
+    @Profile("dev")
+    public void configureDevProfile() {
+        String devLog4JPropertyFile = "src/main/resources/log4j-dev.properties";
+        Properties devProperties = new Properties();
+        try {
+            devProperties.load(new FileInputStream(devLog4JPropertyFile));
+        } catch (IOException e) {
+            logger().info("The log4j-dev.properties was not configured.\n" + Arrays.toString(e.getStackTrace()));
+        }
+        logger().info("The log4j-dev.properties has been configured!");
+        PropertyConfigurator.configure(devProperties);
+    }
+
+    @Bean
+    @Profile("stable")
+    public void configureStableProfile() {
+        String testLog4JPropertyFile = "src/main/resources/log4j-stable.properties";
+        Properties stableProperties = new Properties();
+        try {
+            stableProperties.load(new FileInputStream(testLog4JPropertyFile));
+        } catch (IOException e) {
+            System.out.println("The log4j-stable.properties was not configured.\n" + Arrays.toString(e.getStackTrace()));
+        }
+        logger().info("The log4j-stable.properties has been configured!");
+        PropertyConfigurator.configure(stableProperties);
     }
 }

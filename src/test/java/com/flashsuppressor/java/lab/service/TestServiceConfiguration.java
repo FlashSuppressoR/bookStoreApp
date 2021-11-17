@@ -1,10 +1,21 @@
 package com.flashsuppressor.java.lab.service;
 
-import com.flashsuppressor.java.lab.repository.*;
+import com.flashsuppressor.java.lab.repository.AuthorRepository;
+import com.flashsuppressor.java.lab.repository.BookRepository;
+import com.flashsuppressor.java.lab.repository.CartRepository;
+import com.flashsuppressor.java.lab.repository.CustomerRepository;
+import com.flashsuppressor.java.lab.repository.GenreRepository;
+import com.flashsuppressor.java.lab.repository.PublisherRepository;
+import com.flashsuppressor.java.lab.repository.PurchaseRepository;
+import com.flashsuppressor.java.lab.repository.ReviewRepository;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.TestPropertySource;
 
 import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
