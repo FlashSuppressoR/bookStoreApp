@@ -24,7 +24,6 @@ public class Runner {
     public static void main(String[] args) {
 
         ctx = new AnnotationConfigApplicationContext(ApplicationContextConfiguration.class);
-//        ctx = new AnnotationConfigApplicationContext(ApplicationDevContextConfiguration.class);
         findByIdService();
         createAuthorServiceWithException();
     }
