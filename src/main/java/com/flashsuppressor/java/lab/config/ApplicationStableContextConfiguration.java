@@ -31,10 +31,10 @@ import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 
 @Configuration
 @ComponentScan("com.flashsuppressor.java.lab")
-@PropertySource("classpath:/application.properties")
+@PropertySource("classpath:/application-stable.properties")
 @EnableAspectJAutoProxy
 @EnableTransactionManagement
-public class ApplicationContextConfiguration {
+public class ApplicationStableContextConfiguration {
 
     @Value("${database.driver}")
     String driverClassName;
@@ -129,16 +129,16 @@ public class ApplicationContextConfiguration {
     }
 
     @Bean
-    @Profile("default")
-    public void configureDefaultProfile() {
-        String devLog4JPropertyFile = "src/main/resources/log4j.properties";
-        Properties devProperties = new Properties();
+    @Profile("stable")
+    public void configureStableProfile() {
+        String testLog4JPropertyFile = "src/main/resources/log4j-stable.properties";
+        Properties stableProperties = new Properties();
         try {
-            devProperties.load(new FileInputStream(devLog4JPropertyFile));
+            stableProperties.load(new FileInputStream(testLog4JPropertyFile));
         } catch (IOException e) {
-            logger().info("The log4j.properties was not configured.\n" + Arrays.toString(e.getStackTrace()));
+            System.out.println("The log4j-stable.properties was not configured.\n" + Arrays.toString(e.getStackTrace()));
         }
-        logger().info("The log4j.properties has been configured!");
-        PropertyConfigurator.configure(devProperties);
+        PropertyConfigurator.configure(stableProperties);
+        logger().info("The log4j-stable.properties has been configured!");
     }
 }

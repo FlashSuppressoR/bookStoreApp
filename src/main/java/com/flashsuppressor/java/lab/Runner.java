@@ -7,6 +7,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+/**
+ *  VM options:
+ *
+ * -Dspring.profiles.active=dev          = To run the dev profile
+ *                                         (Logging goes to the console)
+ *
+ * -Dspring.profiles.active=stable       = To run the stable profile
+ *                                         (Logging goes to the console & file C:/TMP/log_file.log)
+ */
+
 @Slf4j
 public class Runner {
     private static ApplicationContext ctx;
@@ -14,6 +24,7 @@ public class Runner {
     public static void main(String[] args) {
 
         ctx = new AnnotationConfigApplicationContext(ApplicationContextConfiguration.class);
+//        ctx = new AnnotationConfigApplicationContext(ApplicationDevContextConfiguration.class);
         findByIdService();
         createAuthorServiceWithException();
     }

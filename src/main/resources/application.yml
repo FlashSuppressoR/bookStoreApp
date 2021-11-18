@@ -11,6 +11,6 @@ hibernate:
   format_sql.property = true
 spring:
   profiles:
-    active: "dev,stable"
+    active: "default,dev,stable"
 
   entity.package.to.scan = com.flashsuppressor.java.lab.entity

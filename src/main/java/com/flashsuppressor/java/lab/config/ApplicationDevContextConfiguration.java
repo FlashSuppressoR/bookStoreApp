@@ -31,10 +31,10 @@ import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 
 @Configuration
 @ComponentScan("com.flashsuppressor.java.lab")
-@PropertySource("classpath:/application.properties")
+@PropertySource("classpath:/application-dev.properties")
 @EnableAspectJAutoProxy
 @EnableTransactionManagement
-public class ApplicationContextConfiguration {
+public class ApplicationDevContextConfiguration {
 
     @Value("${database.driver}")
     String driverClassName;
@@ -129,16 +129,16 @@ public class ApplicationContextConfiguration {
     }
 
     @Bean
-    @Profile("default")
-    public void configureDefaultProfile() {
-        String devLog4JPropertyFile = "src/main/resources/log4j.properties";
+    @Profile("dev")
+    public void configureDevProfile() {
+        String devLog4JPropertyFile = "src/main/resources/log4j-dev.properties";
         Properties devProperties = new Properties();
         try {
             devProperties.load(new FileInputStream(devLog4JPropertyFile));
         } catch (IOException e) {
-            logger().info("The log4j.properties was not configured.\n" + Arrays.toString(e.getStackTrace()));
+            logger().info("The log4j-dev.properties was not configured.\n" + Arrays.toString(e.getStackTrace()));
         }
-        logger().info("The log4j.properties has been configured!");
+        logger().info("The log4j-dev.properties has been configured!");
         PropertyConfigurator.configure(devProperties);
     }
 }
