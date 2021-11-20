@@ -1,12 +1,11 @@
-package com.flashsuppressor.java.lab.service.imp;
+package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Purchase;
 import com.flashsuppressor.java.lab.entity.dto.PurchaseDTO;
 import com.flashsuppressor.java.lab.repository.PurchaseRepository;
 import com.flashsuppressor.java.lab.service.PurchaseService;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,16 +14,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class PurchaseServiceImpl implements PurchaseService {
     private final PurchaseRepository repository;
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public PurchaseServiceImpl(@Qualifier("purchaseRepositoryImpl")
-                                       PurchaseRepository repository, ModelMapper modelMapper) {
-        this.repository = repository;
-        this.modelMapper = modelMapper;
-    }
 
     @Override
     @Transactional(readOnly=true)

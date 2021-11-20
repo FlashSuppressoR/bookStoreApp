@@ -2,9 +2,9 @@ package com.flashsuppressor.java.lab.repository.impl;
 
 import com.flashsuppressor.java.lab.entity.Customer;
 import com.flashsuppressor.java.lab.repository.CustomerRepository;
+import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,16 +13,11 @@ import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-//@AllArgsConstructor
+@AllArgsConstructor
 public class CustomerRepositoryImpl implements CustomerRepository {
     private final SessionFactory sessionFactory;
     private static final String FIND_CUSTOMER_BY_EMAIL_QUERY = "select c from Customer c where Customer.email = ?1";
     private static final String FIND_ALL_CUSTOMERS_QUERY = "select c from Customer c";
-
-    @Autowired
-    public CustomerRepositoryImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
 
     @Override
     public Customer findByEmail(String email) {

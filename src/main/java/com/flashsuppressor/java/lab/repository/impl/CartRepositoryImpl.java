@@ -2,10 +2,10 @@ package com.flashsuppressor.java.lab.repository.impl;
 
 import com.flashsuppressor.java.lab.entity.Cart;
 import com.flashsuppressor.java.lab.repository.CartRepository;
+import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,14 +14,10 @@ import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-//@AllArgsConstructor
+@AllArgsConstructor
 public class CartRepositoryImpl implements CartRepository {
     private final SessionFactory sessionFactory;
     private static final String FIND_CARTS_QUERY = "select c from Cart c ";
-    @Autowired
-    public CartRepositoryImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
 
     @Override
     public List<Cart> findAll() {

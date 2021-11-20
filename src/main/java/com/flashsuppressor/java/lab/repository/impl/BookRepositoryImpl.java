@@ -2,9 +2,9 @@ package com.flashsuppressor.java.lab.repository.impl;
 
 import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.repository.BookRepository;
+import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,15 +13,10 @@ import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-//@AllArgsConstructor
+@AllArgsConstructor
 public class BookRepositoryImpl implements BookRepository {
     private final SessionFactory sessionFactory;
     private static final String FIND_BOOKS_QUERY = "select b from Book b ";
-
-    @Autowired
-    public BookRepositoryImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
 
     @Override
     public Book findById(Long id) {

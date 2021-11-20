@@ -22,7 +22,7 @@ public class FindAdvice {
         this.logger = logger;
     }
 
-    @Pointcut("execution(* com.flashsuppressor.java.lab.repository.impl.*.find*(..))")
+    @Pointcut("execution(* com.flashsuppressor.java.lab.service.impl.*.find*(..))")
     public void findMethodsInRepositories() {
     }
 

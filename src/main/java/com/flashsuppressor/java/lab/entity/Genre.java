@@ -1,6 +1,9 @@
 package com.flashsuppressor.java.lab.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,9 +18,9 @@ import java.util.Set;
 @Entity
 @Data
 @Table(name = "genre", schema = "book_store")
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Genre {
 
     @Id
@@ -29,28 +32,4 @@ public class Genre {
 
     @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL)
     private Set<Book> books;
-
-    public Genre(){
-    }
-
-    public Genre(Integer id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

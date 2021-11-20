@@ -1,51 +1,34 @@
-package com.flashsuppressor.java.lab.service.imp;
+package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Author;
 import com.flashsuppressor.java.lab.entity.dto.AuthorDTO;
 import com.flashsuppressor.java.lab.repository.AuthorRepository;
 import com.flashsuppressor.java.lab.service.AuthorService;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@Slf4j
+
 @Service
+@AllArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository repository;
     private final ModelMapper modelMapper;
 
-    @Autowired
-    public AuthorServiceImpl(@Qualifier("authorRepositoryImpl")
-                                     AuthorRepository repository, ModelMapper modelMapper) {
-        this.repository = repository;
-        this.modelMapper = modelMapper;
-    }
-
     @Override
     @Transactional(readOnly=true)
     public AuthorDTO findById(int id) {
-        Author author = repository.findById(id);
-
-        return convertToAuthorDTO(author);
-
+        return convertToAuthorDTO(repository.findById(id));
     }
 
     @Override
     @Transactional(readOnly=true)
     public List<AuthorDTO> findAll() {
-        List<AuthorDTO> authorDTOs = new ArrayList<>();
-        List<Author> authors = repository.findAll();
-        if (authors.size() > 0) {
-            authorDTOs = authors.stream().map(this::convertToAuthorDTO).collect(Collectors.toList());
-        }
-
-        return authorDTOs;
+        return repository.findAll().stream().map(this::convertToAuthorDTO).collect(Collectors.toList());
     }
 
     @Override

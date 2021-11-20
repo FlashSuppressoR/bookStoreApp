@@ -131,10 +131,9 @@ public class ApplicationStableContextConfiguration {
     @Bean
     @Profile("stable")
     public void configureStableProfile() {
-        String testLog4JPropertyFile = "src/main/resources/log4j-stable.properties";
         Properties stableProperties = new Properties();
         try {
-            stableProperties.load(new FileInputStream(testLog4JPropertyFile));
+            stableProperties.load(new FileInputStream(loggingConfig));
         } catch (IOException e) {
             System.out.println("The log4j-stable.properties was not configured.\n" + Arrays.toString(e.getStackTrace()));
         }

@@ -1,12 +1,11 @@
-package com.flashsuppressor.java.lab.service.imp;
+package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Cart;
 import com.flashsuppressor.java.lab.entity.dto.CartDTO;
 import com.flashsuppressor.java.lab.repository.CartRepository;
 import com.flashsuppressor.java.lab.service.CartService;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,16 +14,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class CartServiceImpl implements CartService {
     private final CartRepository repository;
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public CartServiceImpl(@Qualifier("cartRepositoryImpl")
-                                   CartRepository repository, ModelMapper modelMapper) {
-        this.repository = repository;
-        this.modelMapper = modelMapper;
-    }
 
     @Override
     @Transactional(readOnly=true)

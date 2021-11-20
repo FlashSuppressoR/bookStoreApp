@@ -1,6 +1,9 @@
 package com.flashsuppressor.java.lab.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,9 +19,9 @@ import javax.persistence.Table;
 @Entity
 @Data
 @Table(name = "cart", schema = "book_store")
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Cart {
 
     @Id
@@ -35,46 +38,4 @@ public class Cart {
 
     @Column(name = "book_counter")
     private Integer bookCounter;
-
-    public Cart(){
-    }
-
-    public Cart(Integer id, Customer customer, Long bookId, Integer bookCounter) {
-        this.id = id;
-        this.customer = customer;
-        this.bookId = bookId;
-        this.bookCounter = bookCounter;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public Long getBookId() {
-        return bookId;
-    }
-
-    public void setBookId(Long bookId) {
-        this.bookId = bookId;
-    }
-
-    public Integer getBookCounter() {
-        return bookCounter;
-    }
-
-    public void setBookCounter(Integer bookCounter) {
-        this.bookCounter = bookCounter;
-    }
 }

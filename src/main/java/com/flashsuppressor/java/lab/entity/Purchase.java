@@ -1,6 +1,9 @@
 package com.flashsuppressor.java.lab.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,9 +18,9 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @Table(name = "purchase", schema = "book_store")
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Purchase {
 
     @Id
@@ -31,37 +34,4 @@ public class Purchase {
 
     @Column(name = "purchase_time")
     private Timestamp purchaseTime;
-
-    public  Purchase(){
-    }
-
-    public Purchase(Integer id, Customer customer, Timestamp purchaseTime) {
-        this.id = id;
-        this.customer = customer;
-        this.purchaseTime = purchaseTime;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public Timestamp getPurchaseTime() {
-        return purchaseTime;
-    }
-
-    public void setPurchaseTime(Timestamp purchaseTime) {
-        this.purchaseTime = purchaseTime;
-    }
 }

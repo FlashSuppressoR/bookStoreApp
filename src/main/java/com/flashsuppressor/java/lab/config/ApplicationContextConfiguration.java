@@ -131,14 +131,14 @@ public class ApplicationContextConfiguration {
     @Bean
     @Profile("default")
     public void configureDefaultProfile() {
-        String devLog4JPropertyFile = "src/main/resources/log4j.properties";
+
         Properties devProperties = new Properties();
         try {
-            devProperties.load(new FileInputStream(devLog4JPropertyFile));
+            devProperties.load(new FileInputStream(loggingConfig));
         } catch (IOException e) {
             logger().info("The log4j.properties was not configured.\n" + Arrays.toString(e.getStackTrace()));
         }
-        logger().info("The log4j.properties has been configured!");
         PropertyConfigurator.configure(devProperties);
+        logger().info("The log4j.properties has been configured!");
     }
 }
