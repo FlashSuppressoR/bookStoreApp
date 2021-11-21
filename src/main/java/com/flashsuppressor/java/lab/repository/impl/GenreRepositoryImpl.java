@@ -4,46 +4,54 @@ import com.flashsuppressor.java.lab.entity.Genre;
 import com.flashsuppressor.java.lab.repository.GenreRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
 @AllArgsConstructor
 public class GenreRepositoryImpl implements GenreRepository {
-    private final SessionFactory sessionFactory;
+
+    @Autowired
+    private final EntityManager entityManager;
+
+    private Session getSession() {
+        return entityManager.unwrap(Session.class);
+    }
+
     private static final String FIND_ALL_GENRE_QUERY = "select g from Genre g";
 
     @Override
     public List<Genre> findAll() {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSession();
         return session.createQuery(FIND_ALL_GENRE_QUERY, Genre.class).list();
     }
 
     public Genre findById(Long id) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSession();
         return session.find(Genre.class, id);
     }
 
     @Override
     public Genre findById(int id) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSession();
         return session.find(Genre.class, id);
     }
 
     @Override
     public void create(Genre genre) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSession();
         session.save(genre);
     }
 
     @Override
     public void createAll(List<Genre> genres) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSession();
         for (Genre genre : genres) {
             session.save(genre);
         }
@@ -51,7 +59,7 @@ public class GenreRepositoryImpl implements GenreRepository {
 
     @Override
     public Genre update(Genre genre) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSession();
         Genre updatedGenre;
         session.beginTransaction();
         session.update(genre);
@@ -63,7 +71,7 @@ public class GenreRepositoryImpl implements GenreRepository {
 
     @Override
     public boolean deleteById(int id) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSession();
         boolean result;
         session.beginTransaction();
         Genre genre = session.find(Genre.class, id);

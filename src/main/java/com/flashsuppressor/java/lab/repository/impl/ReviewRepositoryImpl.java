@@ -4,35 +4,43 @@ import com.flashsuppressor.java.lab.entity.Review;
 import com.flashsuppressor.java.lab.repository.ReviewRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
 @AllArgsConstructor
 public class ReviewRepositoryImpl implements ReviewRepository {
-    private final SessionFactory sessionFactory;
+
+    @Autowired
+    private final EntityManager entityManager;
+
+    private Session getSession() {
+        return entityManager.unwrap(Session.class);
+    }
+
     private static final String FIND_ALL_REVIEWS_QUERY = "select r from Review r";
 
     @Override
     public List<Review> findAll() {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSession();
        return session.createQuery(FIND_ALL_REVIEWS_QUERY, Review.class).list();
     }
 
     @Override
     public void create(Review review) {
-
-        Session session = sessionFactory.getCurrentSession();session.save(review);
+        Session session = getSession();
+        session.save(review);
     }
 
     @Override
     public void createAll(List<Review> reviews) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSession();
         for (Review review : reviews) {
             session.save(review);
         }
@@ -40,7 +48,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
 
     @Override
     public Review update(Review review) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSession();
         Review updatedReview;
         session.beginTransaction();
         session.update(review);
@@ -52,7 +60,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
 
     @Override
     public boolean deleteById(int id) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSession();
         boolean result;
         session.beginTransaction();
         Review review = session.find(Review.class, id);

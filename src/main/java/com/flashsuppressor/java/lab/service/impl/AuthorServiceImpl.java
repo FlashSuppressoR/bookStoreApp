@@ -4,7 +4,7 @@ import com.flashsuppressor.java.lab.entity.Author;
 import com.flashsuppressor.java.lab.entity.dto.AuthorDTO;
 import com.flashsuppressor.java.lab.repository.AuthorRepository;
 import com.flashsuppressor.java.lab.service.AuthorService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository repository;
     private final ModelMapper modelMapper;

@@ -4,41 +4,49 @@ import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
 @AllArgsConstructor
 public class BookRepositoryImpl implements BookRepository {
-    private final SessionFactory sessionFactory;
+
+    @Autowired
+    private final EntityManager entityManager;
+
+    private Session getSession() {
+        return entityManager.unwrap(Session.class);
+    }
+
     private static final String FIND_BOOKS_QUERY = "select b from Book b ";
 
     @Override
     public Book findById(Long id) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSession();
         return session.find(Book.class, id);
     }
 
     @Override
     public List<Book> findAll() {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSession();
         return session.createQuery(FIND_BOOKS_QUERY, Book.class).list();
     }
 
     @Override
     public void create(Book book) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSession();
         session.save(book);
     }
 
     @Override
     public void createAll(List<Book> books) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSession();
         for (Book book : books) {
             session.save(book);
         }
@@ -46,7 +54,7 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public Book update(Book book) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSession();
         Book updatedBook;
         session.beginTransaction();
         session.update(book);
@@ -58,7 +66,7 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public boolean deleteById(Long id) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = getSession();
         boolean result;
         session.beginTransaction();
         Book book = session.find(Book.class, id);
