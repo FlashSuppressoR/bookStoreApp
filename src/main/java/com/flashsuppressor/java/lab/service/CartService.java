@@ -1,6 +1,5 @@
 package com.flashsuppressor.java.lab.service;
 
-import com.flashsuppressor.java.lab.entity.Cart;
 import com.flashsuppressor.java.lab.entity.dto.CartDTO;
 
 import java.util.List;
@@ -11,9 +10,9 @@ public interface CartService {
 
     List<CartDTO> findAll();
 
-    void create(Cart cart);
+    CartDTO create(CartDTO cartDTO);
 
-    CartDTO update(Cart cart);
+    CartDTO update(CartDTO cartDTO);
 
     boolean deleteById(int id);
 }

@@ -27,15 +27,22 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     private static final String FIND_ALL_REVIEWS_QUERY = "select r from Review r";
 
     @Override
+    public Review findById(int id){
+        Session session = getSession();
+        return session.find(Review.class, id);
+    }
+
+    @Override
     public List<Review> findAll() {
         Session session = getSession();
        return session.createQuery(FIND_ALL_REVIEWS_QUERY, Review.class).list();
     }
 
     @Override
-    public void create(Review review) {
+    public Review create(Review review) {
         Session session = getSession();
         session.save(review);
+        return review;
     }
 
     @Override

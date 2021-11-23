@@ -1,6 +1,8 @@
 package com.flashsuppressor.java.lab.service.impl;
 
+import com.flashsuppressor.java.lab.entity.Customer;
 import com.flashsuppressor.java.lab.entity.Purchase;
+import com.flashsuppressor.java.lab.entity.dto.CustomerDTO;
 import com.flashsuppressor.java.lab.entity.dto.PurchaseDTO;
 import com.flashsuppressor.java.lab.repository.PurchaseRepository;
 import com.flashsuppressor.java.lab.service.PurchaseService;
@@ -9,7 +11,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,47 +23,49 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     @Transactional(readOnly=true)
     public PurchaseDTO findById(int id) {
-        Purchase purchase = repository.findById(id);
-
-        return convertToPurchaseDTO(purchase);
+        return convertToPurchaseDTO(repository.findById(id));
     }
 
     @Override
     @Transactional(readOnly=true)
     public List<PurchaseDTO> findAll() {
-        List<PurchaseDTO> purchaseDTOs = new ArrayList<>();
-        List<Purchase> purchases = repository.findAll();
-        if (purchases != null && purchases.size() > 0) {
-            purchaseDTOs = purchases.stream().map(this::convertToPurchaseDTO).collect(Collectors.toList());
-        }
-
-        return purchaseDTOs;
+        return repository.findAll().stream().map(this::convertToPurchaseDTO).collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public void create(Purchase purchase) {
-        repository.create(purchase);
+    public PurchaseDTO create(PurchaseDTO purchaseDTO) {
+        Purchase newPurchase = repository.create(convertToPurchase(purchaseDTO));
+        return convertToPurchaseDTO(newPurchase);
     }
 
     @Override
     @Transactional
-    public void createAll(List<Purchase> purchases) {
-        for (Purchase purchase : purchases) {
-            repository.create(purchase);
+    public List<PurchaseDTO> createAll(List<PurchaseDTO> purchases) {
+        List<PurchaseDTO> purchaseDTOList = null;
+        for (PurchaseDTO newPurchaseDTO : purchases) {
+            Purchase newPurchase = repository.create(convertToPurchase(newPurchaseDTO));
+            purchaseDTOList.add(convertToPurchaseDTO(newPurchase));
         }
+        return purchaseDTOList;
     }
 
     @Override
     @Transactional
-    public PurchaseDTO update(Purchase purchase) {
-        PurchaseDTO updatedPurchaseDTO = null;
-        Purchase updatedPurchase = repository.update(purchase);
-        if (updatedPurchase != null) {
-            updatedPurchaseDTO = convertToPurchaseDTO(updatedPurchase);
+    public PurchaseDTO update(PurchaseDTO purchaseDTO) {
+        PurchaseDTO newPurchaseDTO = null;
+        try {
+            Purchase purchase = repository.findById(purchaseDTO.getId());
+            if (purchaseDTO.getCustomerDTO() != null) {
+                purchase.setCustomer(convertToCustomer(purchaseDTO.getCustomerDTO()));
+            }
+            purchase.setPurchaseTime(purchaseDTO.getPurchaseTime());
+            newPurchaseDTO = convertToPurchaseDTO(purchase);
         }
-
-        return updatedPurchaseDTO;
+        catch (Exception e){
+            System.out.println("Can't update authorDTO");
+        }
+        return newPurchaseDTO;
     }
 
     @Override
@@ -72,8 +75,15 @@ public class PurchaseServiceImpl implements PurchaseService {
         return repository.deleteById(id);
     }
 
-    private PurchaseDTO convertToPurchaseDTO(Purchase purchase) {
+    private Customer convertToCustomer(CustomerDTO customerDTO) {
+        return modelMapper.map(customerDTO, Customer.class);
+    }
 
+    private Purchase convertToPurchase(PurchaseDTO purchaseDTO) {
+        return modelMapper.map(purchaseDTO, Purchase.class);
+    }
+
+    private PurchaseDTO convertToPurchaseDTO(Purchase purchase) {
         return modelMapper.map(purchase, PurchaseDTO.class);
     }
 }

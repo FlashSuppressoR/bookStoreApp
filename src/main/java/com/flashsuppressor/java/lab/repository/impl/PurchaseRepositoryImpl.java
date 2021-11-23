@@ -39,9 +39,10 @@ public class PurchaseRepositoryImpl implements PurchaseRepository {
     }
 
     @Override
-    public void create(Purchase purchase) {
+    public Purchase create(Purchase purchase) {
         Session session = getSession();
         session.save(purchase);
+        return purchase;
     }
 
     @Override

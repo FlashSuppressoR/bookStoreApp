@@ -10,7 +10,7 @@ public interface CartRepository {
 
     List<Cart> findAll();
 
-    void create(Cart cart);
+    Cart create(Cart cart);
 
     Cart update(Cart cart);
 

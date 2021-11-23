@@ -44,9 +44,10 @@ public class GenreRepositoryImpl implements GenreRepository {
     }
 
     @Override
-    public void create(Genre genre) {
+    public Genre create(Genre genre) {
         Session session = getSession();
         session.save(genre);
+        return genre;
     }
 
     @Override

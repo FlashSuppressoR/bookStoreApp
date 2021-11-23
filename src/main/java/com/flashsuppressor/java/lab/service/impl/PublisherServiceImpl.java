@@ -9,7 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,58 +21,61 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     @Transactional(readOnly=true)
     public PublisherDTO findById(int id) {
-        Publisher publisher = repository.findById(id);
-
-        return convertToPublisherDTO(publisher);
+        return convertToPublisherDTO(repository.findById(id));
     }
 
     @Override
     @Transactional(readOnly=true)
     public List<PublisherDTO> findAll() {
-        List<PublisherDTO> publisherDTOs = new ArrayList<>();
-        List<Publisher> publishers = repository.findAll();
-        if (publishers != null && publishers.size() > 0) {
-            publisherDTOs = publishers.stream().map(this::convertToPublisherDTO).collect(Collectors.toList());
-        }
-
-        return publisherDTOs;
+        return repository.findAll().stream().map(this::convertToPublisherDTO).collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public void create(Publisher publisher) {
-        repository.create(publisher);
+    public PublisherDTO create(PublisherDTO publisherDTO) {
+       Publisher newPublisher = repository.create(convertToPublisher(publisherDTO));
+        return convertToPublisherDTO(newPublisher);
     }
 
     @Override
     @Transactional
-    public void createAll(List<Publisher> publishers) {
-        for (Publisher publisher : publishers) {
-            repository.create(publisher);
+    public List<PublisherDTO> createAll(List<PublisherDTO> publishers) {
+        List<PublisherDTO> publisherDTOList = null;
+        for (PublisherDTO newPublisherDTO : publishers) {
+            Publisher newPublisher = repository.create(convertToPublisher(newPublisherDTO));
+            publisherDTOList.add(convertToPublisherDTO(newPublisher));
         }
+        return publisherDTOList;
     }
 
     @Override
     @Transactional
-    public PublisherDTO update(Publisher publisher) {
-        PublisherDTO updatedPublisherDTO = null;
-        Publisher updatedPublisher = repository.update(publisher);
-        if (updatedPublisher != null) {
-            updatedPublisherDTO = convertToPublisherDTO(updatedPublisher);
+    public PublisherDTO update(PublisherDTO publisherDTO) {
+        PublisherDTO newPublisherDTO = null;
+        try {
+            Publisher publisher = repository.findById(publisherDTO.getId());
+            if (publisherDTO.getName() != null) {
+                publisher.setName(publisherDTO.getName());
+            }
+            newPublisherDTO = convertToPublisherDTO(publisher);
         }
-
-        return updatedPublisherDTO;
+        catch (Exception e){
+            System.out.println("Can't update publisherDTO");
+        }
+        return newPublisherDTO;
     }
 
     @Override
     @Transactional
     public boolean deleteById(int id) {
-
         return repository.deleteById(id);
     }
 
-    private PublisherDTO convertToPublisherDTO(Publisher publisher) {
+    private Publisher convertToPublisher(PublisherDTO publisherDTO) {
+        return modelMapper.map(publisherDTO, Publisher.class);
+    }
 
+    private PublisherDTO convertToPublisherDTO(Publisher publisher) {
         return modelMapper.map(publisher, PublisherDTO.class);
     }
 }

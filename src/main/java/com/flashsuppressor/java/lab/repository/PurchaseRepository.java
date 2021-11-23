@@ -10,7 +10,7 @@ public interface PurchaseRepository {
 
     List<Purchase> findAll();
 
-    void create(Purchase purchase);
+    Purchase create(Purchase purchase);
 
     void createAll(List<Purchase> purchases);
 

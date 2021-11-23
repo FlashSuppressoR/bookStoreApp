@@ -40,9 +40,10 @@ public class CartRepositoryImpl implements CartRepository {
     }
 
     @Override
-    public void create(Cart cart) {
+    public Cart create(Cart cart) {
         Session session = getSession();
         session.save(cart);
+        return cart;
     }
 
     @Override

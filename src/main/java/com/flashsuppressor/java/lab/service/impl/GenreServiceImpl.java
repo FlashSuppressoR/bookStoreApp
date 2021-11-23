@@ -9,7 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,58 +21,61 @@ public class GenreServiceImpl implements GenreService {
     @Override
     @Transactional(readOnly=true)
     public GenreDTO findById(int id) {
-        Genre genre = repository.findById(id);
-
-        return convertToGenreDTO(genre);
+        return convertToGenreDTO(repository.findById(id));
     }
 
     @Override
     @Transactional(readOnly=true)
     public List<GenreDTO> findAll() {
-        List<GenreDTO> genreDTOs = new ArrayList<>();
-        List<Genre> genres = repository.findAll();
-        if (genres != null && genres.size() > 0) {
-            genreDTOs = genres.stream().map(this::convertToGenreDTO).collect(Collectors.toList());
-        }
-
-        return genreDTOs;
+        return repository.findAll().stream().map(this::convertToGenreDTO).collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public void create(Genre genre) {
-        repository.create(genre);
+    public GenreDTO create(GenreDTO genreDTO) {
+        Genre newGenre = repository.create(convertToGenre(genreDTO));
+        return convertToGenreDTO(newGenre);
     }
 
     @Override
     @Transactional
-    public void createAll(List<Genre> genres) {
-        for (Genre genre : genres) {
-            repository.create(genre);
+    public List<GenreDTO> createAll(List<GenreDTO> genres) {
+        List<GenreDTO> genreDTOList = null;
+        for (GenreDTO newGenreDTO : genres) {
+            Genre newGenre = repository.create(convertToGenre(newGenreDTO));
+            genreDTOList.add(convertToGenreDTO(newGenre));
         }
+        return genreDTOList;
     }
 
     @Override
     @Transactional
-    public GenreDTO update(Genre genre) {
-        GenreDTO updatedGenreDTO = null;
-        Genre updatedGenre = repository.update(genre);
-        if (updatedGenre != null) {
-            updatedGenreDTO = convertToGenreDTO(updatedGenre);
+    public GenreDTO update(GenreDTO genreDTO) {
+        GenreDTO newGenreDTO = null;
+        try {
+            Genre genre = repository.findById(genreDTO.getId());
+            if (genreDTO.getName() != null) {
+                genre.setName(genreDTO.getName());
+            }
+            newGenreDTO = convertToGenreDTO(genre);
         }
-
-        return updatedGenreDTO;
+        catch (Exception e){
+            System.out.println("Can't update genreDTO");
+        }
+        return newGenreDTO;
     }
 
     @Override
     @Transactional
     public boolean deleteById(int id) {
-
         return repository.deleteById(id);
     }
 
-    private GenreDTO convertToGenreDTO(Genre genre) {
+    private Genre convertToGenre(GenreDTO genreDTO) {
+        return modelMapper.map(genreDTO, Genre.class);
+    }
 
+    private GenreDTO convertToGenreDTO(Genre genre) {
         return modelMapper.map(genre, GenreDTO.class);
     }
 }

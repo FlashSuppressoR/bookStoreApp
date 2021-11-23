@@ -1,6 +1,5 @@
 package com.flashsuppressor.java.lab.service;
 
-import com.flashsuppressor.java.lab.entity.Customer;
 import com.flashsuppressor.java.lab.entity.dto.CustomerDTO;
 
 import java.util.List;
@@ -13,9 +12,9 @@ public interface CustomerService {
 
     List<CustomerDTO> findAll();
 
-    void create(Customer customer);
+    CustomerDTO create(CustomerDTO customerDTO);
 
-    CustomerDTO update(Customer customer);
+    CustomerDTO update(CustomerDTO customerDTO);
 
     boolean deleteById(int id);
 }

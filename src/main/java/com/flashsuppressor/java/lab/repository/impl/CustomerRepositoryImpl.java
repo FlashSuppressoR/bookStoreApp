@@ -47,9 +47,10 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
 
     @Override
-    public void create(Customer customer) {
+    public Customer create(Customer customer) {
         Session session = getSession();
         session.save(customer);
+        return customer;
     }
 
     public Customer update(Customer customer) {

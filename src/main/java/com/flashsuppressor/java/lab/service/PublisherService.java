@@ -1,6 +1,5 @@
 package com.flashsuppressor.java.lab.service;
 
-import com.flashsuppressor.java.lab.entity.Publisher;
 import com.flashsuppressor.java.lab.entity.dto.PublisherDTO;
 
 import java.util.List;
@@ -11,11 +10,11 @@ public interface PublisherService {
 
     List<PublisherDTO> findAll();
 
-    void create(Publisher publisher);
+    PublisherDTO create(PublisherDTO publisherDTO);
 
-    void createAll(List<Publisher> publisher);
+    List<PublisherDTO> createAll(List<PublisherDTO> publisherDTOs);
 
-    PublisherDTO update(Publisher publisher);
+    PublisherDTO update(PublisherDTO publisherDTO);
 
     boolean deleteById(int id);
 }

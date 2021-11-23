@@ -1,6 +1,5 @@
 package com.flashsuppressor.java.lab.service;
 
-import com.flashsuppressor.java.lab.entity.Author;
 import com.flashsuppressor.java.lab.entity.dto.AuthorDTO;
 
 import java.util.List;
@@ -11,11 +10,11 @@ public interface AuthorService {
 
     List<AuthorDTO> findAll();
 
-    AuthorDTO create(Author author);
+    AuthorDTO create(AuthorDTO authorDTO);
 
-    void createAll(List<Author> authors);
+    List<AuthorDTO> createAll(List<AuthorDTO> authorDTOs);
 
-    AuthorDTO update(Author author);
+    AuthorDTO update(AuthorDTO authorDTO);
 
     boolean deleteById(int id);
 }

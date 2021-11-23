@@ -12,7 +12,7 @@ public interface CustomerRepository {
 
     List<Customer> findAll();
 
-    void create(Customer customer);
+    Customer create(Customer customer);
 
     Customer update(Customer customer);
 

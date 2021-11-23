@@ -1,19 +1,20 @@
 package com.flashsuppressor.java.lab.service;
 
-import com.flashsuppressor.java.lab.entity.Review;
 import com.flashsuppressor.java.lab.entity.dto.ReviewDTO;
 
 import java.util.List;
 
 public interface ReviewService {
 
+    ReviewDTO findById(int id);
+
     List<ReviewDTO> findAll();
 
-    void create(Review review);
+    ReviewDTO create(ReviewDTO reviewDTO);
 
-    void createAll(List<Review> reviews);
+    List<ReviewDTO> createAll(List<ReviewDTO> reviews);
 
-    ReviewDTO update(Review review);
+    ReviewDTO update(ReviewDTO reviewDTO);
 
     boolean deleteById(int id);
 }

@@ -9,7 +9,7 @@ public interface GenreRepository {
 
     List<Genre> findAll();
 
-    void create(Genre genre);
+    Genre create(Genre genre);
 
     void createAll(List<Genre> genres);
 

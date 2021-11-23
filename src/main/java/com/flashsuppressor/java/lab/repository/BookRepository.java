@@ -10,7 +10,7 @@ public interface BookRepository {
 
     List<Book> findAll();
 
-    void create(Book book);
+    Book create(Book book);
 
     void createAll(List<Book> books);
 

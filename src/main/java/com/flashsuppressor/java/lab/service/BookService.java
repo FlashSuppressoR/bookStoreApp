@@ -1,6 +1,5 @@
 package com.flashsuppressor.java.lab.service;
 
-import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.entity.dto.BookDTO;
 
 import java.util.List;
@@ -11,11 +10,11 @@ public interface BookService {
 
     List<BookDTO> findAll();
 
-    void create(Book book);
+    BookDTO create(BookDTO bookDTO);
 
-    void createAll(List<Book> books);
+    List<BookDTO> createAll(List<BookDTO> bookDTOS);
 
-    BookDTO update(Book book);
+    BookDTO update(BookDTO bookDTO);
 
     boolean deleteById(Long id);
 }

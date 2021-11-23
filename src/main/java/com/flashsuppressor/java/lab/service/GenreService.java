@@ -1,6 +1,5 @@
 package com.flashsuppressor.java.lab.service;
 
-import com.flashsuppressor.java.lab.entity.Genre;
 import com.flashsuppressor.java.lab.entity.dto.GenreDTO;
 
 import java.util.List;
@@ -10,11 +9,11 @@ public interface GenreService {
 
     List<GenreDTO> findAll();
 
-    void create(Genre genre);
+    GenreDTO create(GenreDTO genreDTO);
 
-    void createAll(List<Genre> genres);
+    List<GenreDTO> createAll(List<GenreDTO> genres);
 
-    GenreDTO update(Genre genre);
+    GenreDTO update(GenreDTO genreDTO);
 
     boolean deleteById(int id);
 }

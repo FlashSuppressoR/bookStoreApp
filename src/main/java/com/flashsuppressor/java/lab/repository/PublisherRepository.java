@@ -10,7 +10,7 @@ public interface PublisherRepository {
 
     List<Publisher> findAll();
 
-    void create(Publisher publisher);
+    Publisher create(Publisher publisher);
 
     void createAll(List<Publisher> publisher);
 

@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Service
 @RequiredArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
@@ -33,47 +32,50 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Transactional
-    public AuthorDTO create(Author author){
-        AuthorDTO newAuthorDTO = null;
-        Author newAuthor = repository.create(author);
-        if (newAuthor != null) {
-            newAuthorDTO = convertToAuthorDTO(newAuthor);
-        } else {
-            System.out.println("Object newAuthor == null");
-        }
+    public AuthorDTO create(AuthorDTO authorDTO){
+        Author newAuthor = repository.create(convertToAuthor(authorDTO));
+        return convertToAuthorDTO(newAuthor);
+    }
 
+    @Override
+    @Transactional
+    public List<AuthorDTO> createAll(List<AuthorDTO> authorDTOs) {
+        List<AuthorDTO> authorDTOList = null;
+        for (AuthorDTO newAuthorDTO : authorDTOs) {
+            Author newAuthor = repository.create(convertToAuthor(newAuthorDTO));
+            authorDTOList.add(convertToAuthorDTO(newAuthor));
+        }
+        return authorDTOList;
+    }
+
+    @Override
+    @Transactional
+    public AuthorDTO update(AuthorDTO authorDTO) {
+        AuthorDTO newAuthorDTO = null;
+        try {
+            Author author = repository.findById(authorDTO.getId());
+            if (authorDTO.getName() != null) {
+                author.setName(authorDTO.getName());
+            }
+            newAuthorDTO = convertToAuthorDTO(author);
+        }
+        catch (Exception e){
+            System.out.println("Can't update authorDTO");
+        }
         return newAuthorDTO;
     }
 
     @Override
     @Transactional
-    public void createAll(List<Author> authors) {
-        for (Author author : authors) {
-            repository.create(author);
-        }
-    }
-
-    @Override
-    @Transactional
-    public AuthorDTO update(Author author) {
-        AuthorDTO updatedAuthorDTO = null;
-        Author updatedAuthor = repository.update(author);
-        if (updatedAuthor != null) {
-            updatedAuthorDTO = convertToAuthorDTO(updatedAuthor);
-        }
-
-        return updatedAuthorDTO;
-    }
-
-    @Override
-    @Transactional
     public boolean deleteById(int id) {
-
         return repository.deleteById(id);
     }
 
-    private AuthorDTO convertToAuthorDTO(Author author) {
+    private Author convertToAuthor(AuthorDTO authorDTO) {
+        return modelMapper.map(authorDTO, Author.class);
+    }
 
+    private AuthorDTO convertToAuthorDTO(Author author) {
         return modelMapper.map(author, AuthorDTO.class);
     }
 }

@@ -1,6 +1,5 @@
 package com.flashsuppressor.java.lab.service;
 
-import com.flashsuppressor.java.lab.entity.Purchase;
 import com.flashsuppressor.java.lab.entity.dto.PurchaseDTO;
 
 import java.util.List;
@@ -11,11 +10,11 @@ public interface PurchaseService {
 
     List<PurchaseDTO> findAll();
 
-    void create(Purchase purchase);
+    PurchaseDTO create(PurchaseDTO purchaseDTO);
 
-    void createAll(List<Purchase> purchases);
+    List<PurchaseDTO> createAll(List<PurchaseDTO> purchasesDTO);
 
-    PurchaseDTO update(Purchase purchase);
+    PurchaseDTO update(PurchaseDTO purchaseDTO);
 
     boolean deleteById(int id);
 }

@@ -39,9 +39,10 @@ public class PublisherRepositoryImpl implements PublisherRepository {
     }
 
     @Override
-    public void create(Publisher publisher) {
+    public Publisher create(Publisher publisher) {
         Session session = getSession();
         session.save(publisher);
+        return publisher;
     }
 
     @Override

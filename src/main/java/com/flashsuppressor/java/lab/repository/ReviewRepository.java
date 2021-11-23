@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface ReviewRepository {
 
+    Review findById(int id);
+
     List<Review> findAll();
 
-    void create(Review review);
+    Review create(Review review);
 
     void createAll(List<Review> reviews);
 

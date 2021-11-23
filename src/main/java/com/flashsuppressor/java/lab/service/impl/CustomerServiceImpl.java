@@ -9,7 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,57 +22,62 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional(readOnly=true)
     public CustomerDTO findByEmail(String email) {
         Customer customer = repository.findByEmail("Max@com");
-
         return convertToCustomerDTO(customer);
     }
 
     @Override
     @Transactional(readOnly=true)
     public CustomerDTO findById(int id) {
-        Customer customer = repository.findById(id);
-
-        return convertToCustomerDTO(customer);
+        return convertToCustomerDTO(repository.findById(id));
     }
 
     @Override
     @Transactional(readOnly=true)
     public List<CustomerDTO> findAll() {
-        List<CustomerDTO> customerDTOs = new ArrayList<>();
-        List<Customer> customers = repository.findAll();
-        if (customers != null && customers.size() > 0) {
-            customerDTOs = customers.stream().map(this::convertToCustomerDTO).collect(Collectors.toList());
-        }
-
-        return customerDTOs;
+        return repository.findAll().stream().map(this::convertToCustomerDTO).collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public void create(Customer customer) {
-        repository.create(customer);
+    public CustomerDTO create(CustomerDTO customerDTO) {
+        Customer newCustomer = repository.create(convertToCustomer(customerDTO));
+        return convertToCustomerDTO(newCustomer);
     }
 
     @Override
     @Transactional
-    public CustomerDTO update(Customer customer) {
-        CustomerDTO updatedCustomerDTO = null;
-        Customer updatedCustomer = repository.update(customer);
-        if (updatedCustomer != null) {
-            updatedCustomerDTO = convertToCustomerDTO(updatedCustomer);
+    public CustomerDTO update(CustomerDTO customerDTO) {
+        CustomerDTO newCustomerDTO = null;
+        try {
+            Customer customer = repository.findById(customerDTO.getId());
+            if (customerDTO.getName() != null) {
+                customer.setName(customerDTO.getName());
+            }
+            if (customerDTO.getEmail() != null) {
+                customer.setEmail(customerDTO.getEmail());
+            }
+            if (customerDTO.getPassword() != null) {
+                customer.setPassword(customerDTO.getPassword());
+            }
+            newCustomerDTO = convertToCustomerDTO(customer);
         }
-
-        return updatedCustomerDTO;
+        catch (Exception e){
+            System.out.println("Can't update customerDTO");
+        }
+        return newCustomerDTO;
     }
 
     @Override
     @Transactional
     public boolean deleteById(int id) {
-
         return repository.deleteById(id);
     }
 
-    private CustomerDTO convertToCustomerDTO(Customer customer) {
+    private Customer convertToCustomer(CustomerDTO customerDTO) {
+        return modelMapper.map(customerDTO, Customer.class);
+    }
 
+    private CustomerDTO convertToCustomerDTO(Customer customer) {
         return modelMapper.map(customer, CustomerDTO.class);
     }
 

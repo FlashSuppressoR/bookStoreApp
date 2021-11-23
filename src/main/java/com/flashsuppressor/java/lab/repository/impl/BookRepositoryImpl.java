@@ -39,9 +39,10 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public void create(Book book) {
+    public Book create(Book book) {
         Session session = getSession();
         session.save(book);
+        return book;
     }
 
     @Override
