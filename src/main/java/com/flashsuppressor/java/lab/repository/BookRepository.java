@@ -12,7 +12,7 @@ public interface BookRepository {
 
     Book create(Book book);
 
-    void createAll(List<Book> books);
+    List<Book> createAll(List<Book> books);
 
     Book update(Book book);
 

@@ -12,7 +12,7 @@ public interface AuthorRepository {
 
     Author create(Author author);
 
-    void createAll(List<Author> authors);
+    List<Author> createAll(List<Author> authors);
 
     Author update(Author author);
 

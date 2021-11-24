@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS book_store.book_author
     CONSTRAINT fk_book_has_author_author
         FOREIGN KEY (author_id)
             REFERENCES book_store.author (id)
+            ON DELETE CASCADE
 );
 
 COMMIT;

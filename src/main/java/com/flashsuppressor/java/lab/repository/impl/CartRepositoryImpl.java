@@ -5,7 +5,6 @@ import com.flashsuppressor.java.lab.repository.CartRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,38 +16,33 @@ import java.util.List;
 @Transactional(propagation = Propagation.REQUIRED)
 @AllArgsConstructor
 public class CartRepositoryImpl implements CartRepository {
-
-    @Autowired
-    private final EntityManager entityManager;
-
-    private Session getSession() {
-        return entityManager.unwrap(Session.class);
-    }
-
     private static final String FIND_CARTS_QUERY = "select c from Cart c ";
+
+    private final EntityManager entityManager;
 
     @Override
     public List<Cart> findAll() {
-        Session session = getSession();
-        return session.createQuery(FIND_CARTS_QUERY, Cart.class).list();
+
+        return entityManager.createQuery(FIND_CARTS_QUERY, Cart.class).getResultList();
     }
 
     @Override
     public Cart findById(int id) {
-        Session session = getSession();
-        return session.find(Cart.class, id);
+
+        return entityManager.find(Cart.class, id);
     }
 
     @Override
     public Cart create(Cart cart) {
-        Session session = getSession();
-        session.save(cart);
-        return cart;
+        Session session = entityManager.unwrap(Session.class);
+        Integer newCartId = (Integer) session.save("Cart", cart);
+
+        return session.find(Cart.class, newCartId);
     }
 
     @Override
     public Cart update(Cart cart) {
-        Session session = getSession();
+        Session session = entityManager.unwrap(Session.class);
         Cart updatedCart;
         Transaction transaction = session.beginTransaction();
         session.update(cart);
@@ -60,7 +54,7 @@ public class CartRepositoryImpl implements CartRepository {
 
     @Override
     public boolean deleteById(int id) {
-        Session session = getSession();
+        Session session = entityManager.unwrap(Session.class);
         boolean result;
         session.beginTransaction();
         Cart cart = session.find(Cart.class, id);

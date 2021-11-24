@@ -12,7 +12,7 @@ public interface PublisherRepository {
 
     Publisher create(Publisher publisher);
 
-    void createAll(List<Publisher> publisher);
+    List<Publisher> createAll(List<Publisher> publisher);
 
     Publisher update(Publisher publisher);
 

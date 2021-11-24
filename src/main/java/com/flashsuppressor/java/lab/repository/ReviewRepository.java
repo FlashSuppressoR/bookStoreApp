@@ -12,7 +12,7 @@ public interface ReviewRepository {
 
     Review create(Review review);
 
-    void createAll(List<Review> reviews);
+    List<Review> createAll(List<Review> reviews);
 
     Review update(Review review);
 

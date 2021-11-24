@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +41,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     @Transactional
     public List<AuthorDTO> createAll(List<AuthorDTO> authorDTOs) {
-        List<AuthorDTO> authorDTOList = null;
+        List<AuthorDTO> authorDTOList = new ArrayList<>();
         for (AuthorDTO newAuthorDTO : authorDTOs) {
             Author newAuthor = repository.create(convertToAuthor(newAuthorDTO));
             authorDTOList.add(convertToAuthorDTO(newAuthor));

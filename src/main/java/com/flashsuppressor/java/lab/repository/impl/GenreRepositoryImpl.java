@@ -4,63 +4,58 @@ import com.flashsuppressor.java.lab.entity.Genre;
 import com.flashsuppressor.java.lab.repository.GenreRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
 @AllArgsConstructor
 public class GenreRepositoryImpl implements GenreRepository {
-
-    @Autowired
-    private final EntityManager entityManager;
-
-    private Session getSession() {
-        return entityManager.unwrap(Session.class);
-    }
-
     private static final String FIND_ALL_GENRE_QUERY = "select g from Genre g";
+
+    private final EntityManager entityManager;
 
     @Override
     public List<Genre> findAll() {
-        Session session = getSession();
-        return session.createQuery(FIND_ALL_GENRE_QUERY, Genre.class).list();
-    }
 
-    public Genre findById(Long id) {
-        Session session = getSession();
-        return session.find(Genre.class, id);
+        return entityManager.createQuery(FIND_ALL_GENRE_QUERY, Genre.class).getResultList();
     }
 
     @Override
     public Genre findById(int id) {
-        Session session = getSession();
-        return session.find(Genre.class, id);
+
+        return entityManager.find(Genre.class, id);
     }
 
     @Override
     public Genre create(Genre genre) {
-        Session session = getSession();
-        session.save(genre);
-        return genre;
+        Session session = entityManager.unwrap(Session.class);
+        Integer newGenreId = (Integer) session.save("Genre", genre);
+
+        return session.find(Genre.class, newGenreId);
     }
 
+
     @Override
-    public void createAll(List<Genre> genres) {
-        Session session = getSession();
+    public List<Genre> createAll(List<Genre> genres) {
+        List<Genre> newList = new ArrayList<>();
+        Session session = entityManager.unwrap(Session.class);
         for (Genre genre : genres) {
-            session.save(genre);
+            Integer newGenreId = (Integer) session.save("Genre", genre);
+            newList.add(session.find(Genre.class, newGenreId));
         }
+
+        return newList;
     }
 
     @Override
     public Genre update(Genre genre) {
-        Session session = getSession();
+        Session session = entityManager.unwrap(Session.class);
         Genre updatedGenre;
         session.beginTransaction();
         session.update(genre);
@@ -72,7 +67,7 @@ public class GenreRepositoryImpl implements GenreRepository {
 
     @Override
     public boolean deleteById(int id) {
-        Session session = getSession();
+        Session session = entityManager.unwrap(Session.class);
         boolean result;
         session.beginTransaction();
         Genre genre = session.find(Genre.class, id);

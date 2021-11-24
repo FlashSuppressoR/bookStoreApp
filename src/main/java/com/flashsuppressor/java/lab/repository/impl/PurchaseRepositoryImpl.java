@@ -4,58 +4,57 @@ import com.flashsuppressor.java.lab.entity.Purchase;
 import com.flashsuppressor.java.lab.repository.PurchaseRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
 @AllArgsConstructor
 public class PurchaseRepositoryImpl implements PurchaseRepository {
-
-    @Autowired
-    private final EntityManager entityManager;
-
-    private Session getSession() {
-        return entityManager.unwrap(Session.class);
-    }
-
     private static final String FIND_ALL_PURCHASES_QUERY = "select p from Purchase p";
+
+    private final EntityManager entityManager;
 
     @Override
     public List<Purchase> findAll(){
-        Session session = getSession();
-        return session.createQuery(FIND_ALL_PURCHASES_QUERY, Purchase.class).list();
+
+        return entityManager.createQuery(FIND_ALL_PURCHASES_QUERY, Purchase.class).getResultList();
     }
 
     @Override
     public Purchase findById(int id) {
-        Session session = getSession();
-        return  session.find(Purchase.class, id);
+
+        return  entityManager.find(Purchase.class, id);
     }
 
     @Override
     public Purchase create(Purchase purchase) {
-        Session session = getSession();
-        session.save(purchase);
-        return purchase;
+        Session session = entityManager.unwrap(Session.class);
+        Integer newPurchaseId = (Integer) session.save("Purchase", purchase);
+
+        return session.find(Purchase.class, newPurchaseId);
     }
 
     @Override
-    public void createAll(List<Purchase> purchases) {
-        Session session = getSession();
+    public List<Purchase> createAll(List<Purchase> purchases) {
+        List<Purchase> newList = new ArrayList<>();
+        Session session = entityManager.unwrap(Session.class);
         for (Purchase purchase : purchases) {
-            session.save(purchase);
+            Integer newPurchaseId = (Integer) session.save("Purchase", purchase);
+            newList.add(session.find(Purchase.class, newPurchaseId));
         }
+
+        return newList;
     }
 
     @Override
     public Purchase update(Purchase purchase) {
-        Session session = getSession();
+        Session session = entityManager.unwrap(Session.class);
         Purchase updatedPurchase;
         session.beginTransaction();
         session.update(purchase);
@@ -67,7 +66,7 @@ public class PurchaseRepositoryImpl implements PurchaseRepository {
 
     @Override
     public boolean deleteById(int id) {
-        Session session = getSession();
+        Session session = entityManager.unwrap(Session.class);
         boolean result;
         session.beginTransaction();
         Purchase purchase = session.find(Purchase.class, id);

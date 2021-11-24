@@ -4,58 +4,57 @@ import com.flashsuppressor.java.lab.entity.Review;
 import com.flashsuppressor.java.lab.repository.ReviewRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
 @AllArgsConstructor
 public class ReviewRepositoryImpl implements ReviewRepository {
-
-    @Autowired
-    private final EntityManager entityManager;
-
-    private Session getSession() {
-        return entityManager.unwrap(Session.class);
-    }
-
     private static final String FIND_ALL_REVIEWS_QUERY = "select r from Review r";
+
+    private final EntityManager entityManager;
 
     @Override
     public Review findById(int id){
-        Session session = getSession();
-        return session.find(Review.class, id);
+
+        return entityManager.find(Review.class, id);
     }
 
     @Override
     public List<Review> findAll() {
-        Session session = getSession();
-       return session.createQuery(FIND_ALL_REVIEWS_QUERY, Review.class).list();
+
+       return entityManager.createQuery(FIND_ALL_REVIEWS_QUERY, Review.class).getResultList();
     }
 
     @Override
     public Review create(Review review) {
-        Session session = getSession();
-        session.save(review);
-        return review;
+        Session session = entityManager.unwrap(Session.class);
+        Integer newReviewId = (Integer) session.save("Review", review);
+
+        return session.find(Review.class, newReviewId);
     }
 
     @Override
-    public void createAll(List<Review> reviews) {
-        Session session = getSession();
+    public List<Review> createAll(List<Review> reviews) {
+        List<Review> newList = new ArrayList<>();
+        Session session = entityManager.unwrap(Session.class);
         for (Review review : reviews) {
-            session.save(review);
+            Integer newReviewId = (Integer) session.save("Review", review);
+            newList.add(session.find(Review.class, newReviewId));
         }
+
+        return newList;
     }
 
     @Override
     public Review update(Review review) {
-        Session session = getSession();
+        Session session = entityManager.unwrap(Session.class);
         Review updatedReview;
         session.beginTransaction();
         session.update(review);
@@ -67,7 +66,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
 
     @Override
     public boolean deleteById(int id) {
-        Session session = getSession();
+        Session session = entityManager.unwrap(Session.class);
         boolean result;
         session.beginTransaction();
         Review review = session.find(Review.class, id);

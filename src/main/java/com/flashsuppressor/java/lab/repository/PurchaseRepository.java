@@ -12,7 +12,7 @@ public interface PurchaseRepository {
 
     Purchase create(Purchase purchase);
 
-    void createAll(List<Purchase> purchases);
+    List<Purchase> createAll(List<Purchase> purchases);
 
     Purchase update(Purchase purchase);
 

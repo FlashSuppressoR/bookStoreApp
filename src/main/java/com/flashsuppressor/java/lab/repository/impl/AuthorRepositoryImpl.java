@@ -4,12 +4,12 @@ import com.flashsuppressor.java.lab.entity.Author;
 import com.flashsuppressor.java.lab.repository.AuthorRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -17,45 +17,44 @@ import java.util.List;
 @AllArgsConstructor
 public class AuthorRepositoryImpl implements AuthorRepository {
 
-    @Autowired
-    private final EntityManager entityManager;
-
-    private Session getSession() {
-        return entityManager.unwrap(Session.class);
-    }
-
     private static final String FIND_AUTHORS_QUERY = "select a from  Author a";
+    private final EntityManager entityManager;
 
     @Override
     public Author findById(int id){
-        Session session = getSession();
-        return session.find(Author.class, id);
+
+        return entityManager.find(Author.class, id);
     }
 
     @Override
     public List<Author> findAll() {
-        Session session = getSession();
-        return session.createQuery(FIND_AUTHORS_QUERY, Author.class).list();
+
+        return entityManager.createQuery(FIND_AUTHORS_QUERY, Author.class).getResultList();
     }
 
     @Override
     public Author create(Author author){
-        Session session = getSession();
-        session.save(author);
-        return author;
+        Session session = entityManager.unwrap(Session.class);
+        Integer newUserId = (Integer) session.save("Author", author);
+
+        return session.find(Author.class, newUserId);
     }
 
     @Override
-    public void createAll(List<Author> authors){
-        Session session = getSession();
+    public List<Author> createAll(List<Author> authors){
+        List<Author> newList = new ArrayList<>();
+        Session session = entityManager.unwrap(Session.class);
         for (Author author : authors) {
-            session.save(author);
+            Integer newUserId = (Integer) session.save("Author", author);
+            newList.add(session.find(Author.class, newUserId));
         }
+
+        return newList;
     }
 
     @Override
     public Author update(Author author){
-        Session session = getSession();
+        Session session = entityManager.unwrap(Session.class);
         Author updatedAuthor;
         session.beginTransaction();
         session.update(author);
@@ -67,15 +66,14 @@ public class AuthorRepositoryImpl implements AuthorRepository {
 
     @Override
     public boolean deleteById(int id){
-        Session session = getSession();
-        boolean result = false;
-        session.beginTransaction();
-        Author author = session.find(Author.class, id);
+        boolean result;
+        Author author = entityManager.find(Author.class, id);
         if (author != null) {
-            session.delete(author);
-            result = session.find(Author.class, id) == null;
+            entityManager.remove(author);
+            result = entityManager.find(Author.class, id) == null;
+        } else {
+            result = false;
         }
-        session.getTransaction().commit();
 
         return result;
     }

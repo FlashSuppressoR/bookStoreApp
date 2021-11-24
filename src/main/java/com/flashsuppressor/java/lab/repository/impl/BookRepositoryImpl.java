@@ -4,58 +4,57 @@ import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
 @AllArgsConstructor
 public class BookRepositoryImpl implements BookRepository {
-
-    @Autowired
-    private final EntityManager entityManager;
-
-    private Session getSession() {
-        return entityManager.unwrap(Session.class);
-    }
-
     private static final String FIND_BOOKS_QUERY = "select b from Book b ";
+
+    private final EntityManager entityManager;
 
     @Override
     public Book findById(Long id) {
-        Session session = getSession();
-        return session.find(Book.class, id);
+
+        return entityManager.find(Book.class, id);
     }
 
     @Override
     public List<Book> findAll() {
-        Session session = getSession();
-        return session.createQuery(FIND_BOOKS_QUERY, Book.class).list();
+
+        return entityManager.createQuery(FIND_BOOKS_QUERY, Book.class).getResultList();
     }
 
     @Override
     public Book create(Book book) {
-        Session session = getSession();
-        session.save(book);
-        return book;
+        Session session = entityManager.unwrap(Session.class);
+        Integer newBookId = (Integer) session.save("Book", book);
+
+        return session.find(Book.class, newBookId);
     }
 
     @Override
-    public void createAll(List<Book> books) {
-        Session session = getSession();
+    public List<Book> createAll(List<Book> books) {
+        List<Book> newList = new ArrayList<>();
+        Session session = entityManager.unwrap(Session.class);
         for (Book book : books) {
-            session.save(book);
+            Integer newBookId = (Integer) session.save("Book", book);
+            newList.add(session.find(Book.class, newBookId));
         }
+
+        return newList;
     }
 
     @Override
     public Book update(Book book) {
-        Session session = getSession();
+        Session session = entityManager.unwrap(Session.class);
         Book updatedBook;
         session.beginTransaction();
         session.update(book);
@@ -67,7 +66,7 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public boolean deleteById(Long id) {
-        Session session = getSession();
+        Session session = entityManager.unwrap(Session.class);
         boolean result;
         session.beginTransaction();
         Book book = session.find(Book.class, id);

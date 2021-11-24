@@ -11,7 +11,7 @@ public interface GenreRepository {
 
     Genre create(Genre genre);
 
-    void createAll(List<Genre> genres);
+    List<Genre> createAll(List<Genre> genres);
 
     Genre update(Genre genre);
 
