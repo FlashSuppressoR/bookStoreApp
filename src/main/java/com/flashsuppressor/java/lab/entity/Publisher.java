@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,7 +31,7 @@ public class Publisher {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "publisher")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "publisher", cascade = CascadeType.ALL)
     private Set<Book> books;
 
     public Publisher(Integer id, String name){

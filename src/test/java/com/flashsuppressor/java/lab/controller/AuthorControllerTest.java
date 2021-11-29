@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flashsuppressor.java.lab.entity.dto.AuthorDTO;
 import com.flashsuppressor.java.lab.service.AuthorService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -22,25 +24,26 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = AuthorController.class)
 class AuthorControllerTest {
 
     @MockBean
-    AuthorService authorService;
+    private AuthorService authorService;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
 
     @Test
-    void find() throws Exception {
+    void findTest() throws Exception {
         //given
         int authorId = 1;
-        AuthorDTO expectedAuthor = AuthorDTO.builder().id(authorId).name("First Author").build();
+        AuthorDTO expectedAuthor = AuthorDTO.builder().id(authorId).name("Bred Dee").build();
         // when
         when(authorService.findById(authorId)).thenReturn(expectedAuthor);
         //then
-        MvcResult mvcResult = mockMvc.perform(get("/authors/{id}", authorId)
+        MvcResult mvcResult = mockMvc.perform(get("/authors/find/{id}", authorId)
                 .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -50,21 +53,20 @@ class AuthorControllerTest {
     }
 
     @Test
-    void findAll() throws Exception {
+    void findAllTest() throws Exception {
         //given
         AuthorDTO authorDTO = AuthorDTO.builder().build();
         // when
-        List<AuthorDTO> expectedResponseBody = Arrays.asList(authorDTO, authorDTO);
-        when(authorService.findAll()).thenReturn(expectedResponseBody);
+        List<AuthorDTO> expectedAuthors = Arrays.asList(authorDTO, authorDTO);
+        when(authorService.findAll()).thenReturn(expectedAuthors);
         //then
-        MvcResult mvcResult = mockMvc.perform(get("/authors/all")
+        MvcResult mvcResult = mockMvc.perform(get("/authors/find/all")
                 .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andReturn();
+        String actualAuthors = mvcResult.getResponse().getContentAsString();
 
-        String actualResponseBody = mvcResult.getResponse().getContentAsString();
-
-        assertEquals(objectMapper.writeValueAsString(expectedResponseBody), actualResponseBody);
+        assertEquals(objectMapper.writeValueAsString(expectedAuthors), actualAuthors);
     }
 
     @Test
@@ -79,54 +81,54 @@ class AuthorControllerTest {
                 .content(objectMapper.writeValueAsString(expectedAuthor)))
                 .andExpect(status().isOk())
                 .andReturn();
-        String actualResponseBody = mvcResult.getResponse().getContentAsString();
+        String actualAuthor = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(expectedAuthor), actualResponseBody);
+        assertEquals(objectMapper.writeValueAsString(expectedAuthor), actualAuthor);
     }
 
     @Test
     void createAll() throws Exception {
         //given
         AuthorDTO expectedFirstAuthor = AuthorDTO.builder().id(4).name("New FirstAuthor").build();
-        AuthorDTO expectedSecondAuthor = AuthorDTO.builder().id(5).name("New FirstAuthor").build();
+        AuthorDTO expectedSecondAuthor = AuthorDTO.builder().id(5).name("New SecondAuthor").build();
         List<AuthorDTO> expectedList = new ArrayList<>();
         expectedList.add(expectedFirstAuthor);
         expectedList.add(expectedSecondAuthor);
-        List<AuthorDTO> actualList = new ArrayList<>();
         //when
-        when(authorService.createAll(actualList)).thenReturn(expectedList);
+        when(authorService.createAll(expectedList)).thenReturn(expectedList);
+        List<AuthorDTO> actualAuthorsList = authorService.createAll(expectedList);
         //then
         MvcResult mvcResult = mockMvc.perform(post("/authors/create/all")
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(expectedList)))
+                .content(objectMapper.writeValueAsString(actualAuthorsList)))
                 .andExpect(status().isOk())
                 .andReturn();
-        String actualListDTO = mvcResult.getResponse().getContentAsString();
+        String actualList = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(expectedList), actualListDTO);
+        assertEquals(objectMapper.writeValueAsString(expectedList), actualList);
     }
 
     @Test
-    void update() throws Exception {
+    void updateTest() throws Exception {
         //given
         int userId = 1;
-        String name = "Updated Author";
-        AuthorDTO expectedResponseBody = AuthorDTO.builder().id(userId).name(name).build();
+        String updatedName = "Updated Author";
+        AuthorDTO expectedAuthor = AuthorDTO.builder().id(userId).name(updatedName).build();
         //when
-        when(authorService.update(expectedResponseBody)).thenReturn(expectedResponseBody);
+        when(authorService.update(expectedAuthor)).thenReturn(expectedAuthor);
         // then
         MvcResult mvcResult = mockMvc.perform(put("/authors/update")
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(expectedResponseBody)))
+                .content(objectMapper.writeValueAsString(expectedAuthor)))
                 .andExpect(status().isOk())
                 .andReturn();
-        String actualResponseBody = mvcResult.getResponse().getContentAsString();
+        String actualAuthor = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(expectedResponseBody), actualResponseBody);
+        assertEquals(objectMapper.writeValueAsString(expectedAuthor), actualAuthor);
     }
 
     @Test
-    void deleteByID() throws Exception {
+    void deleteByID_thenReturns200() throws Exception {
         //given
         int id = 1;
         // when
@@ -134,6 +136,6 @@ class AuthorControllerTest {
         //then
         mockMvc.perform(delete("/authors/delete/{id}", id)
                 .contentType("application/json"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()).andReturn();
     }
 }
