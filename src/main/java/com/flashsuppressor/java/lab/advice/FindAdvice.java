@@ -19,6 +19,7 @@ public class FindAdvice {
 
     @AfterReturning(value = "findMethodsInRepositories()")
     public void printSuccessfulExecutionResult(JoinPoint joinPoint) {
-        log.info("\nLOGGING START\n" + String.format(FIND_METHOD_MESSAGE, joinPoint.getSignature().getName()) + "\nLOGGING END\n");
+        log.info("\nLOGGING START\n" + String.format(FIND_METHOD_MESSAGE,
+                joinPoint.getSignature().getName()) + "\nLOGGING END\n");
     }
 }

@@ -1,21 +1,110 @@
 package com.flashsuppressor.java.lab.service.impl;
 
-import com.flashsuppressor.java.lab.repository.CartRepository;
+import com.flashsuppressor.java.lab.entity.Cart;
+import com.flashsuppressor.java.lab.entity.Customer;
+import com.flashsuppressor.java.lab.entity.dto.CartDTO;
+import com.flashsuppressor.java.lab.entity.dto.CustomerDTO;
+import com.flashsuppressor.java.lab.repository.data.CartRepository;
 import com.flashsuppressor.java.lab.service.CartService;
-import com.flashsuppressor.java.lab.service.TestServiceConfiguration;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.modelmapper.ModelMapper;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestServiceConfiguration.class)
 public class CartServiceImplTest {
 
-    @Autowired
-    private CartRepository repository;
-    @Autowired
+    @InjectMocks
     private CartService service;
+    @Mock
+    private CartRepository repository;
+    @Mock
+    private ModelMapper modelMapper;
 
-    //TODO add tests
+    @Test
+    void findByIdTest() {
+        int cartID = 1;
+        Cart cart = Cart.builder().id(4).customer
+                (Customer.builder().id(4).name("Ae").email("Ae@gmail.com").password("Ad").build())
+                .bookId(4L).bookCounter(1).build();
+        CartDTO expectedCartDTO = CartDTO.builder().id(4).customerDTO
+                (CustomerDTO.builder().id(4).name("Ae").email("Ae@gmail.com").password("Ad").build())
+                .bookId(4L).bookCounter(1).build();
+
+        when(repository.getById(cartID)).thenReturn(cart);
+        when(modelMapper.map(cart, CartDTO.class)).thenReturn(expectedCartDTO);
+        CartDTO actualCartDTO = service.findById(cartID);
+
+        assertEquals(expectedCartDTO, actualCartDTO);
+    }
+
+    @Test
+    void findAllTest() {
+        int expectedSize = 2;
+        Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Cart(), new Cart()));
+        int actualSize = service.findAll().size();
+
+        assertEquals(expectedSize, actualSize);
+    }
+
+    @Test
+    void createTest() {
+        //given
+        Cart cart = Cart.builder().id(4).customer
+                (Customer.builder().id(4).name("Ae").email("Ae@gmail.com").password("Ad").build())
+                .bookId(4L).bookCounter(1).build();
+        CartDTO cartDTO = CartDTO.builder().id(4).customerDTO
+                (CustomerDTO.builder().id(4).name("Ae").email("Ae@gmail.com").password("Ad").build())
+                .bookId(4L).bookCounter(1).build();
+        //when
+        when(modelMapper.map(cartDTO, Cart.class)).thenReturn(cart);
+        when(modelMapper.map(cart, CartDTO.class)).thenReturn(cartDTO);
+        when(repository.save(cart)).thenReturn(cart);
+        CartDTO actualCartDTO = service.create(cartDTO);
+        //then
+        assertAll(() -> assertEquals(cartDTO.getId(), actualCartDTO.getId()),
+                () -> assertEquals(cartDTO.getCustomerDTO(), actualCartDTO.getCustomerDTO()),
+                () -> assertEquals(cartDTO.getBookId(), actualCartDTO.getBookId()),
+                () -> assertEquals(cartDTO.getBookCounter(), actualCartDTO.getBookCounter()));
+    }
+
+    @Test
+    void updateTest() {
+        //given
+        int cartId = 1;
+        int bookCounter = 3;
+        Cart cart = Cart.builder().id(4).customer
+                (Customer.builder().id(4).name("Ae").email("Ae@gmail.com").password("Ad").build())
+                .bookId(4L).bookCounter(1).build();
+        CartDTO cartDTO = CartDTO.builder().id(4).customerDTO
+                (CustomerDTO.builder().id(4).name("Ae").email("Ae@gmail.com").password("Ad").build())
+                .bookId(4L).bookCounter(1).build();
+        //when
+        when(repository.getById(cartId)).thenReturn(cart);
+        when(modelMapper.map(cart, CartDTO.class)).thenReturn(cartDTO);
+        when(repository.getById(cartId)).thenReturn(cart);
+        CartDTO actualUpdatedCart = service.update(cartDTO);
+        // then
+        assertAll(() -> assertEquals(cartId, actualUpdatedCart.getId()),
+                () -> assertEquals(bookCounter, actualUpdatedCart.getBookCounter())
+        );
+    }
+
+    @Test
+    void deleteByIdTest() {
+        int validId = 1;
+        Mockito.when(repository.deleteById(validId)).thenReturn(true);
+
+        assertTrue(service.deleteById(validId));
+    }
 }

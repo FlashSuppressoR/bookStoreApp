@@ -4,13 +4,14 @@ import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.entity.Review;
 import com.flashsuppressor.java.lab.entity.dto.BookDTO;
 import com.flashsuppressor.java.lab.entity.dto.ReviewDTO;
-import com.flashsuppressor.java.lab.repository.ReviewRepository;
+import com.flashsuppressor.java.lab.repository.data.ReviewRepository;
 import com.flashsuppressor.java.lab.service.ReviewService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional(readOnly=true)
     public ReviewDTO findById(int id) {
-        return convertToReviewDTO(repository.findById(id));
+        return convertToReviewDTO(repository.getById(id));
     }
 
     @Override
@@ -35,16 +36,16 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public ReviewDTO create(ReviewDTO reviewDTO) {
-        Review newReview = repository.create(convertToReview(reviewDTO));
+        Review newReview = repository.save(convertToReview(reviewDTO));
         return convertToReviewDTO(newReview);
     }
 
     @Override
     @Transactional
     public List<ReviewDTO> createAll(List<ReviewDTO> reviews) {
-        List<ReviewDTO> reviewDTOList = null;
+        List<ReviewDTO> reviewDTOList = new ArrayList<>();
         for (ReviewDTO newReviewDTO : reviews) {
-            Review newReview = repository.create(convertToReview(newReviewDTO));
+            Review newReview = repository.save(convertToReview(newReviewDTO));
             reviewDTOList.add(convertToReviewDTO(newReview));
         }
         return reviewDTOList;
@@ -55,7 +56,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewDTO update(ReviewDTO reviewDTO) {
         ReviewDTO newReviewDTO = null;
         try {
-            Review review = repository.findById(reviewDTO.getId());
+            Review review = repository.getById(reviewDTO.getId());
             review.setMark(reviewDTO.getMark());
             review.setComment(reviewDTO.getComment());
             review.setBook(convertToBook(reviewDTO.getBookDTO()));

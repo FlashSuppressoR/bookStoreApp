@@ -1,23 +1,141 @@
 package com.flashsuppressor.java.lab.service.impl;
 
-import com.flashsuppressor.java.lab.repository.AuthorRepository;
-import com.flashsuppressor.java.lab.repository.PurchaseRepository;
-import com.flashsuppressor.java.lab.service.AuthorService;
-import com.flashsuppressor.java.lab.service.PurchaseService;
-import com.flashsuppressor.java.lab.service.TestServiceConfiguration;
+import com.flashsuppressor.java.lab.entity.Customer;
+import com.flashsuppressor.java.lab.entity.Purchase;
+import com.flashsuppressor.java.lab.entity.dto.CustomerDTO;
+import com.flashsuppressor.java.lab.entity.dto.PurchaseDTO;
+import com.flashsuppressor.java.lab.repository.data.PurchaseRepository;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.modelmapper.ModelMapper;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestServiceConfiguration.class)
 public class PurchaseServiceImplTest {
 
-    @Autowired
+    @InjectMocks
+    private PurchaseServiceImpl service;
+    @Mock
     private PurchaseRepository repository;
-    @Autowired
-    private PurchaseService service;
+    @Mock
+    private ModelMapper modelMapper;
+    @Mock
+    private List<PurchaseDTO> mockPurchasesList;
 
-    //TODO add tests
+    @Test
+    void findByIdTest() {
+        int purchaseID = 1;
+        Purchase purchase = Purchase.builder().id(purchaseID).customer(Customer.builder()
+                .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
+                .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
+        PurchaseDTO expectedPurchaseDTO = PurchaseDTO.builder().id(purchaseID).customerDTO(CustomerDTO.builder()
+                .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
+                .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
+
+        when(repository.getById(purchaseID)).thenReturn(purchase);
+        when(modelMapper.map(purchase, PurchaseDTO.class)).thenReturn(expectedPurchaseDTO);
+        PurchaseDTO actualPurchaseDTO = service.findById(purchaseID);
+
+        assertEquals(expectedPurchaseDTO, actualPurchaseDTO);
+    }
+
+    @Test
+    void findAllTest() {
+        int expectedSize = 2;
+        Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Purchase(), new Purchase()));
+        int actualSize = service.findAll().size();
+
+        assertEquals(expectedSize, actualSize);
+    }
+
+    @Test
+    void createTest() {
+        //given
+        int purchaseID = 4;
+        Purchase purchase = Purchase.builder().id(purchaseID).customer(Customer.builder()
+                .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
+                .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
+        PurchaseDTO expectedPurchaseDTO = PurchaseDTO.builder().id(purchaseID).customerDTO(CustomerDTO.builder()
+                .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
+                .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
+        //when
+        when(modelMapper.map(expectedPurchaseDTO, Purchase.class)).thenReturn(purchase);
+        when(modelMapper.map(purchase, PurchaseDTO.class)).thenReturn(expectedPurchaseDTO);
+        when(repository.save(purchase)).thenReturn(purchase);
+        PurchaseDTO actualPurchaseDTO = service.create(expectedPurchaseDTO);
+        //then
+        assertAll(() -> assertEquals(expectedPurchaseDTO.getId(), actualPurchaseDTO.getId()),
+                () -> assertEquals(expectedPurchaseDTO.getCustomerDTO(), actualPurchaseDTO.getCustomerDTO()),
+                () -> assertEquals(expectedPurchaseDTO.getPurchaseTime(), actualPurchaseDTO.getPurchaseTime()));
+    }
+
+    @Test
+    void createAllTest() {
+        //given
+        List<PurchaseDTO> listDTO = new ArrayList<>() {{
+            add(PurchaseDTO.builder().id(4).customerDTO(CustomerDTO.builder()
+                    .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
+                    .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build());
+            add(PurchaseDTO.builder().id(5).customerDTO(CustomerDTO.builder()
+                    .id(5).name("Alde Saeq").email("ez@com").password("aaex").build())
+                    .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build());
+        }};
+        when(mockPurchasesList.get(0)).thenReturn(listDTO.get(0));
+        when(mockPurchasesList.get(1)).thenReturn(listDTO.get(1));
+        List<PurchaseDTO> createList = new ArrayList<>() {{
+            add(mockPurchasesList.get(0));
+            add(mockPurchasesList.get(1));
+        }};
+        List<PurchaseDTO> purchaseDTOList = service.createAll(listDTO);
+        //then
+        assertAll(() -> assertEquals(createList.get(0).getId(), purchaseDTOList.get(0).getId()),
+                () -> assertEquals(createList.get(0).getCustomerDTO(), purchaseDTOList.get(0).getCustomerDTO()),
+                () -> assertEquals(createList.get(0).getPurchaseTime(), purchaseDTOList.get(0).getPurchaseTime()),
+                () -> assertEquals(createList.get(1).getId(), purchaseDTOList.get(1).getId()),
+                () -> assertEquals(createList.get(1).getCustomerDTO(), purchaseDTOList.get(1).getCustomerDTO()),
+                () -> assertEquals(createList.get(1).getPurchaseTime(), purchaseDTOList.get(1).getPurchaseTime()));
+    }
+
+    @Test
+    void updateTest() {
+        //given
+        int purchaseID = 1;
+        String newName = "Updated Purchase";
+        Purchase purchase = Purchase.builder().id(purchaseID).customer(Customer.builder()
+                .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
+                .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
+        PurchaseDTO expectedPurchaseDTO = PurchaseDTO.builder().id(purchaseID).customerDTO(CustomerDTO.builder()
+                .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
+                .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
+        //when
+        when(repository.getById(purchaseID)).thenReturn(purchase);
+        when(modelMapper.map(purchase, PurchaseDTO.class)).thenReturn(expectedPurchaseDTO);
+        when(repository.getById(purchaseID)).thenReturn(purchase);
+        PurchaseDTO actualUpdatedPurchase = service.update(expectedPurchaseDTO);
+        // then
+        assertAll(() -> assertEquals(purchaseID, actualUpdatedPurchase.getId()),
+                () -> assertEquals(newName, actualUpdatedPurchase.getCustomerDTO().getName())
+        );
+    }
+
+    @Test
+    void deleteByIdTest() {
+        int validId = 1;
+        Mockito.when(repository.deleteById(validId)).thenReturn(true);
+
+        assertTrue(service.deleteById(validId));
+    }
 }

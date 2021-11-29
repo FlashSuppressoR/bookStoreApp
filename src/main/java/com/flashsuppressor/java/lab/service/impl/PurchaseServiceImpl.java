@@ -4,7 +4,7 @@ import com.flashsuppressor.java.lab.entity.Customer;
 import com.flashsuppressor.java.lab.entity.Purchase;
 import com.flashsuppressor.java.lab.entity.dto.CustomerDTO;
 import com.flashsuppressor.java.lab.entity.dto.PurchaseDTO;
-import com.flashsuppressor.java.lab.repository.PurchaseRepository;
+import com.flashsuppressor.java.lab.repository.data.PurchaseRepository;
 import com.flashsuppressor.java.lab.service.PurchaseService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -23,7 +23,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     @Transactional(readOnly=true)
     public PurchaseDTO findById(int id) {
-        return convertToPurchaseDTO(repository.findById(id));
+        return convertToPurchaseDTO(repository.getById(id));
     }
 
     @Override
@@ -35,7 +35,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     @Transactional
     public PurchaseDTO create(PurchaseDTO purchaseDTO) {
-        Purchase newPurchase = repository.create(convertToPurchase(purchaseDTO));
+        Purchase newPurchase = repository.save(convertToPurchase(purchaseDTO));
         return convertToPurchaseDTO(newPurchase);
     }
 
@@ -44,7 +44,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     public List<PurchaseDTO> createAll(List<PurchaseDTO> purchases) {
         List<PurchaseDTO> purchaseDTOList = null;
         for (PurchaseDTO newPurchaseDTO : purchases) {
-            Purchase newPurchase = repository.create(convertToPurchase(newPurchaseDTO));
+            Purchase newPurchase = repository.save(convertToPurchase(newPurchaseDTO));
             purchaseDTOList.add(convertToPurchaseDTO(newPurchase));
         }
         return purchaseDTOList;
@@ -55,7 +55,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     public PurchaseDTO update(PurchaseDTO purchaseDTO) {
         PurchaseDTO newPurchaseDTO = null;
         try {
-            Purchase purchase = repository.findById(purchaseDTO.getId());
+            Purchase purchase = repository.getById(purchaseDTO.getId());
             if (purchaseDTO.getCustomerDTO() != null) {
                 purchase.setCustomer(convertToCustomer(purchaseDTO.getCustomerDTO()));
             }

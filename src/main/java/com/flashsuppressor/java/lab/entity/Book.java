@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,23 +36,32 @@ public class Book {
     @Column(name = "price")
     private double price;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "publisher_id")
     private Publisher publisher;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "genre_id")
     private Genre genre;
 
     @Column(name = "amount")
     private int amount;
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     private Set<Review> reviews;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "book_author",
             joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "author_id", referencedColumnName = "id"))
     private Set<Author> authors;
+
+    public Book(Long id, String name, double price, Publisher publisher, Genre genre, int amount) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.publisher = publisher;
+        this.genre = genre;
+        this.amount = amount;
+    }
 }

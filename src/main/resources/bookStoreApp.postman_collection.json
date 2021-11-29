@@ -12,14 +12,25 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": 6,\r\n    \"name\": \"IT Rex\"\r\n}",
+					"raw": "{\r\n       \"name\": \"IT Rex\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": null
+				"url": {
+					"raw": "http://localhost:8080/authors/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"authors",
+						"create"
+					]
+				}
 			},
 			"response": []
 		},
@@ -30,7 +41,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "[\r\n    {\r\n        \"id\": 7,\r\n        \"name\": \"New World\"\r\n    },\r\n    {\r\n        \"id\": 8,\r\n        \"name\": \"Lee Seen\"\r\n    }\r\n]\r\n",
+					"raw": "[\r\n    {\r\n        \"name\": \"New World\"\r\n    },\r\n    {\r\n       \"name\": \"Lee Seen\"\r\n    }\r\n]\r\n",
 					"options": {
 						"raw": {
 							"language": "json"

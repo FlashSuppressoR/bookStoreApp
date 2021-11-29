@@ -2,7 +2,7 @@ package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Author;
 import com.flashsuppressor.java.lab.entity.dto.AuthorDTO;
-import com.flashsuppressor.java.lab.repository.AuthorRepository;
+import com.flashsuppressor.java.lab.repository.data.AuthorRepository;
 import com.flashsuppressor.java.lab.service.AuthorService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -22,7 +22,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     @Transactional(readOnly=true)
     public AuthorDTO findById(int id) {
-        return convertToAuthorDTO(repository.findById(id));
+        return convertToAuthorDTO(repository.getById(id));
     }
 
     @Override
@@ -34,7 +34,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     @Transactional
     public AuthorDTO create(AuthorDTO authorDTO){
-        Author newAuthor = repository.create(convertToAuthor(authorDTO));
+        Author newAuthor = repository.save(convertToAuthor(authorDTO));
         return convertToAuthorDTO(newAuthor);
     }
 
@@ -43,7 +43,7 @@ public class AuthorServiceImpl implements AuthorService {
     public List<AuthorDTO> createAll(List<AuthorDTO> authorDTOs) {
         List<AuthorDTO> authorDTOList = new ArrayList<>();
         for (AuthorDTO newAuthorDTO : authorDTOs) {
-            Author newAuthor = repository.create(convertToAuthor(newAuthorDTO));
+            Author newAuthor = repository.saveAndFlush(convertToAuthor(newAuthorDTO));
             authorDTOList.add(convertToAuthorDTO(newAuthor));
         }
         return authorDTOList;
@@ -54,7 +54,7 @@ public class AuthorServiceImpl implements AuthorService {
     public AuthorDTO update(AuthorDTO authorDTO) {
         AuthorDTO newAuthorDTO = null;
         try {
-            Author author = repository.findById(authorDTO.getId());
+            Author author = repository.getById(authorDTO.getId());
             if (authorDTO.getName() != null) {
                 author.setName(authorDTO.getName());
             }

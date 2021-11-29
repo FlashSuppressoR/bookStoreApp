@@ -2,13 +2,14 @@ package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Genre;
 import com.flashsuppressor.java.lab.entity.dto.GenreDTO;
-import com.flashsuppressor.java.lab.repository.GenreRepository;
+import com.flashsuppressor.java.lab.repository.data.GenreRepository;
 import com.flashsuppressor.java.lab.service.GenreService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,7 @@ public class GenreServiceImpl implements GenreService {
     @Override
     @Transactional(readOnly=true)
     public GenreDTO findById(int id) {
-        return convertToGenreDTO(repository.findById(id));
+        return convertToGenreDTO(repository.getById(id));
     }
 
     @Override
@@ -33,16 +34,16 @@ public class GenreServiceImpl implements GenreService {
     @Override
     @Transactional
     public GenreDTO create(GenreDTO genreDTO) {
-        Genre newGenre = repository.create(convertToGenre(genreDTO));
+        Genre newGenre = repository.save(convertToGenre(genreDTO));
         return convertToGenreDTO(newGenre);
     }
 
     @Override
     @Transactional
     public List<GenreDTO> createAll(List<GenreDTO> genres) {
-        List<GenreDTO> genreDTOList = null;
+        List<GenreDTO> genreDTOList = new ArrayList<>();
         for (GenreDTO newGenreDTO : genres) {
-            Genre newGenre = repository.create(convertToGenre(newGenreDTO));
+            Genre newGenre = repository.save(convertToGenre(newGenreDTO));
             genreDTOList.add(convertToGenreDTO(newGenre));
         }
         return genreDTOList;
@@ -53,7 +54,7 @@ public class GenreServiceImpl implements GenreService {
     public GenreDTO update(GenreDTO genreDTO) {
         GenreDTO newGenreDTO = null;
         try {
-            Genre genre = repository.findById(genreDTO.getId());
+            Genre genre = repository.getById(genreDTO.getId());
             if (genreDTO.getName() != null) {
                 genre.setName(genreDTO.getName());
             }

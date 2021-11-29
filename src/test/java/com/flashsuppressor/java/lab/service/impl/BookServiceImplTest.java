@@ -1,21 +1,142 @@
 package com.flashsuppressor.java.lab.service.impl;
 
-import com.flashsuppressor.java.lab.repository.BookRepository;
+import com.flashsuppressor.java.lab.entity.Book;
+import com.flashsuppressor.java.lab.entity.Genre;
+import com.flashsuppressor.java.lab.entity.Publisher;
+import com.flashsuppressor.java.lab.entity.dto.BookDTO;
+import com.flashsuppressor.java.lab.entity.dto.GenreDTO;
+import com.flashsuppressor.java.lab.entity.dto.PublisherDTO;
+import com.flashsuppressor.java.lab.repository.data.BookRepository;
 import com.flashsuppressor.java.lab.service.BookService;
-import com.flashsuppressor.java.lab.service.TestServiceConfiguration;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@ContextConfiguration(classes = TestServiceConfiguration.class)
 public class BookServiceImplTest {
 
-    @Autowired
-    private BookRepository repository;
-    @Autowired
+    @InjectMocks
     private BookService service;
+    @Mock
+    private BookRepository repository;
+    @Mock
+    private ModelMapper modelMapper;
+    @Mock
+    private List<BookDTO> mockBooksList;
 
-    //TODO add tests
+    private final Pageable bookPageable = PageRequest.of(1, 5, Sort.by("name"));
+
+    @Test
+    void findByIdTest() {
+        long bookID = 1;
+        Book book = Book.builder().id(bookID).name("TestBook").build();
+        BookDTO expectedABookDTO = BookDTO.builder().id(bookID).name("TestBook").build();
+
+        when(repository.getById(bookID)).thenReturn(book);
+        when(modelMapper.map(book, BookDTO.class)).thenReturn(expectedABookDTO);
+        BookDTO actualBookDTO = service.findById(bookID);
+
+        assertEquals(expectedABookDTO, actualBookDTO);
+    }
+
+    @Test
+    void findAllTest() {
+        int expectedSize = 2;
+        Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Book(), new Book()));
+        int actualSize = service.findAll(bookPageable).getSize();
+
+        assertEquals(expectedSize, actualSize);
+    }
+
+    @Test
+    void createTest() {
+        //given
+        BookDTO bookDTO = BookDTO.builder().id(4).name("New Book").price(123)
+                .publisherDTO(PublisherDTO.builder().id(4).name("Need For Speed").build())
+                .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build();
+        Book book = Book.builder().id(4L).name("New Book").price(123)
+                .publisher(Publisher.builder().id(4).name("Need For Speed").build())
+                .genre(Genre.builder().id(4).name("Soe Ew").build()).amount(1).build();
+        //when
+        when(modelMapper.map(bookDTO, Book.class)).thenReturn(book);
+        when(modelMapper.map(book, BookDTO.class)).thenReturn(bookDTO);
+        when(repository.save(book)).thenReturn(book);
+        BookDTO actualBookDTO = service.create(bookDTO);
+        //then
+        assertAll(() -> assertEquals(book.getId(), actualBookDTO.getId()),
+                () -> assertEquals(actualBookDTO.getName(), actualBookDTO.getName()));
+    }
+
+    @Test
+    void createAllTest() {
+        //given
+        List<BookDTO> listDTO = new ArrayList<>() {{
+            add(BookDTO.builder().id(4L).name("First Book").price(123)
+                    .publisherDTO(PublisherDTO.builder().id(4).name("Need For Speed").build())
+                    .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build());
+            add(BookDTO.builder().id(5L).name("Second Author").price(123)
+                    .publisherDTO(PublisherDTO.builder().id(4).name("Need For Speed").build())
+                    .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build());
+        }};
+        when(mockBooksList.get(0)).thenReturn(listDTO.get(0));
+        when(mockBooksList.get(1)).thenReturn(listDTO.get(1));
+        List<BookDTO> createList = new ArrayList<>() {{
+            add(mockBooksList.get(0));
+            add(mockBooksList.get(1));
+        }};
+        List<BookDTO> bookDTOList = service.createAll(listDTO);
+        //then
+        assertAll(() -> assertEquals(createList.get(0).getId(), bookDTOList.get(0).getId()),
+                () -> assertEquals(createList.get(0).getName(), bookDTOList.get(0).getName()),
+                () -> assertEquals(createList.get(0).getPublisherDTO(), bookDTOList.get(0).getPublisherDTO()),
+                () -> assertEquals(createList.get(0).getGenreDTO(), bookDTOList.get(0).getGenreDTO()),
+                () -> assertEquals(createList.get(0).getAmount(), bookDTOList.get(0).getAmount()),
+                () -> assertEquals(createList.get(1).getId(), bookDTOList.get(1).getId()),
+                () -> assertEquals(createList.get(1).getName(), bookDTOList.get(1).getName()),
+                () -> assertEquals(createList.get(1).getPublisherDTO(), bookDTOList.get(1).getPublisherDTO()),
+                () -> assertEquals(createList.get(1).getGenreDTO(), bookDTOList.get(1).getGenreDTO()),
+                () -> assertEquals(createList.get(1).getAmount(), bookDTOList.get(1).getAmount()));
+    }
+
+    @Test
+    void updateTest() {
+        //given
+        long bookId = 1;
+        String newName = "Updated Book";
+        BookDTO bookDTO = BookDTO.builder().id(bookId).name(newName).build();
+        Book book = Book.builder().id(bookId).name(newName).build();
+        //when
+        when(repository.getById(bookId)).thenReturn(book);
+        when(modelMapper.map(book, BookDTO.class)).thenReturn(bookDTO);
+        when(repository.getById(bookId)).thenReturn(book);
+        BookDTO actualUpdatedBook = service.update(bookDTO);
+        // then
+        assertAll(() -> assertEquals(bookId, actualUpdatedBook.getId()),
+                () -> assertEquals(newName, actualUpdatedBook.getName())
+        );
+    }
+
+    @Test
+    void deleteByIdTest() {
+        int validId = 1;
+        Mockito.when(repository.deleteById(validId)).thenReturn(true);
+
+        assertTrue(service.deleteById(validId));
+    }
 }

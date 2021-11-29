@@ -4,7 +4,7 @@ import com.flashsuppressor.java.lab.entity.Cart;
 import com.flashsuppressor.java.lab.entity.Customer;
 import com.flashsuppressor.java.lab.entity.dto.CartDTO;
 import com.flashsuppressor.java.lab.entity.dto.CustomerDTO;
-import com.flashsuppressor.java.lab.repository.CartRepository;
+import com.flashsuppressor.java.lab.repository.data.CartRepository;
 import com.flashsuppressor.java.lab.service.CartService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -23,7 +23,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional(readOnly=true)
     public CartDTO findById(int id) {
-        return convertToCartDTO(repository.findById(id));
+        return convertToCartDTO(repository.getById(id));
     }
 
     @Override
@@ -35,7 +35,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public CartDTO create(CartDTO cartDTO) {
-        Cart newCart = repository.create(convertToCart(cartDTO));
+        Cart newCart = repository.save(convertToCart(cartDTO));
         return convertToCartDTO(newCart);
     }
 
@@ -44,7 +44,7 @@ public class CartServiceImpl implements CartService {
     public CartDTO update(CartDTO cartDTO) {
         CartDTO newCartDTO = null;
         try {
-            Cart cart = repository.findById(cartDTO.getId());
+            Cart cart = repository.getById(cartDTO.getId());
             if (cartDTO.getCustomerDTO() != null) {
                 cart.setCustomer(convertToCustomer(cartDTO.getCustomerDTO()));
             }

@@ -6,15 +6,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
-/**
- * Active profiles:
- *
- * @dev@ = To run the dev profile
- * (Logging goes to the console)
- * @stable@ = To run the stable profile
- * (Logging goes to the console & file C:/TMP/log_file.log)
- */
-
 @SpringBootApplication
 public class SpringBootProjectApplication implements CommandLineRunner {
 

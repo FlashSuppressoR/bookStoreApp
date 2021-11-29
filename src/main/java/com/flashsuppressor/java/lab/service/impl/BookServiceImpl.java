@@ -6,13 +6,19 @@ import com.flashsuppressor.java.lab.entity.Publisher;
 import com.flashsuppressor.java.lab.entity.dto.BookDTO;
 import com.flashsuppressor.java.lab.entity.dto.GenreDTO;
 import com.flashsuppressor.java.lab.entity.dto.PublisherDTO;
-import com.flashsuppressor.java.lab.repository.BookRepository;
+import com.flashsuppressor.java.lab.repository.data.BookRepository;
 import com.flashsuppressor.java.lab.service.BookService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,32 +28,35 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository repository;
     private final ModelMapper modelMapper;
+    private final Pageable bookPageable = PageRequest.of(1, 5, Sort.by("name"));
 
     @Override
     @Transactional(readOnly=true)
     public BookDTO findById(Long id) {
-        return convertToBookDTO(repository.findById(id));
+        return convertToBookDTO(repository.getById(id));
     }
 
     @Override
     @Transactional(readOnly=true)
-    public List<BookDTO> findAll() {
-        return repository.findAll().stream().map(this::convertToBookDTO).collect(Collectors.toList());
+    public Page<BookDTO> findAll(Pageable pageable) {
+        Page<Book> pageBooks = repository.findAll(bookPageable);
+        List<BookDTO> list = pageBooks.stream().map(this::convertToBookDTO).collect(Collectors.toList());
+        return new PageImpl<>(list);
     }
 
     @Override
     @Transactional
     public BookDTO create(BookDTO bookDTO) {
-        Book newBook = repository.create(convertToBook(bookDTO));
+        Book newBook = repository.save(convertToBook(bookDTO));
         return convertToBookDTO(newBook);
     }
 
     @Override
     @Transactional
     public List<BookDTO> createAll(List<BookDTO> books) {
-        List<BookDTO> bookDTOList = null;
+        List<BookDTO> bookDTOList = new ArrayList<>();
         for (BookDTO newBookDTO : books) {
-            Book newBook = repository.create(convertToBook(newBookDTO));
+            Book newBook = repository.saveAndFlush(convertToBook(newBookDTO));
             bookDTOList.add(convertToBookDTO(newBook));
         }
         return bookDTOList;
@@ -58,7 +67,7 @@ public class BookServiceImpl implements BookService {
     public BookDTO update(BookDTO bookDTO) {
         BookDTO newBookDTO = null;
         try {
-            Book book = repository.findById(bookDTO.getId());
+            Book book = repository.getById(bookDTO.getId());
             if (bookDTO.getName() != null) {
                 book.setName(bookDTO.getName());
             }
@@ -80,7 +89,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public boolean deleteById(Long id) {
+    public boolean deleteById(long id) {
 
         return repository.deleteById(id);
     }

@@ -2,7 +2,7 @@ package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Customer;
 import com.flashsuppressor.java.lab.entity.dto.CustomerDTO;
-import com.flashsuppressor.java.lab.repository.CustomerRepository;
+import com.flashsuppressor.java.lab.repository.data.CustomerRepository;
 import com.flashsuppressor.java.lab.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -28,7 +28,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional(readOnly=true)
     public CustomerDTO findById(int id) {
-        return convertToCustomerDTO(repository.findById(id));
+        return convertToCustomerDTO(repository.getById(id));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public CustomerDTO create(CustomerDTO customerDTO) {
-        Customer newCustomer = repository.create(convertToCustomer(customerDTO));
+        Customer newCustomer = repository.save(convertToCustomer(customerDTO));
         return convertToCustomerDTO(newCustomer);
     }
 
@@ -49,7 +49,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDTO update(CustomerDTO customerDTO) {
         CustomerDTO newCustomerDTO = null;
         try {
-            Customer customer = repository.findById(customerDTO.getId());
+            Customer customer = repository.getById(customerDTO.getId());
             if (customerDTO.getName() != null) {
                 customer.setName(customerDTO.getName());
             }

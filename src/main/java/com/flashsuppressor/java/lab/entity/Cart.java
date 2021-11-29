@@ -1,6 +1,5 @@
 package com.flashsuppressor.java.lab.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +19,6 @@ import javax.persistence.Table;
 @Data
 @Table(name = "cart", schema = "book_store")
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class Cart {
 
@@ -30,7 +28,7 @@ public class Cart {
     private Integer id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "id", unique = true)
     private Customer customer;
 
     @Column(name = "book_id")
@@ -38,4 +36,11 @@ public class Cart {
 
     @Column(name = "book_counter")
     private Integer bookCounter;
+
+    public Cart(Integer id, Customer customer, Long bookId, Integer bookCounter) {
+        this.id = id;
+        this.customer = customer;
+        this.bookId = bookId;
+        this.bookCounter = bookCounter;
+    }
 }
