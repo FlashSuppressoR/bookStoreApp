@@ -2,9 +2,9 @@ package com.flashsuppressor.java.lab.entity;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,7 +27,8 @@ public class Cart {
     @Column(name = "id")
     private Integer id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @OneToOne
     @JoinColumn(name = "customer_id", referencedColumnName = "id", unique = true)
     private Customer customer;
 

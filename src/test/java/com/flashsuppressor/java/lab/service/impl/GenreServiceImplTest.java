@@ -1,7 +1,7 @@
 package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Genre;
-import com.flashsuppressor.java.lab.entity.dto.GenreDTO;
+import com.flashsuppressor.java.lab.service.dto.GenreDTO;
 import com.flashsuppressor.java.lab.repository.data.GenreRepository;
 import com.flashsuppressor.java.lab.service.GenreService;
 import org.junit.jupiter.api.Test;
@@ -10,6 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
@@ -33,25 +36,30 @@ public class GenreServiceImplTest {
     @Mock
     private List<GenreDTO> mockGenresList;
 
+    private final Pageable pageable = PageRequest.of(1, 5, Sort.by("name"));
+
     @Test
     void findByIdTest() {
+        //given
         int genreID = 1;
         Genre genre = Genre.builder().id(genreID).name("Test Genre").build();
         GenreDTO expectedGenreDTO = GenreDTO.builder().id(genreID).name("Test Genre").build();
-
+        //when
         when(repository.getById(genreID)).thenReturn(genre);
         when(modelMapper.map(genre, GenreDTO.class)).thenReturn(expectedGenreDTO);
         GenreDTO actualGenreDTO = service.findById(genreID);
-
+        //then
         assertEquals(expectedGenreDTO, actualGenreDTO);
     }
 
     @Test
     void findAllTest() {
+        //given
         int expectedSize = 2;
+        //when
         Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Genre(), new Genre()));
-        int actualSize = service.findAll().size();
-
+        int actualSize = service.findAll(pageable).getSize();
+        //then
         assertEquals(expectedSize, actualSize);
     }
 
@@ -77,6 +85,7 @@ public class GenreServiceImplTest {
             add(GenreDTO.builder().id(4).name("First Genre").build());
             add(GenreDTO.builder().id(5).name("Second Genre").build());
         }};
+        //when
         when(mockGenresList.get(0)).thenReturn(listDTO.get(0));
         when(mockGenresList.get(1)).thenReturn(listDTO.get(1));
         List<GenreDTO> createList = new ArrayList<>() {{
@@ -111,9 +120,11 @@ public class GenreServiceImplTest {
 
     @Test
     void deleteByIdTest() {
+        //given
         int validId = 1;
-        Mockito.when(repository.deleteById(validId)).thenReturn(true);
-
-        assertTrue(service.deleteById(validId));
+        //when
+        repository.deleteById(validId);
+        //then
+        assertTrue(repository.findById(validId).isEmpty());
     }
 }

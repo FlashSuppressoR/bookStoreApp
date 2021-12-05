@@ -1,17 +1,19 @@
-package com.flashsuppressor.java.lab.entity.dto;
+package com.flashsuppressor.java.lab.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReviewDTO {
+public class PurchaseDTO {
     private int id;
-    private int mark;
-    private String comment;
-    private BookDTO bookDTO;
+    private CustomerDTO customerDTO;
+    private Timestamp purchaseTime;
+
 }

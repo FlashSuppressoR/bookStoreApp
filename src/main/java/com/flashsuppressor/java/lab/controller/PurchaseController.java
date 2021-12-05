@@ -1,11 +1,15 @@
 package com.flashsuppressor.java.lab.controller;
 
-import com.flashsuppressor.java.lab.entity.dto.PublisherDTO;
-import com.flashsuppressor.java.lab.entity.dto.PurchaseDTO;
+import com.flashsuppressor.java.lab.service.dto.PublisherDTO;
+import com.flashsuppressor.java.lab.service.dto.PurchaseDTO;
 import com.flashsuppressor.java.lab.service.PurchaseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,8 +27,10 @@ import java.util.List;
 public class PurchaseController {
 
     private final PurchaseService purchaseService;
+    private final Pageable pageable = PageRequest.of(1, 5);
 
-    @GetMapping(value = "/find/{id}")
+    @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('permission:reed')")
     public ResponseEntity<PurchaseDTO> find(@PathVariable(name = "id") int id) {
         final PurchaseDTO purchase = purchaseService.findById(id);
 
@@ -33,16 +39,18 @@ public class PurchaseController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(value = "/find/all")
-    public ResponseEntity<List<PurchaseDTO>> findAll() {
-        final List<PurchaseDTO> purchases = purchaseService.findAll();
+    @GetMapping(value = "/all")
+    @PreAuthorize("hasAuthority('permission:reed')")
+    public ResponseEntity<Page<PurchaseDTO>> findAll() {
+        final Page<PurchaseDTO> purchases = purchaseService.findAll(pageable);
 
         return purchases != null &&  !purchases.isEmpty()
                 ? new ResponseEntity<>(purchases, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping(value = "/create")
+    @PostMapping(value = "/")
+    @PreAuthorize("hasAuthority('permission:write')")
     public ResponseEntity<PurchaseDTO> create(@RequestBody PurchaseDTO purchaseDTO) {
         PurchaseDTO purchase = purchaseService.create(purchaseDTO);
 
@@ -51,7 +59,8 @@ public class PurchaseController {
                 : new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping(value = "/create/all")
+    @PostMapping(value = "/all")
+    @PreAuthorize("hasAuthority('permission:write')")
     public ResponseEntity<List<PurchaseDTO>> createAll(@RequestBody List<PurchaseDTO> purchaseDTOList) {
         final List<PurchaseDTO> purchases = purchaseService.createAll(purchaseDTOList);
 
@@ -60,7 +69,8 @@ public class PurchaseController {
                 : new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/update")
+    @PutMapping(value = "/")
+    @PreAuthorize("hasAuthority('permission:write')")
     public ResponseEntity<PublisherDTO> update(@RequestBody PurchaseDTO purchaseDTO) {
         final PurchaseDTO purchase = purchaseService.update(purchaseDTO);
 
@@ -69,12 +79,13 @@ public class PurchaseController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<PurchaseDTO> delete(@PathVariable(name = "id") int id) {
+    @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('permission:write')")
+    public ResponseEntity<Boolean> delete(@PathVariable(name = "id") int id) {
         final boolean deleted = purchaseService.deleteById(id);
 
         return deleted
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+                ? new ResponseEntity<>(deleted, HttpStatus.OK)
+                : new ResponseEntity<>(deleted, HttpStatus.NOT_MODIFIED);
     }
 }

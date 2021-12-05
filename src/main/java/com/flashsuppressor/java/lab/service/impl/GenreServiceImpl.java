@@ -1,11 +1,16 @@
 package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Genre;
-import com.flashsuppressor.java.lab.entity.dto.GenreDTO;
+import com.flashsuppressor.java.lab.service.dto.GenreDTO;
 import com.flashsuppressor.java.lab.repository.data.GenreRepository;
 import com.flashsuppressor.java.lab.service.GenreService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,17 +23,19 @@ import java.util.stream.Collectors;
 public class GenreServiceImpl implements GenreService {
     private final GenreRepository repository;
     private final ModelMapper modelMapper;
+    private final Pageable pageable = PageRequest.of(1, 5, Sort.by("name"));
 
     @Override
-    @Transactional(readOnly=true)
     public GenreDTO findById(int id) {
         return convertToGenreDTO(repository.getById(id));
     }
 
     @Override
     @Transactional(readOnly=true)
-    public List<GenreDTO> findAll() {
-        return repository.findAll().stream().map(this::convertToGenreDTO).collect(Collectors.toList());
+    public Page<GenreDTO> findAll(Pageable pgb) {
+        Page<Genre> pages = repository.findAll(pageable);
+
+        return new PageImpl<>(pages.stream().map(this::convertToGenreDTO).collect(Collectors.toList()));
     }
 
     @Override
@@ -55,9 +62,9 @@ public class GenreServiceImpl implements GenreService {
         GenreDTO newGenreDTO = null;
         try {
             Genre genre = repository.getById(genreDTO.getId());
-            if (genreDTO.getName() != null) {
-                genre.setName(genreDTO.getName());
-            }
+            genre.setName(genreDTO.getName());
+
+            repository.flush();
             newGenreDTO = convertToGenreDTO(genre);
         }
         catch (Exception e){
@@ -69,7 +76,8 @@ public class GenreServiceImpl implements GenreService {
     @Override
     @Transactional
     public boolean deleteById(int id) {
-        return repository.deleteById(id);
+        repository.deleteById(id);
+        return repository.findById(id).isEmpty();
     }
 
     private Genre convertToGenre(GenreDTO genreDTO) {

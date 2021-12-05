@@ -5,15 +5,13 @@ import com.flashsuppressor.java.lab.repository.hibernate.CustomerRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
-@Transactional(propagation = Propagation.REQUIRED)
 @AllArgsConstructor
+@Deprecated
 public class CustomerRepositoryImpl implements CustomerRepository {
     private static final String FIND_CUSTOMER_BY_EMAIL_QUERY = "select c from Customer c where Customer.email = ?1";
     private static final String FIND_ALL_CUSTOMERS_QUERY = "select c from Customer c";

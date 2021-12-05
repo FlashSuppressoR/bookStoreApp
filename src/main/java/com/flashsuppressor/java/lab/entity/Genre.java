@@ -3,6 +3,7 @@ package com.flashsuppressor.java.lab.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
@@ -14,7 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -31,8 +32,9 @@ public class Genre {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @EqualsAndHashCode.Exclude
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "genre", cascade = CascadeType.ALL)
-    private Set<Book> books;
+    private List<Book> books;
 
     public Genre(Integer id, String name){
         this.id = id;

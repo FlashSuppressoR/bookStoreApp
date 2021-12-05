@@ -1,4 +1,4 @@
-package com.flashsuppressor.java.lab.entity.dto;
+package com.flashsuppressor.java.lab.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

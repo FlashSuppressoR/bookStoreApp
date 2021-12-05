@@ -1,9 +1,9 @@
 package com.flashsuppressor.java.lab.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flashsuppressor.java.lab.entity.dto.BookDTO;
-import com.flashsuppressor.java.lab.entity.dto.GenreDTO;
-import com.flashsuppressor.java.lab.entity.dto.PublisherDTO;
+import com.flashsuppressor.java.lab.service.dto.BookDTO;
+import com.flashsuppressor.java.lab.service.dto.GenreDTO;
+import com.flashsuppressor.java.lab.service.dto.PublisherDTO;
 import com.flashsuppressor.java.lab.service.BookService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -65,40 +65,38 @@ class BookControllerTest {
     void findAllTest() throws Exception {
         //given
         Page<BookDTO> expectedBooks = bookService.findAll(bookPageable);
-        // when
         when(bookService.findAll(bookPageable)).thenReturn(expectedBooks);
-        //then
+        // when
         MvcResult mvcResult = mockMvc.perform(get("/books/find/all")
                 .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualBook = mvcResult.getResponse().getContentAsString();
-
+        //then
         assertEquals(objectMapper.writeValueAsString(expectedBooks), actualBook);
     }
 
     @Test
-    void create() throws Exception {
+    void createTest() throws Exception {
         //given
         BookDTO expectedBook = BookDTO.builder().id(4).name("New Book").price(123)
                 .publisherDTO(PublisherDTO.builder().id(4).name("Need For Speed").build())
                 .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build();
-        //when
         when(bookService.create(expectedBook)).thenReturn(expectedBook);
+        //when
         BookDTO actualBookDTO = bookService.create(expectedBook);
-        //then
         MvcResult mvcResult = mockMvc.perform(post("/books/create")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(actualBookDTO)))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualBook = mvcResult.getResponse().getContentAsString();
-
+        //then
         assertEquals(objectMapper.writeValueAsString(expectedBook), actualBook);
     }
 
     @Test
-    void createAll() throws Exception {
+    void createAllTest() throws Exception {
         //given
         BookDTO expectedFirstBook = BookDTO.builder().id(4).name("New FirstBook").price(123)
                 .publisherDTO(PublisherDTO.builder().id(4).name("Need asd").build())
@@ -109,17 +107,16 @@ class BookControllerTest {
         List<BookDTO> expectedList = new ArrayList<>();
         expectedList.add(expectedFirstBook);
         expectedList.add(expectedSecondBook);
-        //when
         when(bookService.createAll(expectedList)).thenReturn(expectedList);
+        //when
         List<BookDTO> actualBooksList = bookService.createAll(expectedList);
-        //then
         MvcResult mvcResult = mockMvc.perform(post("/books/create/all")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(actualBooksList)))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualList = mvcResult.getResponse().getContentAsString();
-
+        //then
         assertEquals(objectMapper.writeValueAsString(expectedList), actualList);
     }
 
@@ -131,16 +128,15 @@ class BookControllerTest {
         BookDTO expectedBook = BookDTO.builder().id(bookId).name(updatedName).price(13)
                 .publisherDTO(PublisherDTO.builder().id(4).name("New FirstGenrePublisher").build())
                 .genreDTO(GenreDTO.builder().id(4).name("New FirstGenre").build()).amount(2).build();
-        //when
         when(bookService.update(expectedBook)).thenReturn(expectedBook);
-        // then
+        //when
         MvcResult mvcResult = mockMvc.perform(put("/books/update")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(expectedBook)))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualBook = mvcResult.getResponse().getContentAsString();
-
+        //then
         assertEquals(objectMapper.writeValueAsString(expectedBook), actualBook);
     }
 
@@ -148,8 +144,8 @@ class BookControllerTest {
     void deleteByID_thenReturns200() throws Exception {
         //given
         long id = 1;
-        // when
         when(bookService.deleteById(id)).thenReturn(true);
+        //when
         //then
         mockMvc.perform(delete("/books/delete/{id}", id)
                 .contentType("application/json"))

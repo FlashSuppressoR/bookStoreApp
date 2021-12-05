@@ -5,16 +5,14 @@ import com.flashsuppressor.java.lab.repository.hibernate.PublisherRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-@Transactional(propagation = Propagation.REQUIRED)
 @AllArgsConstructor
+@Deprecated
 public class PublisherRepositoryImpl implements PublisherRepository {
     private static final String FIND_ALL_PUBLISHERS_QUERY = "select p from Publisher p";
 

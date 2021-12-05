@@ -2,8 +2,8 @@ package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Customer;
 import com.flashsuppressor.java.lab.entity.Purchase;
-import com.flashsuppressor.java.lab.entity.dto.CustomerDTO;
-import com.flashsuppressor.java.lab.entity.dto.PurchaseDTO;
+import com.flashsuppressor.java.lab.service.dto.CustomerDTO;
+import com.flashsuppressor.java.lab.service.dto.PurchaseDTO;
 import com.flashsuppressor.java.lab.repository.data.PurchaseRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.Timestamp;
@@ -35,8 +38,11 @@ public class PurchaseServiceImplTest {
     @Mock
     private List<PurchaseDTO> mockPurchasesList;
 
+    private final Pageable pageable = PageRequest.of(1, 5, Sort.by("name"));
+
     @Test
     void findByIdTest() {
+        //given
         int purchaseID = 1;
         Purchase purchase = Purchase.builder().id(purchaseID).customer(Customer.builder()
                 .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
@@ -44,20 +50,22 @@ public class PurchaseServiceImplTest {
         PurchaseDTO expectedPurchaseDTO = PurchaseDTO.builder().id(purchaseID).customerDTO(CustomerDTO.builder()
                 .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
                 .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
-
+        //when
         when(repository.getById(purchaseID)).thenReturn(purchase);
         when(modelMapper.map(purchase, PurchaseDTO.class)).thenReturn(expectedPurchaseDTO);
         PurchaseDTO actualPurchaseDTO = service.findById(purchaseID);
-
+        //then
         assertEquals(expectedPurchaseDTO, actualPurchaseDTO);
     }
 
     @Test
     void findAllTest() {
+        //given
         int expectedSize = 2;
+        //when
         Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Purchase(), new Purchase()));
-        int actualSize = service.findAll().size();
-
+        int actualSize = service.findAll(pageable).getSize();
+        //then
         assertEquals(expectedSize, actualSize);
     }
 
@@ -93,6 +101,7 @@ public class PurchaseServiceImplTest {
                     .id(5).name("Alde Saeq").email("ez@com").password("aaex").build())
                     .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build());
         }};
+        //when
         when(mockPurchasesList.get(0)).thenReturn(listDTO.get(0));
         when(mockPurchasesList.get(1)).thenReturn(listDTO.get(1));
         List<PurchaseDTO> createList = new ArrayList<>() {{
@@ -133,9 +142,11 @@ public class PurchaseServiceImplTest {
 
     @Test
     void deleteByIdTest() {
+        //given
         int validId = 1;
-        Mockito.when(repository.deleteById(validId)).thenReturn(true);
-
-        assertTrue(service.deleteById(validId));
+        //when
+        repository.deleteById(validId);
+        //then
+        assertTrue(repository.findById(validId).isEmpty());
     }
 }

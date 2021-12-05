@@ -1,14 +1,14 @@
 package com.flashsuppressor.java.lab.service;
 
-import com.flashsuppressor.java.lab.entity.dto.CartDTO;
-
-import java.util.List;
+import com.flashsuppressor.java.lab.service.dto.CartDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CartService {
 
     CartDTO findById(int id);
 
-    List<CartDTO> findAll();
+    Page<CartDTO> findAll(Pageable pageable);
 
     CartDTO create(CartDTO cartDTO);
 

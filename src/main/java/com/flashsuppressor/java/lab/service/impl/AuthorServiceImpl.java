@@ -1,11 +1,16 @@
 package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Author;
-import com.flashsuppressor.java.lab.entity.dto.AuthorDTO;
+import com.flashsuppressor.java.lab.service.dto.AuthorDTO;
 import com.flashsuppressor.java.lab.repository.data.AuthorRepository;
 import com.flashsuppressor.java.lab.service.AuthorService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,22 +23,24 @@ import java.util.stream.Collectors;
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository repository;
     private final ModelMapper modelMapper;
+    private final Pageable pageable = PageRequest.of(1, 5, Sort.by("name"));
 
     @Override
-    @Transactional(readOnly=true)
     public AuthorDTO findById(int id) {
         return convertToAuthorDTO(repository.getById(id));
     }
 
     @Override
-    @Transactional(readOnly=true)
-    public List<AuthorDTO> findAll() {
-        return repository.findAll().stream().map(this::convertToAuthorDTO).collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public Page<AuthorDTO> findAll(Pageable pgb) {
+        Page<Author> pages = repository.findAll(pageable);
+
+        return new PageImpl<>(pages.stream().map(this::convertToAuthorDTO).collect(Collectors.toList()));
     }
 
     @Override
     @Transactional
-    public AuthorDTO create(AuthorDTO authorDTO){
+    public AuthorDTO create(AuthorDTO authorDTO) {
         Author newAuthor = repository.save(convertToAuthor(authorDTO));
         return convertToAuthorDTO(newAuthor);
     }
@@ -52,24 +59,19 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     @Transactional
     public AuthorDTO update(AuthorDTO authorDTO) {
-        AuthorDTO newAuthorDTO = null;
-        try {
-            Author author = repository.getById(authorDTO.getId());
-            if (authorDTO.getName() != null) {
-                author.setName(authorDTO.getName());
-            }
-            newAuthorDTO = convertToAuthorDTO(author);
-        }
-        catch (Exception e){
-            System.out.println("Can't update authorDTO");
-        }
-        return newAuthorDTO;
+        Author author = repository.getById(authorDTO.getId());
+        author.setName(authorDTO.getName());
+
+        repository.flush();
+
+        return convertToAuthorDTO(author);
     }
 
     @Override
     @Transactional
     public boolean deleteById(int id) {
-        return repository.deleteById(id);
+        repository.deleteById(id);
+        return repository.findById(id).isEmpty();
     }
 
     private Author convertToAuthor(AuthorDTO authorDTO) {

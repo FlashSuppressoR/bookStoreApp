@@ -1,6 +1,6 @@
 package com.flashsuppressor.java.lab.service;
 
-import com.flashsuppressor.java.lab.entity.dto.BookDTO;
+import com.flashsuppressor.java.lab.service.dto.BookDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

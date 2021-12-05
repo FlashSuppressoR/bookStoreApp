@@ -2,16 +2,20 @@ package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Cart;
 import com.flashsuppressor.java.lab.entity.Customer;
-import com.flashsuppressor.java.lab.entity.dto.CartDTO;
-import com.flashsuppressor.java.lab.entity.dto.CustomerDTO;
+import com.flashsuppressor.java.lab.service.dto.CartDTO;
+import com.flashsuppressor.java.lab.service.dto.CustomerDTO;
 import com.flashsuppressor.java.lab.repository.data.CartRepository;
 import com.flashsuppressor.java.lab.service.CartService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,17 +23,19 @@ import java.util.stream.Collectors;
 public class CartServiceImpl implements CartService {
     private final CartRepository repository;
     private final ModelMapper modelMapper;
+    private final Pageable pageable = PageRequest.of(1, 5, Sort.by("name"));
 
     @Override
-    @Transactional(readOnly=true)
     public CartDTO findById(int id) {
         return convertToCartDTO(repository.getById(id));
     }
 
     @Override
     @Transactional(readOnly=true)
-    public List<CartDTO> findAll() {
-        return repository.findAll().stream().map(this::convertToCartDTO).collect(Collectors.toList());
+    public Page<CartDTO> findAll(Pageable pgb) {
+        Page<Cart> pages = repository.findAll(pageable);
+
+        return new PageImpl<>(pages.stream().map(this::convertToCartDTO).collect(Collectors.toList()));
     }
 
     @Override
@@ -45,11 +51,11 @@ public class CartServiceImpl implements CartService {
         CartDTO newCartDTO = null;
         try {
             Cart cart = repository.getById(cartDTO.getId());
-            if (cartDTO.getCustomerDTO() != null) {
-                cart.setCustomer(convertToCustomer(cartDTO.getCustomerDTO()));
-            }
+            cart.setCustomer(convertToCustomer(cartDTO.getCustomerDTO()));
             cart.setBookId(cartDTO.getBookId());
             cart.setBookCounter(cartDTO.getBookCounter());
+
+            repository.flush();
             newCartDTO = convertToCartDTO(cart);
         }
         catch (Exception e){
@@ -61,7 +67,8 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public boolean deleteById(int id) {
-        return repository.deleteById(id);
+        repository.deleteById(id);
+        return repository.findById(id).isEmpty();
     }
 
     private Customer convertToCustomer(CustomerDTO customerDTO) {

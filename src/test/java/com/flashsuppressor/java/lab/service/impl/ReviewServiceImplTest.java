@@ -2,10 +2,10 @@ package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.entity.Review;
-import com.flashsuppressor.java.lab.entity.dto.BookDTO;
-import com.flashsuppressor.java.lab.entity.dto.GenreDTO;
-import com.flashsuppressor.java.lab.entity.dto.PublisherDTO;
-import com.flashsuppressor.java.lab.entity.dto.ReviewDTO;
+import com.flashsuppressor.java.lab.service.dto.BookDTO;
+import com.flashsuppressor.java.lab.service.dto.GenreDTO;
+import com.flashsuppressor.java.lab.service.dto.PublisherDTO;
+import com.flashsuppressor.java.lab.service.dto.ReviewDTO;
 import com.flashsuppressor.java.lab.repository.data.ReviewRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
@@ -36,27 +39,32 @@ public class ReviewServiceImplTest {
     @Mock
     private List<ReviewDTO> mockReviewsList;
 
+    private final Pageable pageable = PageRequest.of(1, 5, Sort.by("name"));
+
     @Test
     void findByIdTest() {
+        //given
         int reviewID = 1;
         Review review = Review.builder().id(reviewID).mark(5).comment("Cool")
                 .book(Book.builder().id(4L).name("TestBook").build()).build();
         ReviewDTO expectedReviewDTO = ReviewDTO.builder().id(reviewID).mark(5).comment("Cool")
                 .bookDTO(BookDTO.builder().id(4L).name("TestBook").build()).build();
-
+        //when
         when(repository.getById(reviewID)).thenReturn(review);
         when(modelMapper.map(review, ReviewDTO.class)).thenReturn(expectedReviewDTO);
         ReviewDTO actualReviewDTO = service.findById(reviewID);
-
+        //then
         assertEquals(expectedReviewDTO, actualReviewDTO);
     }
 
     @Test
     void findAllTest() {
+        //given
         int expectedSize = 2;
+        //when
         Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Review(), new Review()));
-        int actualSize = service.findAll().size();
-
+        int actualSize = service.findAll(pageable).getSize();
+        //then
         assertEquals(expectedSize, actualSize);
     }
 
@@ -133,9 +141,11 @@ public class ReviewServiceImplTest {
 
     @Test
     void deleteByIdTest() {
+        //given
         int validId = 1;
-        Mockito.when(repository.deleteById(validId)).thenReturn(true);
-
-        assertTrue(service.deleteById(validId));
+        //when
+        repository.deleteById(validId);
+        //then
+        assertTrue(repository.findById(validId).isEmpty());
     }
 }

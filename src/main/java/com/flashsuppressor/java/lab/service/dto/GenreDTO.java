@@ -1,4 +1,4 @@
-package com.flashsuppressor.java.lab.entity.dto;
+package com.flashsuppressor.java.lab.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CartDTO {
+public class GenreDTO {
     private int id;
-    private CustomerDTO customerDTO;
-    private long bookId;
-    private int bookCounter;
+    private String name;
+
 }

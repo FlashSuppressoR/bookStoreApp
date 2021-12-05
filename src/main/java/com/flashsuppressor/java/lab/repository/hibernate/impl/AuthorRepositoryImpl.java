@@ -5,19 +5,17 @@ import com.flashsuppressor.java.lab.repository.hibernate.AuthorRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-@Transactional(propagation = Propagation.REQUIRED)
 @AllArgsConstructor
+@Deprecated
 public class AuthorRepositoryImpl implements AuthorRepository {
 
-    private static final String FIND_AUTHORS_QUERY = "select a from  Author a";
+    private static final String FIND_AUTHORS_QUERY = "select a from Author a";
     private final EntityManager entityManager;
 
     @Override
@@ -35,7 +33,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
     @Override
     public Author create(Author author){
         Session session = entityManager.unwrap(Session.class);
-        Integer newUserId = (Integer) session.save("Author", author);
+        Integer newUserId = (Integer) session.save(author.getName(), author);
 
         return session.find(Author.class, newUserId);
     }
@@ -45,7 +43,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
         List<Author> newList = new ArrayList<>();
         Session session = entityManager.unwrap(Session.class);
         for (Author author : authors) {
-            Integer newUserId = (Integer) session.save("Author", author);
+            Integer newUserId = (Integer) session.save(author.getName(), author);
             newList.add(session.find(Author.class, newUserId));
         }
 

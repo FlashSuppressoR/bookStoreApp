@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class FindAdvice {
     private static final String FIND_METHOD_MESSAGE = "Method: %s has been called";
 
-    @Pointcut("execution(* com.flashsuppressor.java.lab.service.impl.*.find*(..))")
+    @Pointcut("execution(* com.flashsuppressor.java.lab.repository.data.*.find*(..))")
     public void findMethodsInRepositories() {
     }
 

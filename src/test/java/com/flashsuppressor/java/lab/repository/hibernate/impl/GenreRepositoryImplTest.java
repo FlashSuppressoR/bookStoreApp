@@ -25,7 +25,7 @@ public class GenreRepositoryImplTest extends BaseRepositoryTest {
     }};
 
     @Test
-    public void findAll() {
+    public void findAllTest() {
         List<Genre> actualGenres = genreRepository.findAll();
 
         for (int i = 0; i < expectedGenres.size(); i++) {
@@ -34,7 +34,7 @@ public class GenreRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void findById() {
+    public void findByIdTest() {
         Genre expected = expectedGenres.get(0);
         Genre actual = genreRepository.findById(expected.getId());
 

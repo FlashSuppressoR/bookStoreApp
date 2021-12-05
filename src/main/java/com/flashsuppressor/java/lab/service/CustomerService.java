@@ -1,8 +1,8 @@
 package com.flashsuppressor.java.lab.service;
 
-import com.flashsuppressor.java.lab.entity.dto.CustomerDTO;
-
-import java.util.List;
+import com.flashsuppressor.java.lab.service.dto.CustomerDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CustomerService {
 
@@ -10,7 +10,7 @@ public interface CustomerService {
 
     CustomerDTO findById(int id);
 
-    List<CustomerDTO> findAll();
+    Page<CustomerDTO> findAll(Pageable pageable);
 
     CustomerDTO create(CustomerDTO customerDTO);
 

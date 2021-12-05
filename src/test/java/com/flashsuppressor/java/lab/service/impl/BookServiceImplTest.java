@@ -3,9 +3,9 @@ package com.flashsuppressor.java.lab.service.impl;
 import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.entity.Genre;
 import com.flashsuppressor.java.lab.entity.Publisher;
-import com.flashsuppressor.java.lab.entity.dto.BookDTO;
-import com.flashsuppressor.java.lab.entity.dto.GenreDTO;
-import com.flashsuppressor.java.lab.entity.dto.PublisherDTO;
+import com.flashsuppressor.java.lab.service.dto.BookDTO;
+import com.flashsuppressor.java.lab.service.dto.GenreDTO;
+import com.flashsuppressor.java.lab.service.dto.PublisherDTO;
 import com.flashsuppressor.java.lab.repository.data.BookRepository;
 import com.flashsuppressor.java.lab.service.BookService;
 import org.junit.jupiter.api.Test;
@@ -44,23 +44,26 @@ public class BookServiceImplTest {
 
     @Test
     void findByIdTest() {
+        //given
         long bookID = 1;
         Book book = Book.builder().id(bookID).name("TestBook").build();
         BookDTO expectedABookDTO = BookDTO.builder().id(bookID).name("TestBook").build();
-
+        //when
         when(repository.getById(bookID)).thenReturn(book);
         when(modelMapper.map(book, BookDTO.class)).thenReturn(expectedABookDTO);
         BookDTO actualBookDTO = service.findById(bookID);
-
+        //then
         assertEquals(expectedABookDTO, actualBookDTO);
     }
 
     @Test
     void findAllTest() {
+        //given
         int expectedSize = 2;
+        //when
         Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Book(), new Book()));
         int actualSize = service.findAll(bookPageable).getSize();
-
+        //then
         assertEquals(expectedSize, actualSize);
     }
 
@@ -94,6 +97,7 @@ public class BookServiceImplTest {
                     .publisherDTO(PublisherDTO.builder().id(4).name("Need For Speed").build())
                     .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build());
         }};
+        //when
         when(mockBooksList.get(0)).thenReturn(listDTO.get(0));
         when(mockBooksList.get(1)).thenReturn(listDTO.get(1));
         List<BookDTO> createList = new ArrayList<>() {{
@@ -134,9 +138,11 @@ public class BookServiceImplTest {
 
     @Test
     void deleteByIdTest() {
-        int validId = 1;
-        Mockito.when(repository.deleteById(validId)).thenReturn(true);
-
-        assertTrue(service.deleteById(validId));
+        //given
+        long validId = 1;
+        //when
+        repository.deleteById(validId);
+        //then
+        assertTrue(repository.findById(validId).isEmpty());
     }
 }

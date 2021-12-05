@@ -1,6 +1,8 @@
 package com.flashsuppressor.java.lab.service;
 
-import com.flashsuppressor.java.lab.entity.dto.PublisherDTO;
+import com.flashsuppressor.java.lab.service.dto.PublisherDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -8,7 +10,7 @@ public interface PublisherService {
 
     PublisherDTO findById(int id);
 
-    List<PublisherDTO> findAll();
+    Page<PublisherDTO> findAll(Pageable pageable);
 
     PublisherDTO create(PublisherDTO publisherDTO);
 

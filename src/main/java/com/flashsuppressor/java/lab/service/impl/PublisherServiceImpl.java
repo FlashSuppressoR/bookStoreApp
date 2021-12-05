@@ -1,11 +1,16 @@
 package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Publisher;
-import com.flashsuppressor.java.lab.entity.dto.PublisherDTO;
+import com.flashsuppressor.java.lab.service.dto.PublisherDTO;
 import com.flashsuppressor.java.lab.repository.data.PublisherRepository;
 import com.flashsuppressor.java.lab.service.PublisherService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,17 +23,19 @@ import java.util.stream.Collectors;
 public class PublisherServiceImpl implements PublisherService {
     private final PublisherRepository repository;
     private final ModelMapper modelMapper;
+    private final Pageable pageable = PageRequest.of(1, 5, Sort.by("name"));
 
     @Override
-    @Transactional(readOnly=true)
     public PublisherDTO findById(int id) {
         return convertToPublisherDTO(repository.getById(id));
     }
 
     @Override
     @Transactional(readOnly=true)
-    public List<PublisherDTO> findAll() {
-        return repository.findAll().stream().map(this::convertToPublisherDTO).collect(Collectors.toList());
+    public Page<PublisherDTO> findAll(Pageable pgb) {
+        Page<Publisher> pages = repository.findAll(pageable);
+
+        return new PageImpl<>(pages.stream().map(this::convertToPublisherDTO).collect(Collectors.toList()));
     }
 
     @Override
@@ -55,9 +62,9 @@ public class PublisherServiceImpl implements PublisherService {
         PublisherDTO newPublisherDTO = null;
         try {
             Publisher publisher = repository.getById(publisherDTO.getId());
-            if (publisherDTO.getName() != null) {
-                publisher.setName(publisherDTO.getName());
-            }
+            publisher.setName(publisherDTO.getName());
+
+            repository.flush();
             newPublisherDTO = convertToPublisherDTO(publisher);
         }
         catch (Exception e){
@@ -69,7 +76,8 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     @Transactional
     public boolean deleteById(int id) {
-        return repository.deleteById(id);
+        repository.deleteById(id);
+        return repository.findById(id).isEmpty();
     }
 
     private Publisher convertToPublisher(PublisherDTO publisherDTO) {

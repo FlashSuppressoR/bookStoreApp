@@ -2,8 +2,8 @@ package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Cart;
 import com.flashsuppressor.java.lab.entity.Customer;
-import com.flashsuppressor.java.lab.entity.dto.CartDTO;
-import com.flashsuppressor.java.lab.entity.dto.CustomerDTO;
+import com.flashsuppressor.java.lab.service.dto.CartDTO;
+import com.flashsuppressor.java.lab.service.dto.CustomerDTO;
 import com.flashsuppressor.java.lab.repository.data.CartRepository;
 import com.flashsuppressor.java.lab.service.CartService;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
@@ -30,6 +33,8 @@ public class CartServiceImplTest {
     private CartRepository repository;
     @Mock
     private ModelMapper modelMapper;
+
+    private final Pageable pageable = PageRequest.of(1, 5, Sort.by("name"));
 
     @Test
     void findByIdTest() {
@@ -52,7 +57,7 @@ public class CartServiceImplTest {
     void findAllTest() {
         int expectedSize = 2;
         Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Cart(), new Cart()));
-        int actualSize = service.findAll().size();
+        int actualSize = service.findAll(pageable).getSize();
 
         assertEquals(expectedSize, actualSize);
     }
@@ -102,9 +107,11 @@ public class CartServiceImplTest {
 
     @Test
     void deleteByIdTest() {
+        //given
         int validId = 1;
-        Mockito.when(repository.deleteById(validId)).thenReturn(true);
-
-        assertTrue(service.deleteById(validId));
+        //when
+        repository.deleteById(validId);
+        //then
+        assertTrue(repository.findById(validId).isEmpty());
     }
 }

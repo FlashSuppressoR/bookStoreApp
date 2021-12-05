@@ -3,18 +3,17 @@ package com.flashsuppressor.java.lab.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -31,8 +30,9 @@ public class Author {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "authors")
-    private Set<Book> books = new HashSet<>();
+    @EqualsAndHashCode.Exclude
+    @ManyToMany(mappedBy = "authors")
+    private List<Book> books;
 
     public Author(Integer id, String name) {
         this.id = id;

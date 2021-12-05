@@ -1,21 +1,24 @@
 package com.flashsuppressor.java.lab.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flashsuppressor.java.lab.entity.dto.CustomerDTO;
-import com.flashsuppressor.java.lab.entity.dto.PurchaseDTO;
+import com.flashsuppressor.java.lab.service.dto.CustomerDTO;
+import com.flashsuppressor.java.lab.service.dto.PurchaseDTO;
 import com.flashsuppressor.java.lab.service.PurchaseService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,6 +40,8 @@ class PurchaseControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private final Pageable pageable = PageRequest.of(1, 10, Sort.by("customer_id"));
+
     @Test
     void findTest() throws Exception {
         //given
@@ -44,57 +49,53 @@ class PurchaseControllerTest {
         PurchaseDTO expectedPurchase = PurchaseDTO.builder().id(purchaseID).customerDTO(CustomerDTO.builder()
                 .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
                 .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
-        // when
         when(purchaseService.findById(purchaseID)).thenReturn(expectedPurchase);
-        //then
+        //when
         MvcResult mvcResult = mockMvc.perform(get("/purchases/find/{id}", purchaseID)
                 .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualPurchase = mvcResult.getResponse().getContentAsString();
-
+        //then
         assertEquals(objectMapper.writeValueAsString(expectedPurchase), actualPurchase);
     }
 
     @Test
     void findAllTest() throws Exception {
         //given
-        PurchaseDTO newPurchase = PurchaseDTO.builder().build();
-        // when
-        List<PurchaseDTO> expectedPurchases = Arrays.asList(newPurchase, newPurchase);
-        when(purchaseService.findAll()).thenReturn(expectedPurchases);
-        //then
+        Page<PurchaseDTO> expectedPurchases = purchaseService.findAll(pageable);
+        when(purchaseService.findAll(pageable)).thenReturn(expectedPurchases);
+        //when
         MvcResult mvcResult = mockMvc.perform(get("/purchases/find/all")
                 .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualPurchases = mvcResult.getResponse().getContentAsString();
-
+        //then
         assertEquals(objectMapper.writeValueAsString(expectedPurchases), actualPurchases);
     }
 
     @Test
-    void create() throws Exception {
+    void createTest() throws Exception {
         //given
         int purchaseID = 1;
         PurchaseDTO expectedPurchase = PurchaseDTO.builder().id(purchaseID).customerDTO(CustomerDTO.builder()
                 .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
                 .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
-        //when
         when(purchaseService.create(expectedPurchase)).thenReturn(expectedPurchase);
-        //then
+        //when
         MvcResult mvcResult = mockMvc.perform(post("/purchases/create")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(expectedPurchase)))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualPurchase = mvcResult.getResponse().getContentAsString();
-
+        //then
         assertEquals(objectMapper.writeValueAsString(expectedPurchase), actualPurchase);
     }
 
     @Test
-    void createAll() throws Exception {
+    void createAllTest() throws Exception {
         //given
         PurchaseDTO expectedFirstPurchase = PurchaseDTO.builder().id(4).customerDTO(CustomerDTO.builder()
                 .id(4).name("Al Sdz").email("Shez@com").password("ax").build())
@@ -105,16 +106,15 @@ class PurchaseControllerTest {
         List<PurchaseDTO> expectedList = new ArrayList<>();
         expectedList.add(expectedFirstPurchase);
         expectedList.add(expectedSecondPurchase);
-        //when
         when(purchaseService.createAll(expectedList)).thenReturn(expectedList);
-        //then
+        //when
         MvcResult mvcResult = mockMvc.perform(post("/purchases/create/all")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(expectedList)))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualList = mvcResult.getResponse().getContentAsString();
-
+        //then
         assertEquals(objectMapper.writeValueAsString(expectedList), actualList);
     }
 
@@ -126,16 +126,15 @@ class PurchaseControllerTest {
         PurchaseDTO expectedPurchase = PurchaseDTO.builder().id(purchaseId).customerDTO(CustomerDTO.builder()
                 .id(4).name("Al Sdz").email("Shez@com").password("ax").build())
                 .purchaseTime(Timestamp.valueOf(updatedTime)).build();
-        //when
         when(purchaseService.update(expectedPurchase)).thenReturn(expectedPurchase);
-        // then
+        //when
         MvcResult mvcResult = mockMvc.perform(put("/purchases/update")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(expectedPurchase)))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualPurchase = mvcResult.getResponse().getContentAsString();
-
+        //then
         assertEquals(objectMapper.writeValueAsString(expectedPurchase), actualPurchase);
     }
 
@@ -143,8 +142,8 @@ class PurchaseControllerTest {
     void deleteByID_thenReturns200() throws Exception {
         //given
         int id = 1;
-        // when
         when(purchaseService.deleteById(id)).thenReturn(true);
+        //when
         //then
         mockMvc.perform(delete("/purchases/delete/{id}", id)
                 .contentType("application/json"))

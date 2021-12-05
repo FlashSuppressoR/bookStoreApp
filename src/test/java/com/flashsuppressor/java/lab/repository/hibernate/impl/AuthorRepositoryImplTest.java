@@ -17,7 +17,7 @@ public class AuthorRepositoryImplTest extends BaseRepositoryTest {
 
     @Autowired
     private AuthorRepositoryImpl authorRepository;
-
+    //given
     private final List<Author> expectedAuthors = new ArrayList<>() {{
         add(new Author(1, "Bred Dee"));
         add(new Author(2, "John Serb"));
@@ -26,9 +26,10 @@ public class AuthorRepositoryImplTest extends BaseRepositoryTest {
 
     @Test
     public void findAllTest() {
+        //when
         List<Author> actualAuthors = authorRepository.findAll();
+        //then
         assertEquals(expectedAuthors.size(), actualAuthors.size());
-
         for (int i = 0; i < expectedAuthors.size(); i++) {
             assertAuthorEquals(expectedAuthors.get(i), actualAuthors.get(i));
         }
@@ -36,22 +37,27 @@ public class AuthorRepositoryImplTest extends BaseRepositoryTest {
 
     @Test
     public void findByIdTest() {
+        //given
         Author expectedAuthor = expectedAuthors.get(0);
+        //when
         Author actualAuthor = authorRepository.findById(1);
-
+        //then
         assertAuthorEquals(expectedAuthor, actualAuthor);
     }
 
     @Test
     public void createTest() {
+        //given
         Author expectedAuthor = new Author(4, "Roi Bard");
+        //when
         authorRepository.create(expectedAuthor);
-
+        //then
         assertEquals(4, authorRepository.findAll().size());
     }
 
     @Test
     public void createAllTest() {
+        //given
         List<Author> expectedList = new ArrayList<>() {{
             add(new Author(4, "Alexandrod"));
             add(new Author(5, "Bred Eqwex"));
@@ -60,8 +66,9 @@ public class AuthorRepositoryImplTest extends BaseRepositoryTest {
             add(new Author(null, "Alexandrod"));
             add(new Author(null, "Bred Eqwex"));
         }};
+        //when
         authorRepository.createAll(actualList);
-
+        //then
         for (int i = 0; i < expectedList.size(); i++) {
             assertAuthorEquals(expectedList.get(i), actualList.get(i));
         }
@@ -69,17 +76,20 @@ public class AuthorRepositoryImplTest extends BaseRepositoryTest {
 
     @Test
     public void updateTest() {
+        //given
         Author expectedUser = new Author(3, "Max Ew");
+        //when
         Author actualAuthor = authorRepository.update(expectedUser);
-
+        //then
         assert actualAuthor != null;
         assertAuthorEquals(expectedUser, actualAuthor);
     }
 
     @Test
     public void deleteByIdTest() {
+        //given
         int authorId = 1;
-
+        //then
         assertTrue(authorRepository.deleteById(authorId));
     }
 

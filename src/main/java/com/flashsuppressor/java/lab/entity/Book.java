@@ -3,6 +3,7 @@ package com.flashsuppressor.java.lab.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
@@ -18,6 +19,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -37,25 +39,27 @@ public class Book {
     @Column(name = "price")
     private double price;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "publisher_id")
+    @ManyToOne
+    @JoinColumn(name = "publisher_id", nullable = false)
     private Publisher publisher;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "genre_id")
+    @ManyToOne
+    @JoinColumn(name = "genre_id", nullable = false)
     private Genre genre;
 
     @Column(name = "amount")
     private int amount;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private Set<Review> reviews;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ManyToMany
     @JoinTable(name = "book_author",
             joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "author_id", referencedColumnName = "id"))
-    private Set<Author> authors;
+    private List<Author> authors;
 
     public Book(Long id, String name, double price, Publisher publisher, Genre genre, int amount) {
         this.id = id;

@@ -1,40 +1,46 @@
 package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Customer;
-import com.flashsuppressor.java.lab.entity.dto.CustomerDTO;
+import com.flashsuppressor.java.lab.service.dto.CustomerDTO;
 import com.flashsuppressor.java.lab.repository.data.CustomerRepository;
 import com.flashsuppressor.java.lab.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository repository;
     private final ModelMapper modelMapper;
+    private final Pageable pageable = PageRequest.of(1, 5, Sort.by("name"));
 
     @Override
-    @Transactional(readOnly=true)
     public CustomerDTO findByEmail(String email) {
-        Customer customer = repository.findByEmail("Max@com");
+        Customer customer = repository.findCustomerByEmail(email);
         return convertToCustomerDTO(customer);
     }
 
     @Override
-    @Transactional(readOnly=true)
     public CustomerDTO findById(int id) {
         return convertToCustomerDTO(repository.getById(id));
     }
 
     @Override
-    @Transactional(readOnly=true)
-    public List<CustomerDTO> findAll() {
-        return repository.findAll().stream().map(this::convertToCustomerDTO).collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public Page<CustomerDTO> findAll(Pageable pgb) {
+        Page<Customer> pages = repository.findAll(pageable);
+
+        return new PageImpl<>(pages.stream().map(this::convertToCustomerDTO).collect(Collectors.toList()));
     }
 
     @Override
@@ -50,15 +56,12 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerDTO newCustomerDTO = null;
         try {
             Customer customer = repository.getById(customerDTO.getId());
-            if (customerDTO.getName() != null) {
-                customer.setName(customerDTO.getName());
-            }
-            if (customerDTO.getEmail() != null) {
-                customer.setEmail(customerDTO.getEmail());
-            }
-            if (customerDTO.getPassword() != null) {
-                customer.setPassword(customerDTO.getPassword());
-            }
+            customer.setName(customerDTO.getName());
+            customer.setEmail(customerDTO.getEmail());
+            customer.setPassword(customerDTO.getPassword());
+            customer.setRole(customerDTO.getRole());
+
+            repository.flush();
             newCustomerDTO = convertToCustomerDTO(customer);
         }
         catch (Exception e){
@@ -70,7 +73,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public boolean deleteById(int id) {
-        return repository.deleteById(id);
+        repository.deleteById(id);
+        return repository.findById(id).isEmpty();
     }
 
     private Customer convertToCustomer(CustomerDTO customerDTO) {
@@ -80,5 +84,4 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerDTO convertToCustomerDTO(Customer customer) {
         return modelMapper.map(customer, CustomerDTO.class);
     }
-
 }

@@ -1,4 +1,4 @@
-package com.flashsuppressor.java.lab.entity.dto;
+package com.flashsuppressor.java.lab.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PublisherDTO {
+public class ReviewDTO {
     private int id;
-    private String name;
-
+    private int mark;
+    private String comment;
+    private BookDTO bookDTO;
 }

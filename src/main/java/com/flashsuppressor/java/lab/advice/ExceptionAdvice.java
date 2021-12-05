@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class ExceptionAdvice {
     private static final String EXC_MESSAGE = "Catch exception in method: %s with message: %s";
 
-    @AfterThrowing(pointcut = "execution(* com.flashsuppressor.java.lab.repository.hibernate.impl.*.*(..))",
+    @AfterThrowing(pointcut = "execution(* com.flashsuppressor.java.lab.repository.data.*.*(..))",
             throwing = "ex")
     public void errorLogging(JoinPoint joinpoint, Exception ex) {
         log.error("\nLOGGING START\n" + (String.format(EXC_MESSAGE,

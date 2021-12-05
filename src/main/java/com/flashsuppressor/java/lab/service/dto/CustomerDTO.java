@@ -1,5 +1,6 @@
-package com.flashsuppressor.java.lab.entity.dto;
+package com.flashsuppressor.java.lab.service.dto;
 
+import com.flashsuppressor.java.lab.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,4 +15,5 @@ public class CustomerDTO {
     private String name;
     private String email;
     private String password;
+    private Role role;
 }

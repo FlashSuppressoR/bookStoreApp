@@ -7,5 +7,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 @Primary
 public interface CartRepository extends JpaRepository<Cart, Integer> {
 
-    Boolean deleteById(int id);
 }

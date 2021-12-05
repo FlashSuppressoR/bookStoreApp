@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS book_store.customer
     id       INT         NOT NULL AUTO_INCREMENT,
     name     VARCHAR(32) NOT NULL,
     email    VARCHAR(64) NOT NULL UNIQUE,
-    password VARCHAR(16) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -98,5 +98,8 @@ CREATE TABLE IF NOT EXISTS book_store.book_author
             REFERENCES book_store.author (id)
             ON DELETE CASCADE
 );
+
+ALTER TABLE book_store.customer
+    ADD role VARCHAR(16) NOT NULL DEFAULT 'USER';
 
 COMMIT;

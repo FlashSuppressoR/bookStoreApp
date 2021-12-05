@@ -2,12 +2,17 @@ package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.entity.Review;
-import com.flashsuppressor.java.lab.entity.dto.BookDTO;
-import com.flashsuppressor.java.lab.entity.dto.ReviewDTO;
+import com.flashsuppressor.java.lab.service.dto.BookDTO;
+import com.flashsuppressor.java.lab.service.dto.ReviewDTO;
 import com.flashsuppressor.java.lab.repository.data.ReviewRepository;
 import com.flashsuppressor.java.lab.service.ReviewService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,17 +25,19 @@ import java.util.stream.Collectors;
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository repository;
     private final ModelMapper modelMapper;
+    private final Pageable pageable = PageRequest.of(1, 5, Sort.by("name"));
 
     @Override
-    @Transactional(readOnly=true)
     public ReviewDTO findById(int id) {
         return convertToReviewDTO(repository.getById(id));
     }
 
     @Override
     @Transactional(readOnly=true)
-    public List<ReviewDTO> findAll() {
-        return repository.findAll().stream().map(this::convertToReviewDTO).collect(Collectors.toList());
+    public Page<ReviewDTO> findAll(Pageable pgb) {
+        Page<Review> pages = repository.findAll(pageable);
+
+        return new PageImpl<>(pages.stream().map(this::convertToReviewDTO).collect(Collectors.toList()));
     }
 
     @Override
@@ -60,6 +67,8 @@ public class ReviewServiceImpl implements ReviewService {
             review.setMark(reviewDTO.getMark());
             review.setComment(reviewDTO.getComment());
             review.setBook(convertToBook(reviewDTO.getBookDTO()));
+
+            repository.flush();
             newReviewDTO = convertToReviewDTO(review);
         }
         catch (Exception e){
@@ -71,7 +80,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public boolean deleteById(int id) {
-        return repository.deleteById(id);
+        repository.deleteById(id);
+        return repository.findById(id).isEmpty();
     }
 
     private Book convertToBook(BookDTO bookDTO) {

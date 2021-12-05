@@ -5,16 +5,14 @@ import com.flashsuppressor.java.lab.repository.hibernate.GenreRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-@Transactional(propagation = Propagation.REQUIRED)
 @AllArgsConstructor
+@Deprecated
 public class GenreRepositoryImpl implements GenreRepository {
     private static final String FIND_ALL_GENRE_QUERY = "select g from Genre g";
 

@@ -1,10 +1,14 @@
 package com.flashsuppressor.java.lab.controller;
 
-import com.flashsuppressor.java.lab.entity.dto.GenreDTO;
+import com.flashsuppressor.java.lab.service.dto.GenreDTO;
 import com.flashsuppressor.java.lab.service.GenreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,8 +26,10 @@ import java.util.List;
 public class GenreController {
 
     private final GenreService genreService;
+    private final Pageable pageable = PageRequest.of(1, 5);
 
-    @GetMapping(value = "/find/{id}")
+    @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('permission:reed')")
     public ResponseEntity<GenreDTO> find(@PathVariable(name = "id") int id) {
         final GenreDTO genre = genreService.findById(id);
 
@@ -32,16 +38,18 @@ public class GenreController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(value = "/find/all")
-    public ResponseEntity<List<GenreDTO>> findAll() {
-        final List<GenreDTO> genres = genreService.findAll();
+    @GetMapping(value = "/all")
+    @PreAuthorize("hasAuthority('permission:reed')")
+    public ResponseEntity<Page<GenreDTO>> findAll() {
+        Page<GenreDTO> genres = genreService.findAll(pageable);
 
         return genres != null &&  !genres.isEmpty()
                 ? new ResponseEntity<>(genres, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping(value = "/create")
+    @PostMapping(value = "/")
+    @PreAuthorize("hasAuthority('permission:write')")
     public ResponseEntity<GenreDTO> create(@RequestBody GenreDTO genreDTO) {
         GenreDTO genre = genreService.create(genreDTO);
 
@@ -50,7 +58,8 @@ public class GenreController {
                 : new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping(value = "/create/all")
+    @PostMapping(value = "/all")
+    @PreAuthorize("hasAuthority('permission:write')")
     public ResponseEntity<List<GenreDTO>> createAll(@RequestBody List<GenreDTO> genreDTOList) {
         final List<GenreDTO> genres = genreService.createAll(genreDTOList);
 
@@ -59,7 +68,8 @@ public class GenreController {
                 : new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/update")
+    @PutMapping(value = "/")
+    @PreAuthorize("hasAuthority('permission:write')")
     public ResponseEntity<GenreDTO> update(@RequestBody GenreDTO genreDTO) {
         final GenreDTO genre = genreService.update(genreDTO);
 
@@ -68,12 +78,13 @@ public class GenreController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<GenreDTO> delete(@PathVariable(name = "id") int id) {
+    @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('permission:write')")
+    public ResponseEntity<Boolean> delete(@PathVariable(name = "id") int id) {
         final boolean deleted = genreService.deleteById(id);
 
         return deleted
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+                ? new ResponseEntity<>(deleted, HttpStatus.OK)
+                : new ResponseEntity<>(deleted, HttpStatus.NOT_MODIFIED);
     }
 }

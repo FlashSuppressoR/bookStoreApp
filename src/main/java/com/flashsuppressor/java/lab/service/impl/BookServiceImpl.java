@@ -3,9 +3,9 @@ package com.flashsuppressor.java.lab.service.impl;
 import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.entity.Genre;
 import com.flashsuppressor.java.lab.entity.Publisher;
-import com.flashsuppressor.java.lab.entity.dto.BookDTO;
-import com.flashsuppressor.java.lab.entity.dto.GenreDTO;
-import com.flashsuppressor.java.lab.entity.dto.PublisherDTO;
+import com.flashsuppressor.java.lab.service.dto.BookDTO;
+import com.flashsuppressor.java.lab.service.dto.GenreDTO;
+import com.flashsuppressor.java.lab.service.dto.PublisherDTO;
 import com.flashsuppressor.java.lab.repository.data.BookRepository;
 import com.flashsuppressor.java.lab.service.BookService;
 import lombok.AllArgsConstructor;
@@ -31,17 +31,16 @@ public class BookServiceImpl implements BookService {
     private final Pageable bookPageable = PageRequest.of(1, 5, Sort.by("name"));
 
     @Override
-    @Transactional(readOnly=true)
     public BookDTO findById(Long id) {
         return convertToBookDTO(repository.getById(id));
     }
 
     @Override
     @Transactional(readOnly=true)
-    public Page<BookDTO> findAll(Pageable pageable) {
-        Page<Book> pageBooks = repository.findAll(bookPageable);
-        List<BookDTO> list = pageBooks.stream().map(this::convertToBookDTO).collect(Collectors.toList());
-        return new PageImpl<>(list);
+    public Page<BookDTO> findAll(Pageable pgb) {
+        Page<Book> pages = repository.findAll(bookPageable);
+
+        return new PageImpl<>(pages.stream().map(this::convertToBookDTO).collect(Collectors.toList()));
     }
 
     @Override
@@ -68,17 +67,13 @@ public class BookServiceImpl implements BookService {
         BookDTO newBookDTO = null;
         try {
             Book book = repository.getById(bookDTO.getId());
-            if (bookDTO.getName() != null) {
-                book.setName(bookDTO.getName());
-            }
+            book.setName(bookDTO.getName());
             book.setPrice(bookDTO.getPrice());
-            if (bookDTO.getPublisherDTO() != null) {
-                book.setPublisher(convertToPublisher(bookDTO.getPublisherDTO()));
-            }
-            if (bookDTO.getGenreDTO() != null) {
-                book.setGenre(convertToGenre(bookDTO.getGenreDTO()));
-            }
+            book.setPublisher(convertToPublisher(bookDTO.getPublisherDTO()));
+            book.setGenre(convertToGenre(bookDTO.getGenreDTO()));
             book.setAmount(bookDTO.getAmount());
+
+            repository.flush();
             newBookDTO = convertToBookDTO(book);
         }
         catch (Exception e){
@@ -90,8 +85,8 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public boolean deleteById(long id) {
-
-        return repository.deleteById(id);
+        repository.deleteById(id);
+        return repository.findById(id).isEmpty();
     }
 
     private Genre convertToGenre(GenreDTO genreDTO) {

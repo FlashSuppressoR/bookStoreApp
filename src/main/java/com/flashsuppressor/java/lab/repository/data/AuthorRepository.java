@@ -7,5 +7,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 @Primary
 public interface AuthorRepository extends JpaRepository<Author, Integer> {
 
-    Boolean deleteById(int id);
 }

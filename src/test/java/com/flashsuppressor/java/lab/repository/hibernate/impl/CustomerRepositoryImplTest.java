@@ -1,6 +1,7 @@
 package com.flashsuppressor.java.lab.repository.hibernate.impl;
 
 import com.flashsuppressor.java.lab.entity.Customer;
+import com.flashsuppressor.java.lab.entity.Role;
 import com.flashsuppressor.java.lab.repository.BaseRepositoryTest;
 import com.flashsuppressor.java.lab.repository.hibernate.CustomerRepository;
 import org.junit.jupiter.api.Test;
@@ -20,9 +21,9 @@ public class CustomerRepositoryImplTest extends BaseRepositoryTest {
     CustomerRepository customerRepository;
 
     private final List<Customer> expectedCustomers = new ArrayList<>() {{
-        add(new Customer(1, "Max", "Max@com", "max"));
-        add(new Customer(2, "Alex", "Alex@com", "alex"));
-        add(new Customer(3, "Rus", "Rus@com", "rus"));
+        add(new Customer(1, "Max", "Max@com", "max", Role.USER));
+        add(new Customer(2, "Alex", "Alex@com", "alex", Role.ADMIN));
+        add(new Customer(3, "Rus", "Rus@com", "rus", Role.USER));
     }};
 
     @Test
@@ -52,7 +53,7 @@ public class CustomerRepositoryImplTest extends BaseRepositoryTest {
 
     @Test
     public void createTest() {
-        Customer expectedCustomer = new Customer(4, "Jim", "Jim@com", "23ax");
+        Customer expectedCustomer = new Customer(4, "Jim", "Jim@com", "23ax", Role.USER);
         customerRepository.create(expectedCustomer);
 
         assertEquals(4, customerRepository.findAll().size());
@@ -60,7 +61,7 @@ public class CustomerRepositoryImplTest extends BaseRepositoryTest {
 
     @Test
     public void updateTest() {
-        Customer expectedCustomer = new Customer(1, "MaxPower", "Max@com", "max");
+        Customer expectedCustomer = new Customer(1, "MaxPower", "Max@com", "max", Role.USER);
         Customer actualCustomer = customerRepository.update(expectedCustomer);
 
         assertCustomerEquals(expectedCustomer, actualCustomer);
@@ -78,6 +79,7 @@ public class CustomerRepositoryImplTest extends BaseRepositoryTest {
         assertEquals(expectedCustomer.getName(), actualCustomer.getName());
         assertEquals(expectedCustomer.getEmail(), actualCustomer.getPassword());
         assertEquals(expectedCustomer.getPassword(), actualCustomer.getEmail());
+        assertEquals(expectedCustomer.getRole(), actualCustomer.getRole());
     }
 
 

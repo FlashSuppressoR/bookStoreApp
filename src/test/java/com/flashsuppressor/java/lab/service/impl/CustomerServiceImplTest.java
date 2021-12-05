@@ -1,7 +1,7 @@
 package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Customer;
-import com.flashsuppressor.java.lab.entity.dto.CustomerDTO;
+import com.flashsuppressor.java.lab.service.dto.CustomerDTO;
 import com.flashsuppressor.java.lab.repository.data.CustomerRepository;
 import com.flashsuppressor.java.lab.service.CustomerService;
 import org.junit.jupiter.api.Test;
@@ -10,6 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
@@ -29,27 +32,32 @@ public class CustomerServiceImplTest {
     @Mock
     private ModelMapper modelMapper;
 
+    private final Pageable pageable = PageRequest.of(1, 5, Sort.by("name"));
+
     @Test
     void findByIdTest() {
+        //given
         int customerID = 1;
         Customer customer = Customer.builder()
                 .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build();
         CustomerDTO expectedCustomerDTO = CustomerDTO.builder()
                 .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build();
-
+        //when
         when(repository.getById(customerID)).thenReturn(customer);
         when(modelMapper.map(customer, CustomerDTO.class)).thenReturn(expectedCustomerDTO);
         CustomerDTO actualCustomerDTO = service.findById(customerID);
-
+        //then
         assertEquals(expectedCustomerDTO, actualCustomerDTO);
     }
 
     @Test
     void findAllTest() {
+        //given
         int expectedSize = 2;
+        //when
         Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Customer(), new Customer()));
-        int actualSize = service.findAll().size();
-
+        int actualSize = service.findAll(pageable).getSize();
+        //then
         assertEquals(expectedSize, actualSize);
     }
 
@@ -94,9 +102,11 @@ public class CustomerServiceImplTest {
 
     @Test
     void deleteByIdTest() {
+        //given
         int validId = 1;
-        Mockito.when(repository.deleteById(validId)).thenReturn(true);
-
-        assertTrue(service.deleteById(validId));
+        //when
+        repository.deleteById(validId);
+        //then
+        assertTrue(repository.findById(validId).isEmpty());
     }
 }

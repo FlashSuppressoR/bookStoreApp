@@ -99,4 +99,7 @@ CREATE TABLE IF NOT EXISTS book_store.book_author
             REFERENCES book_store.author (id)
 );
 
+ALTER TABLE book_store.customer
+    ADD role VARCHAR(16) NOT NULL DEFAULT 'USER';
+
 COMMIT;
