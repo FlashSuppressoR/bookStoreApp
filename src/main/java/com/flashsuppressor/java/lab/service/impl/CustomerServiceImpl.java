@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository repository;
     private final ModelMapper modelMapper;
-    private final Pageable pageable = PageRequest.of(1, 5, Sort.by("name"));
+    private final Pageable pageable = PageRequest.of(0, 5, Sort.by("name"));
 
     @Override
     public CustomerDTO findByEmail(String email) {

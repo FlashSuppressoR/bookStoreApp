@@ -1,0 +1,192 @@
+{
+	"info": {
+		"_postman_id": "a43aca9f-3749-40a2-82d1-439efa566e7b",
+		"name": "bookStoreApp.books",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "findBookById",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/books/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"books",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "findAllBooks",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/books/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"books",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createBook",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{\r\n    \"name\": \"Pop Bee\",\r\n    \"price\": 8.23,\r\n    \"publisherId\": 1,\r\n    \"genreId\": 1,\r\n    \"amount\": 1\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/books/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"books",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createAllBooks",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"name\": \"Pretty Bee\",\r\n        \"price\": 4.23,\r\n        \"publisherId\": 1,\r\n        \"genreId\": 1,\r\n        \"amount\": 1\r\n    },\r\n    {\r\n        \"name\": \"Bred Power\",\r\n        \"price\": 13.12,\r\n        \"publisherId\": 2,\r\n        \"genreId\": 2,\r\n        \"amount\": 1\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/books/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"books",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateBook",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"Little Bee\",\r\n    \"price\": 3.22,\r\n    \"genreId\": 2,\r\n    \"publisherId\": 2,\r\n    \"amount\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/books/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"books",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteBookById",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/books/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"books",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

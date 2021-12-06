@@ -26,7 +26,7 @@ import java.util.List;
 public class GenreController {
 
     private final GenreService genreService;
-    private final Pageable pageable = PageRequest.of(1, 5);
+    private final Pageable pageable = PageRequest.of(0, 5);
 
     @GetMapping(value = "/{id}")
     @PreAuthorize("hasAuthority('permission:reed')")

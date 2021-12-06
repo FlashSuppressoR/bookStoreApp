@@ -26,7 +26,7 @@ import java.util.List;
 public class BookController {
 
     private final BookService bookService;
-    private final Pageable bookPageable = PageRequest.of(1, 5);
+    private final Pageable bookPageable = PageRequest.of(0, 5);
 
     @GetMapping(value = "/{id}")
     @PreAuthorize("hasAuthority('permission:reed')")
@@ -43,7 +43,7 @@ public class BookController {
     public ResponseEntity<Page<BookDTO>> findAll() {
         final Page<BookDTO> books = bookService.findAll(bookPageable);
 
-        return books != null &&  !books.isEmpty()
+        return books != null && !books.isEmpty()
                 ? new ResponseEntity<>(books, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -80,11 +80,11 @@ public class BookController {
 
     @DeleteMapping(value = "/{id}")
     @PreAuthorize("hasAuthority('permission:write')")
-    public ResponseEntity<Boolean> delete(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Boolean> delete(@PathVariable(name = "id") long id) {
         final boolean deleted = bookService.deleteById(id);
 
         return deleted
-                ? new ResponseEntity<>(deleted ,HttpStatus.OK)
-                : new ResponseEntity<>(deleted ,HttpStatus.NOT_MODIFIED);
+                ? new ResponseEntity<>(deleted, HttpStatus.OK)
+                : new ResponseEntity<>(deleted, HttpStatus.NOT_MODIFIED);
     }
 }

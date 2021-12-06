@@ -14,9 +14,9 @@ INSERT INTO book_store.author  (id, name) VALUES ( 2 , 'John Serb' );
 INSERT INTO book_store.author  (id, name) VALUES ( 3 , 'Alex Green' );
 
 -- INIT TABLE BOOK --
-INSERT INTO book_store.book  (id, name, price, publisher_id, genre_id) VALUES ( 1 , 'Little Bee', 3.22 , 1, 1);
-INSERT INTO book_store.book  (id, name, price, publisher_id, genre_id) VALUES ( 2 , 'Big system Black Sun', 2.33, 2, 1);
-INSERT INTO book_store.book  (id, name, price, publisher_id, genre_id) VALUES ( 3 , 'Alex Green', 13.22, 1, 3);
+INSERT INTO book_store.book  (id, name, price, publisher_id, genre_id, amount) VALUES ( 1 , 'Little Bee', 3.22 , 1, 1, 1);
+INSERT INTO book_store.book  (id, name, price, publisher_id, genre_id, amount) VALUES ( 2 , 'Big system Black Sun', 2.33, 2, 1, 1);
+INSERT INTO book_store.book  (id, name, price, publisher_id, genre_id, amount) VALUES ( 3 , 'Alex Green', 13.22, 1, 3, 2);
 
 -- INIT TABLE CUSTOMER --
 INSERT INTO book_store.customer (id, name, email, password, role) VALUES ( 1 , 'Max', 'Max@com' , '$2a$12$xskqFFkJsSy9ByczMBJ0NOd/AcoGrANp1g.I4MFfm/OvpYkrlDeRC', 'USER');

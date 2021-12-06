@@ -13,7 +13,7 @@ public class BookDTO {
     private long id;
     private String name;
     private double price;
-    private GenreDTO genreDTO;
-    private PublisherDTO publisherDTO;
+    private int publisherId;
+    private int genreId;
     private int amount;
 }

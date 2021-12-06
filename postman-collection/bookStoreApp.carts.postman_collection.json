@@ -1,0 +1,157 @@
+{
+	"info": {
+		"_postman_id": "02ed6359-a4e4-4f5c-9e94-73b0f0ebab98",
+		"name": "bookStoreApp.carts",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "findCartsById",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/carts/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"carts",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "findAllCarts",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/carts/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"carts",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createCart",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"customerId\":2,\r\n    \"bookId\": 2,\r\n    \"bookCounter\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/carts/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"carts",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateCart",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"customerId\": 1,\r\n    \"bookId\": 1,\r\n    \"bookCounter\": 3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/carts/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"carts",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteCartById",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/carts/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"carts",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,131 @@
+info:
+  _postman_id: 0b70a501-18ff-48ee-bc9d-0dca4ab5fbc3
+  name: bookStoreApp.purchases
+  schema: https://schema.getpostman.com/json/collection/v2.1.0/collection.json
+item:
+  - name: findPurchaseById
+    request:
+      method: GET
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      url:
+        raw: http://localhost:8080/purchases/1
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - purchases
+          - '1'
+    response: []
+  - name: findAllPurchases
+    request:
+      method: GET
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      url:
+        raw: http://localhost:8080/purchases/all
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - purchases
+          - all
+    response: []
+  - name: createPurchase
+    request:
+      method: POST
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      body:
+        mode: raw
+        raw: "{\r\n    \"customerId\": 1,\r\n    \"purchaseTime\": \"2021-04-04T05:18:00.000+00:00\"\r\n}"
+        options:
+          raw:
+            language: json
+      url:
+        raw: http://localhost:8080/purchases/
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - purchases
+          - ''
+    response: []
+  - name: createAllPurchases
+    request:
+      method: POST
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      body:
+        mode: raw
+        raw: "[\r\n    {\r\n        \"customerId\": 3,\r\n        \"purchaseTime\": \"2021-04-04T05:12:00.000+00:00\"\r\n    },\r\n    {\r\n        \"customerId\": 4,\r\n        \"purchaseTime\": \"2021-04-04T05:13:00.000+00:00\"\r\n    }\r\n]"
+        options:
+          raw:
+            language: json
+      url:
+        raw: http://localhost:8080/purchases/all
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - purchases
+          - all
+    response: []
+  - name: updatePurchase
+    request:
+      method: PUT
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      body:
+        mode: raw
+        raw: "{\r\n    \"id\": 1,\r\n    \"customerId\":1,\r\n    \"purchaseTime\": \"2021-04-04T17:35:30.000+00:00\"\r\n}"
+        options:
+          raw:
+            language: json
+      url:
+        raw: http://localhost:8080/purchases/
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - purchases
+          - ''
+    response: []
+  - name: deletePurchaseById
+    request:
+      method: DELETE
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      url:
+        raw: http://localhost:8080/purchases/1
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - purchases
+          - '1'
+    response: []

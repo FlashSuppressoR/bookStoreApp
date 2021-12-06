@@ -1,0 +1,167 @@
+info:
+  _postman_id: 3feeae35-9008-4340-a82d-f2e52586e2bd
+  name: bookStoreApp.customers
+  schema: https://schema.getpostman.com/json/collection/v2.1.0/collection.json
+item:
+  - name: authCustomer
+    request:
+      method: POST
+      header: []
+      body:
+        mode: raw
+        raw: "{\r\n    \"email\":\"Alex@com\",\r\n    \"password\":\"alex\"\r\n}"
+        options:
+          raw:
+            language: json
+      url:
+        raw: http://localhost:8080/login
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - login
+    response: []
+  - name: WelcomePage
+    request:
+      method: GET
+      header: []
+      url:
+        raw: http://localhost:8080/
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - ''
+    response: []
+  - name: findCustomerById
+    protocolProfileBehavior:
+      disableBodyPruning: true
+    request:
+      method: GET
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      body:
+        mode: raw
+        raw: ''
+        options:
+          raw:
+            language: json
+      url:
+        raw: http://localhost:8080/customers/id/2
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - customers
+          - id
+          - '2'
+    response: []
+  - name: findCustomerByEmail
+    request:
+      method: GET
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      url:
+        raw: http://localhost:8080/customers/email/Alex@com
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - customers
+          - email
+          - Alex@com
+    response: []
+  - name: findAllCustomers
+    request:
+      method: GET
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      url:
+        raw: http://localhost:8080/customers/all
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - customers
+          - all
+    response: []
+  - name: createCustomer
+    request:
+      method: POST
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      body:
+        mode: raw
+        raw: "{\r\n    \"name\":\"Alegro Sett\",\r\n    \"email\":\"PowerG@com\",\r\n    \"password\":\"$2a$12$nrvmA4hihV2TkqPIkQpGu.uWtOgEJyzKzXZ5w59RjXAE0ywAOEEod\",\r\n    \"role\":\"USER\"\r\n}"
+        options:
+          raw:
+            language: json
+      url:
+        raw: http://localhost:8080/customers/
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - customers
+          - ''
+    response: []
+  - name: updateCustomer
+    request:
+      method: PUT
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      body:
+        mode: raw
+        raw: "{\r\n    \"id\": 4,\r\n    \"name\":\"NEW Johnny\",\r\n    \"email\":\"newJohnny@com\",\r\n    \"password\":\"$2a$12$nrvmA4hihV2TkqPIkQpGu.uWtOgEJyzKzXZ5w59RjXAE0ywAOEEoy\",\r\n    \"role\":\"USER\"\r\n}"
+        options:
+          raw:
+            language: json
+      url:
+        raw: http://localhost:8080/customers/
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - customers
+          - ''
+    response: []
+  - name: deleteCustomerById
+    request:
+      method: DELETE
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      url:
+        raw: http://localhost:8080/customers/3
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - customers
+          - '3'
+    response: []

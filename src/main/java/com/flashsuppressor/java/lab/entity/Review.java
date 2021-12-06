@@ -2,9 +2,9 @@ package com.flashsuppressor.java.lab.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Data
+@Setter
+@Getter
 @Table(name = "review", schema = "book_store")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,7 +33,6 @@ public class Review {
     @Column(name = "comment")
     private String comment;
 
-    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;

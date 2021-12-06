@@ -1,9 +1,9 @@
 package com.flashsuppressor.java.lab.entity;
 
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +16,8 @@ import javax.persistence.Table;
 
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "cart", schema = "book_store")
 @NoArgsConstructor
 @Builder
@@ -27,21 +28,21 @@ public class Cart {
     @Column(name = "id")
     private Integer id;
 
-    @EqualsAndHashCode.Exclude
     @OneToOne
-    @JoinColumn(name = "customer_id", referencedColumnName = "id", unique = true)
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 
-    @Column(name = "book_id")
-    private Long bookId;
+    @OneToOne
+    @JoinColumn(name = "book_id", referencedColumnName = "id")
+    private Book book;
 
     @Column(name = "book_counter")
     private Integer bookCounter;
 
-    public Cart(Integer id, Customer customer, Long bookId, Integer bookCounter) {
+    public Cart(Integer id, Customer customer, Book book, Integer bookCounter) {
         this.id = id;
         this.customer = customer;
-        this.bookId = bookId;
+        this.book= book;
         this.bookCounter = bookCounter;
     }
 }

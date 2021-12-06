@@ -1,0 +1,131 @@
+info:
+  _postman_id: 89216629-63d8-48ab-b8cd-aded0dcb9a42
+  name: bookStoreApp.genres
+  schema: https://schema.getpostman.com/json/collection/v2.1.0/collection.json
+item:
+  - name: findGenreById
+    request:
+      method: GET
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      url:
+        raw: http://localhost:8080/genres/1
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - genres
+          - '1'
+    response: []
+  - name: findAllGenres
+    request:
+      method: GET
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      url:
+        raw: http://localhost:8080/genres/all
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - genres
+          - all
+    response: []
+  - name: createGenre
+    request:
+      method: POST
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      body:
+        mode: raw
+        raw: "{\r\n    \"id\": 4,\r\n    \"name\": \"Drama\"\r\n}"
+        options:
+          raw:
+            language: json
+      url:
+        raw: http://localhost:8080/genres/
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - genres
+          - ''
+    response: []
+  - name: createAllGenres
+    request:
+      method: POST
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      body:
+        mode: raw
+        raw: "[\r\n    {\r\n    \"name\": \"New Test1\"\r\n    },\r\n    {\r\n        \"name\": \"New Test2\"\r\n    }\r\n]"
+        options:
+          raw:
+            language: json
+      url:
+        raw: http://localhost:8080/genres/all
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - genres
+          - all
+    response: []
+  - name: updateGenre
+    request:
+      method: PUT
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      body:
+        mode: raw
+        raw: "{\r\n    \"id\": 1,\r\n    \"name\": \"Updated Genre\"\r\n}"
+        options:
+          raw:
+            language: json
+      url:
+        raw: http://localhost:8080/genres/
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - genres
+          - ''
+    response: []
+  - name: deleteGenreById
+    request:
+      method: DELETE
+      header:
+        - key: Authorization
+          value: >-
+            eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbGV4QGNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYzODY5NzIyMywiZXhwIjoxNjM4NzYyNzU5fQ.4uQv2NHCZldbzpy_7zD2En3CElAEJQ9bz1q0bmZIhlc
+          type: text
+      url:
+        raw: http://localhost:8080/genres/1
+        protocol: http
+        host:
+          - localhost
+        port: '8080'
+        path:
+          - genres
+          - '1'
+    response: []

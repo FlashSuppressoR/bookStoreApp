@@ -20,9 +20,9 @@ INSERT INTO book_store.book  (id, name, price, publisher_id, genre_id) VALUES ( 
 INSERT INTO book_store.book  (id, name, price, publisher_id, genre_id) VALUES ( 3 , 'Alex Green', 13.22, 1, 3);
 
 -- INIT TABLE CUSTOMER --
-INSERT INTO book_store.customer (id, name, email, password) VALUES ( 1 , 'Max', 'Max@com' , 'max', 'USER');
-INSERT INTO book_store.customer (id, name, email, password) VALUES ( 2 , 'Alex', 'Alex@com' , 'alex', 'ADMIN');
-INSERT INTO book_store.customer (id, name, email, password) VALUES ( 3 , 'Rus', 'Rus@com' , 'rus', 'USER');
+INSERT INTO book_store.customer (id, name, email, password, role) VALUES ( 1 , 'Max', 'Max@com' , '$2a$12$xskqFFkJsSy9ByczMBJ0NOd/AcoGrANp1g.I4MFfm/OvpYkrlDeRC', 'USER');
+INSERT INTO book_store.customer (id, name, email, password, role) VALUES ( 2 , 'Alex', 'Alex@com' , '$2a$12$s6vTBxE2xOzjE9V1u8E1nOvaEC2/1ZbR1O.eyJ7ZxWkTlbdh5l1gm', 'ADMIN');
+INSERT INTO book_store.customer (id, name, email, password, role) VALUES ( 3 , 'Rus', 'Rus@com' , '$2a$12$xQ/q67UYmRrqHkeVzXX8W.v9ToknbjGQLD1dZBUSefeR05zhT9wOy', 'USER');
 
 -- INIT TABLE CART --
 INSERT INTO book_store.cart (id,customer_id, book_id, book_counter) VALUES ( 1, 1, 2, 1);

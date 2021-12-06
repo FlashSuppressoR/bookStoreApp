@@ -2,6 +2,7 @@ package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.entity.Review;
+import com.flashsuppressor.java.lab.service.BookService;
 import com.flashsuppressor.java.lab.service.dto.BookDTO;
 import com.flashsuppressor.java.lab.service.dto.ReviewDTO;
 import com.flashsuppressor.java.lab.repository.data.ReviewRepository;
@@ -23,9 +24,10 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
+    private final BookService bookService;
     private final ReviewRepository repository;
     private final ModelMapper modelMapper;
-    private final Pageable pageable = PageRequest.of(1, 5, Sort.by("name"));
+    private final Pageable pageable = PageRequest.of(0, 5, Sort.by("name"));
 
     @Override
     public ReviewDTO findById(int id) {
@@ -66,7 +68,7 @@ public class ReviewServiceImpl implements ReviewService {
             Review review = repository.getById(reviewDTO.getId());
             review.setMark(reviewDTO.getMark());
             review.setComment(reviewDTO.getComment());
-            review.setBook(convertToBook(reviewDTO.getBookDTO()));
+            review.setBook(convertToBook(bookService.findById(reviewDTO.getBookId())));
 
             repository.flush();
             newReviewDTO = convertToReviewDTO(review);
@@ -83,6 +85,17 @@ public class ReviewServiceImpl implements ReviewService {
         repository.deleteById(id);
         return repository.findById(id).isEmpty();
     }
+
+//    List<Offer> userOffers = offerRepository.findByOfferOwnerId(id);
+//        for (Offer userOffer : userOffers) {
+//        offerRepository.deleteById(userOffer.getId());
+//    }
+//    List<Contract> userContracts = contractRepository.findAllByOwnerId(id);
+//        for (Contract userContract : userContracts) {
+//        contractService.delete(userContract.getId());
+//    }
+//        userRepository.deleteById(id);
+//        return userRepository.findById(id).isEmpty();
 
     private Book convertToBook(BookDTO bookDTO) {
         return modelMapper.map(bookDTO, Book.class);

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository repository;
     private final ModelMapper modelMapper;
-    private final Pageable pageable = PageRequest.of(1, 5, Sort.by("name"));
+    private final Pageable pageable = PageRequest.of(0, 5, Sort.by("name"));
 
     @Override
     public AuthorDTO findById(int id) {

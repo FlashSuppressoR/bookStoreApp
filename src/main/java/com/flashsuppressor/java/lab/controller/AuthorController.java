@@ -26,7 +26,7 @@ import java.util.List;
 public class AuthorController {
 
     private final AuthorService authorService;
-    private final Pageable pageable = PageRequest.of(1, 5);
+    private final Pageable pageable = PageRequest.of(0, 5);
 
     @GetMapping(value = "/{id}")
     @PreAuthorize("hasAuthority('permission:reed')")
@@ -39,7 +39,7 @@ public class AuthorController {
     }
 
     @GetMapping(value = "/all")
-    @PreAuthorize("hasAuthority('customers:reed')")
+    @PreAuthorize("hasAuthority('permission:reed')")
     public ResponseEntity<Page<AuthorDTO>> findAll() {
         Page<AuthorDTO> authors = authorService.findAll(pageable);
 

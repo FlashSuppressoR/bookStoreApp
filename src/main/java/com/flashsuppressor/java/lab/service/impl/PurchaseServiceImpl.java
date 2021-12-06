@@ -2,6 +2,7 @@ package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Customer;
 import com.flashsuppressor.java.lab.entity.Purchase;
+import com.flashsuppressor.java.lab.service.CustomerService;
 import com.flashsuppressor.java.lab.service.dto.CustomerDTO;
 import com.flashsuppressor.java.lab.service.dto.PurchaseDTO;
 import com.flashsuppressor.java.lab.repository.data.PurchaseRepository;
@@ -23,9 +24,11 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class PurchaseServiceImpl implements PurchaseService {
+
+    private final CustomerService customerService;
     private final PurchaseRepository repository;
     private final ModelMapper modelMapper;
-    private final Pageable pageable = PageRequest.of(1, 5, Sort.by("name"));
+    private final Pageable pageable = PageRequest.of(0, 5, Sort.by("name"));
 
     @Override
     public PurchaseDTO findById(int id) {
@@ -64,7 +67,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         PurchaseDTO newPurchaseDTO = null;
         try {
             Purchase purchase = repository.getById(purchaseDTO.getId());
-            purchase.setCustomer(convertToCustomer(purchaseDTO.getCustomerDTO()));
+            purchase.setCustomer(convertToCustomer(customerService.findById(purchaseDTO.getCustomerId())));
             purchase.setPurchaseTime(purchaseDTO.getPurchaseTime());
 
             repository.flush();

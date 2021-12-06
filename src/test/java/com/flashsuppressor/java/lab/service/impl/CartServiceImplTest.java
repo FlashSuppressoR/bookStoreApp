@@ -1,11 +1,17 @@
 package com.flashsuppressor.java.lab.service.impl;
 
+import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.entity.Cart;
 import com.flashsuppressor.java.lab.entity.Customer;
+import com.flashsuppressor.java.lab.entity.Genre;
+import com.flashsuppressor.java.lab.entity.Publisher;
+import com.flashsuppressor.java.lab.service.dto.BookDTO;
 import com.flashsuppressor.java.lab.service.dto.CartDTO;
 import com.flashsuppressor.java.lab.service.dto.CustomerDTO;
 import com.flashsuppressor.java.lab.repository.data.CartRepository;
 import com.flashsuppressor.java.lab.service.CartService;
+import com.flashsuppressor.java.lab.service.dto.GenreDTO;
+import com.flashsuppressor.java.lab.service.dto.PublisherDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,10 +47,14 @@ public class CartServiceImplTest {
         int cartID = 1;
         Cart cart = Cart.builder().id(4).customer
                 (Customer.builder().id(4).name("Ae").email("Ae@gmail.com").password("Ad").build())
-                .bookId(4L).bookCounter(1).build();
+                .book(Book.builder().id(4L).name("New Book").price(123)
+                        .publisher(Publisher.builder().id(4).name("Need For Speed").build())
+                        .genre(Genre.builder().id(4).name("Soe Ew").build()).amount(1).build()).bookCounter(1).build();
         CartDTO expectedCartDTO = CartDTO.builder().id(4).customerDTO
                 (CustomerDTO.builder().id(4).name("Ae").email("Ae@gmail.com").password("Ad").build())
-                .bookId(4L).bookCounter(1).build();
+                .bookDTO(BookDTO.builder().id(4).name("New Book").price(123)
+                        .publisherDTO(PublisherDTO.builder().id(4).name("Need For Speed").build())
+                        .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build()).bookCounter(1).build();
 
         when(repository.getById(cartID)).thenReturn(cart);
         when(modelMapper.map(cart, CartDTO.class)).thenReturn(expectedCartDTO);
@@ -67,10 +77,15 @@ public class CartServiceImplTest {
         //given
         Cart cart = Cart.builder().id(4).customer
                 (Customer.builder().id(4).name("Ae").email("Ae@gmail.com").password("Ad").build())
-                .bookId(4L).bookCounter(1).build();
+                .book(Book.builder().id(4L).name("New Book").price(123)
+                        .publisher(Publisher.builder().id(4).name("Need For Speed").build())
+                        .genre(Genre.builder().id(4).name("Soe Ew").build()).amount(1).build()).bookCounter(1).build();
         CartDTO cartDTO = CartDTO.builder().id(4).customerDTO
                 (CustomerDTO.builder().id(4).name("Ae").email("Ae@gmail.com").password("Ad").build())
-                .bookId(4L).bookCounter(1).build();
+                .bookDTO(BookDTO.builder().id(4).name("New Book").price(123)
+                        .publisherDTO(PublisherDTO.builder().id(4).name("Need For Speed").build())
+                        .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build()).bookCounter(1).build();
+
         //when
         when(modelMapper.map(cartDTO, Cart.class)).thenReturn(cart);
         when(modelMapper.map(cart, CartDTO.class)).thenReturn(cartDTO);
@@ -79,7 +94,7 @@ public class CartServiceImplTest {
         //then
         assertAll(() -> assertEquals(cartDTO.getId(), actualCartDTO.getId()),
                 () -> assertEquals(cartDTO.getCustomerDTO(), actualCartDTO.getCustomerDTO()),
-                () -> assertEquals(cartDTO.getBookId(), actualCartDTO.getBookId()),
+                () -> assertEquals(cartDTO.getBookDTO(), actualCartDTO.getBookDTO()),
                 () -> assertEquals(cartDTO.getBookCounter(), actualCartDTO.getBookCounter()));
     }
 
@@ -90,10 +105,15 @@ public class CartServiceImplTest {
         int bookCounter = 3;
         Cart cart = Cart.builder().id(4).customer
                 (Customer.builder().id(4).name("Ae").email("Ae@gmail.com").password("Ad").build())
-                .bookId(4L).bookCounter(1).build();
+                .book(Book.builder().id(4L).name("New Book").price(123)
+                        .publisher(Publisher.builder().id(4).name("Need For Speed").build())
+                        .genre(Genre.builder().id(4).name("Soe Ew").build()).amount(1).build()).bookCounter(1).build();
         CartDTO cartDTO = CartDTO.builder().id(4).customerDTO
                 (CustomerDTO.builder().id(4).name("Ae").email("Ae@gmail.com").password("Ad").build())
-                .bookId(4L).bookCounter(1).build();
+                .bookDTO(BookDTO.builder().id(4).name("New Book").price(123)
+                        .publisherDTO(PublisherDTO.builder().id(4).name("Need For Speed").build())
+                        .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build()).bookCounter(1).build();
+
         //when
         when(repository.getById(cartId)).thenReturn(cart);
         when(modelMapper.map(cart, CartDTO.class)).thenReturn(cartDTO);

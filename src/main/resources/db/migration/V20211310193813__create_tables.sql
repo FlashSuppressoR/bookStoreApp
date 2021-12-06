@@ -16,13 +16,12 @@ CREATE TABLE IF NOT EXISTS book_store.genre
 
 CREATE TABLE IF NOT EXISTS book_store.book
 (
-    id           BIGINT(12)    NOT NULL AUTO_INCREMENT,
+    id           BIGINT(12)    NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name         VARCHAR(64)   NOT NULL,
     price        DECIMAL(5, 2) NOT NULL,
     publisher_id INT           NOT NULL,
     genre_id     INT           NOT NULL,
     amount       INT           NOT NULL DEFAULT 0,
-    PRIMARY KEY (id),
     CONSTRAINT fk_book_publisher
         FOREIGN KEY (publisher_id)
             REFERENCES book_store.publisher (id),
@@ -49,6 +48,7 @@ CREATE TABLE IF NOT EXISTS book_store.customer
     name     VARCHAR(32) NOT NULL,
     email    VARCHAR(64) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
+    role VARCHAR(16) NOT NULL DEFAULT 'USER',
     PRIMARY KEY (id)
 );
 
@@ -96,10 +96,6 @@ CREATE TABLE IF NOT EXISTS book_store.book_author
     CONSTRAINT fk_book_has_author_author
         FOREIGN KEY (author_id)
             REFERENCES book_store.author (id)
-            ON DELETE CASCADE
 );
-
-ALTER TABLE book_store.customer
-    ADD role VARCHAR(16) NOT NULL DEFAULT 'USER';
 
 COMMIT;

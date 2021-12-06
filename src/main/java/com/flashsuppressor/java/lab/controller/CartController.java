@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CartController {
 
     private final CartService cartService;
-    private final Pageable pageable = PageRequest.of(1, 5);
+    private final Pageable pageable = PageRequest.of(0, 5);
 
     @GetMapping(value = "/{id}")
     @PreAuthorize("hasAuthority('permission:reed')")
@@ -73,6 +73,6 @@ public class CartController {
 
         return deleted
                 ? new ResponseEntity<>(deleted, HttpStatus.OK)
-                : new ResponseEntity<>(deleted ,HttpStatus.NOT_MODIFIED);
+                : new ResponseEntity<>(deleted, HttpStatus.NOT_MODIFIED);
     }
 }

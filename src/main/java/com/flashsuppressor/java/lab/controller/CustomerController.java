@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/customers")
 @RequiredArgsConstructor
-public class CustomerController {
+public class    CustomerController {
 
     private final CustomerService customerService;
-    private final Pageable pageable = PageRequest.of(1, 5);
+    private final Pageable pageable = PageRequest.of(0, 5);
 
     @GetMapping(value = "/id/{id}")
     @PreAuthorize("hasAuthority('permission:reed')")
@@ -82,7 +82,7 @@ public class CustomerController {
         final boolean deleted = customerService.deleteById(id);
 
         return deleted
-                ? new ResponseEntity<>(deleted ,HttpStatus.OK)
-                : new ResponseEntity<>(deleted ,HttpStatus.NOT_MODIFIED);
+                ? new ResponseEntity<>(deleted, HttpStatus.OK)
+                : new ResponseEntity<>(deleted, HttpStatus.NOT_MODIFIED);
     }
 }

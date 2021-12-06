@@ -3,6 +3,8 @@ package com.flashsuppressor.java.lab.service.impl;
 import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.entity.Genre;
 import com.flashsuppressor.java.lab.entity.Publisher;
+import com.flashsuppressor.java.lab.service.GenreService;
+import com.flashsuppressor.java.lab.service.PublisherService;
 import com.flashsuppressor.java.lab.service.dto.BookDTO;
 import com.flashsuppressor.java.lab.service.dto.GenreDTO;
 import com.flashsuppressor.java.lab.service.dto.PublisherDTO;
@@ -26,9 +28,11 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class BookServiceImpl implements BookService {
 
+    private final PublisherService publisherService;
+    private final GenreService genreService;
     private final BookRepository repository;
     private final ModelMapper modelMapper;
-    private final Pageable bookPageable = PageRequest.of(1, 5, Sort.by("name"));
+    private final Pageable bookPageable = PageRequest.of(0, 5, Sort.by("name"));
 
     @Override
     public BookDTO findById(Long id) {
@@ -69,8 +73,8 @@ public class BookServiceImpl implements BookService {
             Book book = repository.getById(bookDTO.getId());
             book.setName(bookDTO.getName());
             book.setPrice(bookDTO.getPrice());
-            book.setPublisher(convertToPublisher(bookDTO.getPublisherDTO()));
-            book.setGenre(convertToGenre(bookDTO.getGenreDTO()));
+            book.setPublisher(convertToPublisher(publisherService.findById(bookDTO.getPublisherId())));
+            book.setGenre(convertToGenre(genreService.findById(bookDTO.getGenreId())));
             book.setAmount(bookDTO.getAmount());
 
             repository.flush();
