@@ -12,17 +12,17 @@ The application provides two roles:
 * ADMIN
 * USER
 
-Admin can use operations:
--[X] CREATE
--[X] READ
--[X] UPDATE
--[X] DELETE
+Admin can use operations:   
+-[X] CREATE   
+-[X] READ   
+-[X] UPDATE   
+-[X] DELETE   
 
-User can use operations:
--[ ] CREATE
--[X] READ
--[ ] UPDATE
--[ ] DELETE
+User can use operations:   
+-[ ] CREATE   
+-[X] READ   
+-[ ] UPDATE   
+-[ ] DELETE   
 
 To run the application you need to go to :
 
