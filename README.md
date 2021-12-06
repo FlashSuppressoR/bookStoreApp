@@ -13,16 +13,16 @@ The application provides two roles:
 * USER
 
 Admin can use operations:   
--[X] CREATE   
--[X] READ   
--[X] UPDATE   
--[X] DELETE   
+:white_check_mark: CREATE   
+:white_check_mark: READ   
+:white_check_mark: UPDATE   
+:white_check_mark: DELETE   
 
 User can use operations:   
--[ ] CREATE   
--[X] READ   
--[ ] UPDATE   
--[ ] DELETE   
+:negative_squared_cross_mark: CREATE   
+:white_check_mark: READ   
+:negative_squared_cross_mark: UPDATE   
+:negative_squared_cross_mark: DELETE   
 
 To run the application you need to go to :
 
