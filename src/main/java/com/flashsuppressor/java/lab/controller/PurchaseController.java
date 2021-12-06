@@ -44,7 +44,7 @@ public class PurchaseController {
     public ResponseEntity<Page<PurchaseDTO>> findAll() {
         final Page<PurchaseDTO> purchases = purchaseService.findAll(pageable);
 
-        return purchases != null &&  !purchases.isEmpty()
+        return purchases != null && !purchases.isEmpty()
                 ? new ResponseEntity<>(purchases, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

@@ -43,7 +43,7 @@ public class GenreController {
     public ResponseEntity<Page<GenreDTO>> findAll() {
         Page<GenreDTO> genres = genreService.findAll(pageable);
 
-        return genres != null &&  !genres.isEmpty()
+        return genres != null && !genres.isEmpty()
                 ? new ResponseEntity<>(genres, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

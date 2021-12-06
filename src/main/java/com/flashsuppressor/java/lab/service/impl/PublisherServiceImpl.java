@@ -31,7 +31,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public Page<PublisherDTO> findAll(Pageable pgb) {
         Page<Publisher> pages = repository.findAll(pageable);
 
@@ -41,7 +41,7 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     @Transactional
     public PublisherDTO create(PublisherDTO publisherDTO) {
-       Publisher newPublisher = repository.save(convertToPublisher(publisherDTO));
+        Publisher newPublisher = repository.save(convertToPublisher(publisherDTO));
         return convertToPublisherDTO(newPublisher);
     }
 
@@ -66,8 +66,7 @@ public class PublisherServiceImpl implements PublisherService {
 
             repository.flush();
             newPublisherDTO = convertToPublisherDTO(publisher);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Can't update publisherDTO");
         }
         return newPublisherDTO;

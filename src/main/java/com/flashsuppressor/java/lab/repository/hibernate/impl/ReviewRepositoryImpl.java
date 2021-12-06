@@ -19,7 +19,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     private final EntityManager entityManager;
 
     @Override
-    public Review findById(int id){
+    public Review findById(int id) {
 
         return entityManager.find(Review.class, id);
     }
@@ -27,7 +27,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     @Override
     public List<Review> findAll() {
 
-       return entityManager.createQuery(FIND_ALL_REVIEWS_QUERY, Review.class).getResultList();
+        return entityManager.createQuery(FIND_ALL_REVIEWS_QUERY, Review.class).getResultList();
     }
 
     @Override

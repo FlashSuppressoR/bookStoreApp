@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository repository;
     private final ModelMapper modelMapper;
-    private final Pageable pageable = PageRequest.of(0, 5, Sort.by("name"));
+    private final Pageable pageable = PageRequest.of(0, 5, Sort.by("email"));
 
     @Override
     public CustomerDTO findByEmail(String email) {
@@ -63,8 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
 
             repository.flush();
             newCustomerDTO = convertToCustomerDTO(customer);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Can't update customerDTO");
         }
         return newCustomerDTO;

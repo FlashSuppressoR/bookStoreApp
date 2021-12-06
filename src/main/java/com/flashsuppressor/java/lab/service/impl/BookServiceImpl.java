@@ -40,7 +40,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public Page<BookDTO> findAll(Pageable pgb) {
         Page<Book> pages = repository.findAll(bookPageable);
 
@@ -79,8 +79,7 @@ public class BookServiceImpl implements BookService {
 
             repository.flush();
             newBookDTO = convertToBookDTO(book);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Can't update bookDTO");
         }
         return newBookDTO;

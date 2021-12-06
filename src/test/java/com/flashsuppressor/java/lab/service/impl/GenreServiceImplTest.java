@@ -56,8 +56,8 @@ public class GenreServiceImplTest {
     void findAllTest() {
         //given
         int expectedSize = 2;
-        //when
         Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Genre(), new Genre()));
+        //when
         int actualSize = service.findAll(pageable).getSize();
         //then
         assertEquals(expectedSize, actualSize);
@@ -68,10 +68,10 @@ public class GenreServiceImplTest {
         //given
         GenreDTO genreDTO = GenreDTO.builder().id(4).name("New Genre").build();
         Genre genre = Genre.builder().id(4).name("New Genre").build();
-        //when
         when(modelMapper.map(genreDTO, Genre.class)).thenReturn(genre);
         when(modelMapper.map(genre, GenreDTO.class)).thenReturn(genreDTO);
         when(repository.save(genre)).thenReturn(genre);
+        //when
         GenreDTO actualGenreDTO = service.create(genreDTO);
         //then
         assertAll(() -> assertEquals(genre.getId(), actualGenreDTO.getId()),
@@ -85,9 +85,9 @@ public class GenreServiceImplTest {
             add(GenreDTO.builder().id(4).name("First Genre").build());
             add(GenreDTO.builder().id(5).name("Second Genre").build());
         }};
-        //when
         when(mockGenresList.get(0)).thenReturn(listDTO.get(0));
         when(mockGenresList.get(1)).thenReturn(listDTO.get(1));
+        //when
         List<GenreDTO> createList = new ArrayList<>() {{
             add(mockGenresList.get(0));
             add(mockGenresList.get(1));
@@ -107,10 +107,10 @@ public class GenreServiceImplTest {
         String newName = "Updated Genre";
         GenreDTO genreDTO = GenreDTO.builder().id(genreId).name(newName).build();
         Genre genre = Genre.builder().id(genreId).name(newName).build();
-        //when
         when(repository.getById(genreId)).thenReturn(genre);
         when(modelMapper.map(genre, GenreDTO.class)).thenReturn(genreDTO);
         when(repository.getById(genreId)).thenReturn(genre);
+        //when
         GenreDTO actualUpdatedGenre = service.update(genreDTO);
         // then
         assertAll(() -> assertEquals(genreId, actualUpdatedGenre.getId()),

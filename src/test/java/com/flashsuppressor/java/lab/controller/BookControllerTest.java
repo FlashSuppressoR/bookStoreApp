@@ -1,10 +1,8 @@
 package com.flashsuppressor.java.lab.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flashsuppressor.java.lab.service.dto.BookDTO;
-import com.flashsuppressor.java.lab.service.dto.GenreDTO;
-import com.flashsuppressor.java.lab.service.dto.PublisherDTO;
 import com.flashsuppressor.java.lab.service.BookService;
+import com.flashsuppressor.java.lab.service.dto.BookDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,17 +45,15 @@ class BookControllerTest {
         //given
         long bookId = 4;
         BookDTO expectedBook = BookDTO.builder().id(4).name("New Book").price(123)
-                .publisherDTO(PublisherDTO.builder().id(4).name("Need For Speed").build())
-                .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build();
-        // when
+                .publisherId(1).genreId(1).amount(1).build();
         when(bookService.findById(bookId)).thenReturn(expectedBook);
-        //then
+        // when
         MvcResult mvcResult = mockMvc.perform(get("/books/find/{id}", bookId)
                 .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualBook = mvcResult.getResponse().getContentAsString();
-
+        //then
         assertEquals(objectMapper.writeValueAsString(expectedBook), actualBook);
     }
 
@@ -80,8 +76,7 @@ class BookControllerTest {
     void createTest() throws Exception {
         //given
         BookDTO expectedBook = BookDTO.builder().id(4).name("New Book").price(123)
-                .publisherDTO(PublisherDTO.builder().id(4).name("Need For Speed").build())
-                .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build();
+                .publisherId(1).genreId(1).amount(1).build();
         when(bookService.create(expectedBook)).thenReturn(expectedBook);
         //when
         BookDTO actualBookDTO = bookService.create(expectedBook);
@@ -98,12 +93,10 @@ class BookControllerTest {
     @Test
     void createAllTest() throws Exception {
         //given
-        BookDTO expectedFirstBook = BookDTO.builder().id(4).name("New FirstBook").price(123)
-                .publisherDTO(PublisherDTO.builder().id(4).name("Need asd").build())
-                .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build();
-        BookDTO expectedSecondBook = BookDTO.builder().id(5).name("New SecondBook").price(123)
-                .publisherDTO(PublisherDTO.builder().id(5).name("Need For Speed").build())
-                .genreDTO(GenreDTO.builder().id(4).name("Dee dEw").build()).amount(1).build();
+        BookDTO expectedFirstBook = BookDTO.builder().id(4).name("New First Book").price(123)
+                .publisherId(1).genreId(1).amount(1).build();
+        BookDTO expectedSecondBook = BookDTO.builder().id(5).name("New Second Book").price(16)
+                .publisherId(2).genreId(2).amount(1).build();
         List<BookDTO> expectedList = new ArrayList<>();
         expectedList.add(expectedFirstBook);
         expectedList.add(expectedSecondBook);
@@ -125,9 +118,8 @@ class BookControllerTest {
         //given
         long bookId = 1;
         String updatedName = "Updated Book";
-        BookDTO expectedBook = BookDTO.builder().id(bookId).name(updatedName).price(13)
-                .publisherDTO(PublisherDTO.builder().id(4).name("New FirstGenrePublisher").build())
-                .genreDTO(GenreDTO.builder().id(4).name("New FirstGenre").build()).amount(2).build();
+        BookDTO expectedBook = BookDTO.builder().id(4).name(updatedName).price(123)
+                .publisherId(1).genreId(1).amount(1).build();
         when(bookService.update(expectedBook)).thenReturn(expectedBook);
         //when
         MvcResult mvcResult = mockMvc.perform(put("/books/update")

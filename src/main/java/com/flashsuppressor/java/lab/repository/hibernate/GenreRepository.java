@@ -1,6 +1,7 @@
 package com.flashsuppressor.java.lab.repository.hibernate;
 
 import com.flashsuppressor.java.lab.entity.Genre;
+
 import java.util.List;
 
 @Deprecated

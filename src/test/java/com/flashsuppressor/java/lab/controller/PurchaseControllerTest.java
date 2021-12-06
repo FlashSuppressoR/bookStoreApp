@@ -1,9 +1,8 @@
 package com.flashsuppressor.java.lab.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flashsuppressor.java.lab.service.dto.CustomerDTO;
-import com.flashsuppressor.java.lab.service.dto.PurchaseDTO;
 import com.flashsuppressor.java.lab.service.PurchaseService;
+import com.flashsuppressor.java.lab.service.dto.PurchaseDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +45,7 @@ class PurchaseControllerTest {
     void findTest() throws Exception {
         //given
         int purchaseID = 1;
-        PurchaseDTO expectedPurchase = PurchaseDTO.builder().id(purchaseID).customerDTO(CustomerDTO.builder()
-                .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
+        PurchaseDTO expectedPurchase = PurchaseDTO.builder().id(purchaseID).customerId(1)
                 .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
         when(purchaseService.findById(purchaseID)).thenReturn(expectedPurchase);
         //when
@@ -79,8 +77,7 @@ class PurchaseControllerTest {
     void createTest() throws Exception {
         //given
         int purchaseID = 1;
-        PurchaseDTO expectedPurchase = PurchaseDTO.builder().id(purchaseID).customerDTO(CustomerDTO.builder()
-                .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
+        PurchaseDTO expectedPurchase = PurchaseDTO.builder().id(purchaseID).customerId(1)
                 .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
         when(purchaseService.create(expectedPurchase)).thenReturn(expectedPurchase);
         //when
@@ -97,12 +94,10 @@ class PurchaseControllerTest {
     @Test
     void createAllTest() throws Exception {
         //given
-        PurchaseDTO expectedFirstPurchase = PurchaseDTO.builder().id(4).customerDTO(CustomerDTO.builder()
-                .id(4).name("Al Sdz").email("Shez@com").password("ax").build())
+        PurchaseDTO expectedFirstPurchase = PurchaseDTO.builder().id(4).customerId(1)
                 .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
-        PurchaseDTO expectedSecondPurchase = PurchaseDTO.builder().id(5).customerDTO(CustomerDTO.builder()
-                .id(5).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
-                .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
+        PurchaseDTO expectedSecondPurchase = PurchaseDTO.builder().id(5).customerId(2)
+                .purchaseTime(Timestamp.valueOf("2017-03-11 00:00:00.0")).build();
         List<PurchaseDTO> expectedList = new ArrayList<>();
         expectedList.add(expectedFirstPurchase);
         expectedList.add(expectedSecondPurchase);
@@ -123,9 +118,8 @@ class PurchaseControllerTest {
         //given
         int purchaseId = 1;
         String updatedTime = "2017-12-10 02:33:00.0";
-        PurchaseDTO expectedPurchase = PurchaseDTO.builder().id(purchaseId).customerDTO(CustomerDTO.builder()
-                .id(4).name("Al Sdz").email("Shez@com").password("ax").build())
-                .purchaseTime(Timestamp.valueOf(updatedTime)).build();
+        PurchaseDTO expectedPurchase = PurchaseDTO.builder().id(purchaseId).customerId(1)
+                .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
         when(purchaseService.update(expectedPurchase)).thenReturn(expectedPurchase);
         //when
         MvcResult mvcResult = mockMvc.perform(put("/purchases/update")

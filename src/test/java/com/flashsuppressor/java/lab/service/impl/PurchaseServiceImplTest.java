@@ -2,9 +2,8 @@ package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Customer;
 import com.flashsuppressor.java.lab.entity.Purchase;
-import com.flashsuppressor.java.lab.service.dto.CustomerDTO;
-import com.flashsuppressor.java.lab.service.dto.PurchaseDTO;
 import com.flashsuppressor.java.lab.repository.data.PurchaseRepository;
+import com.flashsuppressor.java.lab.service.dto.PurchaseDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -47,12 +46,11 @@ public class PurchaseServiceImplTest {
         Purchase purchase = Purchase.builder().id(purchaseID).customer(Customer.builder()
                 .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
                 .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
-        PurchaseDTO expectedPurchaseDTO = PurchaseDTO.builder().id(purchaseID).customerDTO(CustomerDTO.builder()
-                .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
+        PurchaseDTO expectedPurchaseDTO = PurchaseDTO.builder().id(purchaseID).customerId(4)
                 .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
-        //when
         when(repository.getById(purchaseID)).thenReturn(purchase);
         when(modelMapper.map(purchase, PurchaseDTO.class)).thenReturn(expectedPurchaseDTO);
+        //when
         PurchaseDTO actualPurchaseDTO = service.findById(purchaseID);
         //then
         assertEquals(expectedPurchaseDTO, actualPurchaseDTO);
@@ -62,8 +60,8 @@ public class PurchaseServiceImplTest {
     void findAllTest() {
         //given
         int expectedSize = 2;
-        //when
         Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Purchase(), new Purchase()));
+        //when
         int actualSize = service.findAll(pageable).getSize();
         //then
         assertEquals(expectedSize, actualSize);
@@ -76,17 +74,16 @@ public class PurchaseServiceImplTest {
         Purchase purchase = Purchase.builder().id(purchaseID).customer(Customer.builder()
                 .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
                 .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
-        PurchaseDTO expectedPurchaseDTO = PurchaseDTO.builder().id(purchaseID).customerDTO(CustomerDTO.builder()
-                .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
+        PurchaseDTO expectedPurchaseDTO = PurchaseDTO.builder().id(purchaseID).customerId(4)
                 .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
-        //when
         when(modelMapper.map(expectedPurchaseDTO, Purchase.class)).thenReturn(purchase);
         when(modelMapper.map(purchase, PurchaseDTO.class)).thenReturn(expectedPurchaseDTO);
         when(repository.save(purchase)).thenReturn(purchase);
+        //when
         PurchaseDTO actualPurchaseDTO = service.create(expectedPurchaseDTO);
         //then
         assertAll(() -> assertEquals(expectedPurchaseDTO.getId(), actualPurchaseDTO.getId()),
-                () -> assertEquals(expectedPurchaseDTO.getCustomerDTO(), actualPurchaseDTO.getCustomerDTO()),
+                () -> assertEquals(expectedPurchaseDTO.getCustomerId(), actualPurchaseDTO.getCustomerId()),
                 () -> assertEquals(expectedPurchaseDTO.getPurchaseTime(), actualPurchaseDTO.getPurchaseTime()));
     }
 
@@ -94,16 +91,14 @@ public class PurchaseServiceImplTest {
     void createAllTest() {
         //given
         List<PurchaseDTO> listDTO = new ArrayList<>() {{
-            add(PurchaseDTO.builder().id(4).customerDTO(CustomerDTO.builder()
-                    .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
+            add(PurchaseDTO.builder().id(4).customerId(4)
                     .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build());
-            add(PurchaseDTO.builder().id(5).customerDTO(CustomerDTO.builder()
-                    .id(5).name("Alde Saeq").email("ez@com").password("aaex").build())
+            add(PurchaseDTO.builder().id(5).customerId(5)
                     .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build());
         }};
-        //when
         when(mockPurchasesList.get(0)).thenReturn(listDTO.get(0));
         when(mockPurchasesList.get(1)).thenReturn(listDTO.get(1));
+        //when
         List<PurchaseDTO> createList = new ArrayList<>() {{
             add(mockPurchasesList.get(0));
             add(mockPurchasesList.get(1));
@@ -111,10 +106,10 @@ public class PurchaseServiceImplTest {
         List<PurchaseDTO> purchaseDTOList = service.createAll(listDTO);
         //then
         assertAll(() -> assertEquals(createList.get(0).getId(), purchaseDTOList.get(0).getId()),
-                () -> assertEquals(createList.get(0).getCustomerDTO(), purchaseDTOList.get(0).getCustomerDTO()),
+                () -> assertEquals(createList.get(0).getCustomerId(), purchaseDTOList.get(0).getCustomerId()),
                 () -> assertEquals(createList.get(0).getPurchaseTime(), purchaseDTOList.get(0).getPurchaseTime()),
                 () -> assertEquals(createList.get(1).getId(), purchaseDTOList.get(1).getId()),
-                () -> assertEquals(createList.get(1).getCustomerDTO(), purchaseDTOList.get(1).getCustomerDTO()),
+                () -> assertEquals(createList.get(1).getCustomerId(), purchaseDTOList.get(1).getCustomerId()),
                 () -> assertEquals(createList.get(1).getPurchaseTime(), purchaseDTOList.get(1).getPurchaseTime()));
     }
 
@@ -122,21 +117,20 @@ public class PurchaseServiceImplTest {
     void updateTest() {
         //given
         int purchaseID = 1;
-        String newName = "Updated Purchase";
+        int customerId = 4;
         Purchase purchase = Purchase.builder().id(purchaseID).customer(Customer.builder()
-                .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
+                .id(customerId).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
                 .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
-        PurchaseDTO expectedPurchaseDTO = PurchaseDTO.builder().id(purchaseID).customerDTO(CustomerDTO.builder()
-                .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build())
+        PurchaseDTO expectedPurchaseDTO = PurchaseDTO.builder().id(purchaseID).customerId(customerId)
                 .purchaseTime(Timestamp.valueOf("2007-09-10 00:00:00.0")).build();
-        //when
         when(repository.getById(purchaseID)).thenReturn(purchase);
         when(modelMapper.map(purchase, PurchaseDTO.class)).thenReturn(expectedPurchaseDTO);
         when(repository.getById(purchaseID)).thenReturn(purchase);
+        //when
         PurchaseDTO actualUpdatedPurchase = service.update(expectedPurchaseDTO);
         // then
         assertAll(() -> assertEquals(purchaseID, actualUpdatedPurchase.getId()),
-                () -> assertEquals(newName, actualUpdatedPurchase.getCustomerDTO().getName())
+                () -> assertEquals(customerId, actualUpdatedPurchase.getCustomerId())
         );
     }
 

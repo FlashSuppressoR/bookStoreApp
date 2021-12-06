@@ -42,9 +42,9 @@ public class CustomerServiceImplTest {
                 .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build();
         CustomerDTO expectedCustomerDTO = CustomerDTO.builder()
                 .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build();
-        //when
         when(repository.getById(customerID)).thenReturn(customer);
         when(modelMapper.map(customer, CustomerDTO.class)).thenReturn(expectedCustomerDTO);
+        //when
         CustomerDTO actualCustomerDTO = service.findById(customerID);
         //then
         assertEquals(expectedCustomerDTO, actualCustomerDTO);
@@ -68,10 +68,10 @@ public class CustomerServiceImplTest {
                 .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build();
         CustomerDTO customerDTO = CustomerDTO.builder()
                 .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build();
-        //when
         when(modelMapper.map(customerDTO, Customer.class)).thenReturn(customer);
         when(modelMapper.map(customer, CustomerDTO.class)).thenReturn(customerDTO);
         when(repository.save(customer)).thenReturn(customer);
+        //when
         CustomerDTO actualCustomerDTO = service.create(customerDTO);
         //then
         assertAll(() -> assertEquals(customerDTO.getId(), actualCustomerDTO.getId()),
@@ -89,10 +89,10 @@ public class CustomerServiceImplTest {
                 .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build();
         CustomerDTO customerDTO = CustomerDTO.builder()
                 .id(4).name("Alexis Sanchez").email("Sanchez@com").password("alex").build();
-        //when
         when(repository.getById(customerId)).thenReturn(customer);
         when(modelMapper.map(customer, CustomerDTO.class)).thenReturn(customerDTO);
         when(repository.getById(customerId)).thenReturn(customer);
+        //when
         CustomerDTO actualUpdatedCustomer = service.update(customerDTO);
         // then
         assertAll(() -> assertEquals(customerId, actualUpdatedCustomer.getId()),

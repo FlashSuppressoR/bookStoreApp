@@ -30,7 +30,7 @@ public class CartServiceImpl implements CartService {
     private final BookService bookService;
     private final CartRepository repository;
     private final ModelMapper modelMapper;
-    private final Pageable pageable = PageRequest.of(0, 5, Sort.by("name"));
+    private final Pageable pageable = PageRequest.of(0, 5, Sort.by("customer_id"));
 
     @Override
     public CartDTO findById(int id) {
@@ -38,7 +38,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public Page<CartDTO> findAll(Pageable pgb) {
         Page<Cart> pages = repository.findAll(pageable);
 
@@ -64,8 +64,7 @@ public class CartServiceImpl implements CartService {
 
             repository.flush();
             newCartDTO = convertToCartDTO(cart);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Can't update cartDTO");
         }
         return newCartDTO;

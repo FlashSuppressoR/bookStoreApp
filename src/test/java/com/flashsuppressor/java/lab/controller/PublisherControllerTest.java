@@ -91,7 +91,7 @@ class PublisherControllerTest {
     void createAllTest() throws Exception {
         //given
         PublisherDTO expectedFirstPublisher = PublisherDTO.builder().id(4).name("New FirstGenrePublisher").build();
-        PublisherDTO expectedSecondPublisher= PublisherDTO.builder().id(5).name("New SecondPublisher").build();
+        PublisherDTO expectedSecondPublisher = PublisherDTO.builder().id(5).name("New SecondPublisher").build();
         List<PublisherDTO> expectedList = new ArrayList<>();
         expectedList.add(expectedFirstPublisher);
         expectedList.add(expectedSecondPublisher);

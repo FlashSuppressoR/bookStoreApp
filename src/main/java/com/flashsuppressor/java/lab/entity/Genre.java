@@ -36,7 +36,7 @@ public class Genre {
     @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Book> books;
 
-    public Genre(Integer id, String name){
+    public Genre(Integer id, String name) {
         this.id = id;
         this.name = name;
     }

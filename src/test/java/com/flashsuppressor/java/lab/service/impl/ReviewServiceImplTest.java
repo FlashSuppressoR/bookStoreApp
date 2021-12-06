@@ -2,16 +2,12 @@ package com.flashsuppressor.java.lab.service.impl;
 
 import com.flashsuppressor.java.lab.entity.Book;
 import com.flashsuppressor.java.lab.entity.Review;
-import com.flashsuppressor.java.lab.service.dto.BookDTO;
-import com.flashsuppressor.java.lab.service.dto.GenreDTO;
-import com.flashsuppressor.java.lab.service.dto.PublisherDTO;
-import com.flashsuppressor.java.lab.service.dto.ReviewDTO;
 import com.flashsuppressor.java.lab.repository.data.ReviewRepository;
+import com.flashsuppressor.java.lab.service.dto.ReviewDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -48,10 +44,10 @@ public class ReviewServiceImplTest {
         Review review = Review.builder().id(reviewID).mark(5).comment("Cool")
                 .book(Book.builder().id(4L).name("TestBook").build()).build();
         ReviewDTO expectedReviewDTO = ReviewDTO.builder().id(reviewID).mark(5).comment("Cool")
-                .bookDTO(BookDTO.builder().id(4L).name("TestBook").build()).build();
-        //when
+                .bookId(4L).build();
         when(repository.getById(reviewID)).thenReturn(review);
         when(modelMapper.map(review, ReviewDTO.class)).thenReturn(expectedReviewDTO);
+        //when
         ReviewDTO actualReviewDTO = service.findById(reviewID);
         //then
         assertEquals(expectedReviewDTO, actualReviewDTO);
@@ -61,8 +57,8 @@ public class ReviewServiceImplTest {
     void findAllTest() {
         //given
         int expectedSize = 2;
+        when(repository.findAll()).thenReturn(Arrays.asList(new Review(), new Review()));
         //when
-        Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Review(), new Review()));
         int actualSize = service.findAll(pageable).getSize();
         //then
         assertEquals(expectedSize, actualSize);
@@ -74,35 +70,29 @@ public class ReviewServiceImplTest {
         Review review = Review.builder().id(4).mark(5).comment("Cool")
                 .book(Book.builder().id(4L).name("TestBook").build()).build();
         ReviewDTO expectedReviewDTO = ReviewDTO.builder().id(4).mark(5).comment("Cool")
-                .bookDTO(BookDTO.builder().id(4L).name("TestBook").build()).build();
-        //when
+                .bookId(4L).build();
         when(modelMapper.map(expectedReviewDTO, Review.class)).thenReturn(review);
         when(modelMapper.map(review, ReviewDTO.class)).thenReturn(expectedReviewDTO);
         when(repository.save(review)).thenReturn(review);
+        //when
         ReviewDTO actualReviewDTO = service.create(expectedReviewDTO);
         //then
         assertAll(() -> assertEquals(expectedReviewDTO.getId(), actualReviewDTO.getId()),
                 () -> assertEquals(expectedReviewDTO.getMark(), actualReviewDTO.getMark()),
                 () -> assertEquals(expectedReviewDTO.getComment(), actualReviewDTO.getComment()),
-                () -> assertEquals(expectedReviewDTO.getBookDTO(), actualReviewDTO.getBookDTO()));
+                () -> assertEquals(expectedReviewDTO.getBookId(), actualReviewDTO.getBookId()));
     }
 
     @Test
     void createAllTest() {
         //given
         List<ReviewDTO> listDTO = new ArrayList<>() {{
-            add(ReviewDTO.builder().id(4).mark(4).comment("Cool")
-                    .bookDTO(BookDTO.builder().id(4).name("First Book").price(123)
-                            .publisherDTO(PublisherDTO.builder().id(4).name("Need For Speed").build())
-                            .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build()).build());
-
-            add(ReviewDTO.builder().id(5).mark(5).comment("Cool")
-                    .bookDTO(BookDTO.builder().id(5).name("Second Book").price(123)
-                            .publisherDTO(PublisherDTO.builder().id(5).name("EA games").build())
-                            .genreDTO(GenreDTO.builder().id(5).name("See It").build()).amount(1).build()).build());
+            add(ReviewDTO.builder().id(4).mark(4).comment("Cool").bookId(1L).build());
+            add(ReviewDTO.builder().id(5).mark(5).comment("Perfecto").bookId(1L).build());
         }};
         when(mockReviewsList.get(0)).thenReturn(listDTO.get(0));
         when(mockReviewsList.get(1)).thenReturn(listDTO.get(1));
+        //when
         List<ReviewDTO> createList = new ArrayList<>() {{
             add(mockReviewsList.get(0));
             add(mockReviewsList.get(1));
@@ -112,11 +102,11 @@ public class ReviewServiceImplTest {
         assertAll(() -> assertEquals(createList.get(0).getId(), reviewDTOList.get(0).getId()),
                 () -> assertEquals(createList.get(0).getMark(), reviewDTOList.get(0).getMark()),
                 () -> assertEquals(createList.get(0).getComment(), reviewDTOList.get(0).getComment()),
-                () -> assertEquals(createList.get(0).getBookDTO(), reviewDTOList.get(0).getBookDTO()),
+                () -> assertEquals(createList.get(0).getBookId(), reviewDTOList.get(0).getBookId()),
                 () -> assertEquals(createList.get(1).getId(), reviewDTOList.get(1).getId()),
                 () -> assertEquals(createList.get(1).getMark(), reviewDTOList.get(1).getMark()),
                 () -> assertEquals(createList.get(1).getComment(), reviewDTOList.get(1).getComment()),
-                () -> assertEquals(createList.get(1).getBookDTO(), reviewDTOList.get(1).getBookDTO()));
+                () -> assertEquals(createList.get(1).getBookId(), reviewDTOList.get(1).getBookId()));
     }
 
     @Test
@@ -126,12 +116,11 @@ public class ReviewServiceImplTest {
         String newComment = "Updated Comment";
         Review review = Review.builder().id(4).mark(5).comment("Cool")
                 .book(Book.builder().id(4L).name("TestBook").build()).build();
-        ReviewDTO expectedReviewDTO = ReviewDTO.builder().id(4).mark(5).comment("Cool")
-                .bookDTO(BookDTO.builder().id(4L).name("TestBook").build()).build();
-        //when
+        ReviewDTO expectedReviewDTO = ReviewDTO.builder().id(4).mark(5).comment("Cool").bookId(4L).build();
         when(repository.getById(reviewId)).thenReturn(review);
         when(modelMapper.map(review, ReviewDTO.class)).thenReturn(expectedReviewDTO);
         when(repository.getById(reviewId)).thenReturn(review);
+        //when
         ReviewDTO actualUpdatedReview = service.update(expectedReviewDTO);
         // then
         assertAll(() -> assertEquals(reviewId, actualUpdatedReview.getId()),

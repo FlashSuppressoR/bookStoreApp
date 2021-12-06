@@ -19,7 +19,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
     private final EntityManager entityManager;
 
     @Override
-    public Author findById(int id){
+    public Author findById(int id) {
 
         return entityManager.find(Author.class, id);
     }
@@ -31,7 +31,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
     }
 
     @Override
-    public Author create(Author author){
+    public Author create(Author author) {
         Session session = entityManager.unwrap(Session.class);
         Integer newUserId = (Integer) session.save(author.getName(), author);
 
@@ -39,7 +39,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
     }
 
     @Override
-    public List<Author> createAll(List<Author> authors){
+    public List<Author> createAll(List<Author> authors) {
         List<Author> newList = new ArrayList<>();
         Session session = entityManager.unwrap(Session.class);
         for (Author author : authors) {
@@ -51,7 +51,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
     }
 
     @Override
-    public Author update(Author author){
+    public Author update(Author author) {
         Session session = entityManager.unwrap(Session.class);
         Author updatedAuthor;
         session.beginTransaction();
@@ -63,7 +63,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
     }
 
     @Override
-    public boolean deleteById(int id){
+    public boolean deleteById(int id) {
         boolean result;
         Author author = entityManager.find(Author.class, id);
         if (author != null) {

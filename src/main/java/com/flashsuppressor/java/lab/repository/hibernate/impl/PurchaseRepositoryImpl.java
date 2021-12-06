@@ -19,7 +19,7 @@ public class PurchaseRepositoryImpl implements PurchaseRepository {
     private final EntityManager entityManager;
 
     @Override
-    public List<Purchase> findAll(){
+    public List<Purchase> findAll() {
 
         return entityManager.createQuery(FIND_ALL_PURCHASES_QUERY, Purchase.class).getResultList();
     }
@@ -27,7 +27,7 @@ public class PurchaseRepositoryImpl implements PurchaseRepository {
     @Override
     public Purchase findById(int id) {
 
-        return  entityManager.find(Purchase.class, id);
+        return entityManager.find(Purchase.class, id);
     }
 
     @Override

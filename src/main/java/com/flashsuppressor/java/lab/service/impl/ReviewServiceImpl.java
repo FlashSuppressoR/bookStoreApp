@@ -27,7 +27,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final BookService bookService;
     private final ReviewRepository repository;
     private final ModelMapper modelMapper;
-    private final Pageable pageable = PageRequest.of(0, 5, Sort.by("name"));
+    private final Pageable pageable = PageRequest.of(0, 5, Sort.by("mark"));
 
     @Override
     public ReviewDTO findById(int id) {
@@ -35,7 +35,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public Page<ReviewDTO> findAll(Pageable pgb) {
         Page<Review> pages = repository.findAll(pageable);
 
@@ -72,8 +72,7 @@ public class ReviewServiceImpl implements ReviewService {
 
             repository.flush();
             newReviewDTO = convertToReviewDTO(review);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Can't update reviewDTO");
         }
         return newReviewDTO;

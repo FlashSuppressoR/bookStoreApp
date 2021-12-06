@@ -28,7 +28,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     @Override
     public List<Customer> findAll() {
 
-       return entityManager.createQuery(FIND_ALL_CUSTOMERS_QUERY, Customer.class).getResultList();
+        return entityManager.createQuery(FIND_ALL_CUSTOMERS_QUERY, Customer.class).getResultList();
     }
 
     @Override

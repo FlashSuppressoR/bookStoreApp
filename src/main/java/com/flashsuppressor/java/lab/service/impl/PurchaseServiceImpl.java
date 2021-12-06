@@ -28,7 +28,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     private final CustomerService customerService;
     private final PurchaseRepository repository;
     private final ModelMapper modelMapper;
-    private final Pageable pageable = PageRequest.of(0, 5, Sort.by("name"));
+    private final Pageable pageable = PageRequest.of(0, 5, Sort.by("customer_id"));
 
     @Override
     public PurchaseDTO findById(int id) {
@@ -36,7 +36,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public Page<PurchaseDTO> findAll(Pageable pgb) {
         Page<Purchase> pages = repository.findAll(pageable);
 
@@ -72,8 +72,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
             repository.flush();
             newPurchaseDTO = convertToPurchaseDTO(purchase);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Can't update authorDTO");
         }
         return newPurchaseDTO;

@@ -59,9 +59,9 @@ public class SecurityCustomer implements UserDetails {
         return isActive;
     }
 
-    public static UserDetails fromCustomer(Customer customer){
+    public static UserDetails fromCustomer(Customer customer) {
         return new User(customer.getEmail(), customer.getPassword(),
-                true,true,true,true,
+                true, true, true, true,
                 customer.getRole().getAuthorities());
     }
 }

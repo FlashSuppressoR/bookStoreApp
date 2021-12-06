@@ -43,9 +43,9 @@ public class PublisherServiceImplTest {
         int publisherID = 1;
         Publisher publisher = Publisher.builder().id(publisherID).name("Test Publisher").build();
         PublisherDTO expectedPublisherDTO = PublisherDTO.builder().id(publisherID).name("Test Publisher").build();
-        //when
         when(repository.getById(publisherID)).thenReturn(publisher);
         when(modelMapper.map(publisher, PublisherDTO.class)).thenReturn(expectedPublisherDTO);
+        //when
         PublisherDTO actualPublisherDTO = service.findById(publisherID);
         //then
         assertEquals(expectedPublisherDTO, actualPublisherDTO);
@@ -55,8 +55,8 @@ public class PublisherServiceImplTest {
     void findAllTest() {
         //given
         int expectedSize = 2;
-        //when
         Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Publisher(), new Publisher()));
+        //when
         int actualSize = service.findAll(pageable).getSize();
         //then
         assertEquals(expectedSize, actualSize);
@@ -67,10 +67,10 @@ public class PublisherServiceImplTest {
         //given
         PublisherDTO publisherDTO = PublisherDTO.builder().id(4).name("New Publisher").build();
         Publisher publisher = Publisher.builder().id(4).name("New Publisher").build();
-        //when
         when(modelMapper.map(publisherDTO, Publisher.class)).thenReturn(publisher);
         when(modelMapper.map(publisher, PublisherDTO.class)).thenReturn(publisherDTO);
         when(repository.save(publisher)).thenReturn(publisher);
+        //when
         PublisherDTO actualPublisherDTO = service.create(publisherDTO);
         //then
         assertAll(() -> assertEquals(publisher.getId(), actualPublisherDTO.getId()),
@@ -84,9 +84,9 @@ public class PublisherServiceImplTest {
             add(PublisherDTO.builder().id(4).name("First Publisher").build());
             add(PublisherDTO.builder().id(5).name("Second Publisher").build());
         }};
-        //when
         when(mockPublishersList.get(0)).thenReturn(listDTO.get(0));
         when(mockPublishersList.get(1)).thenReturn(listDTO.get(1));
+        //when
         List<PublisherDTO> createList = new ArrayList<>() {{
             add(mockPublishersList.get(0));
             add(mockPublishersList.get(1));
@@ -106,10 +106,10 @@ public class PublisherServiceImplTest {
         String newName = "Updated Publisher";
         PublisherDTO publisherDTO = PublisherDTO.builder().id(publisherId).name(newName).build();
         Publisher publisher = Publisher.builder().id(publisherId).name(newName).build();
-        //when
         when(repository.getById(publisherId)).thenReturn(publisher);
         when(modelMapper.map(publisher, PublisherDTO.class)).thenReturn(publisherDTO);
         when(repository.getById(publisherId)).thenReturn(publisher);
+        //when
         PublisherDTO actualUpdatedPublisher = service.update(publisherDTO);
         // then
         assertAll(() -> assertEquals(publisherId, actualUpdatedPublisher.getId()),

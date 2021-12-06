@@ -31,7 +31,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public Page<GenreDTO> findAll(Pageable pgb) {
         Page<Genre> pages = repository.findAll(pageable);
 
@@ -66,8 +66,7 @@ public class GenreServiceImpl implements GenreService {
 
             repository.flush();
             newGenreDTO = convertToGenreDTO(genre);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Can't update genreDTO");
         }
         return newGenreDTO;

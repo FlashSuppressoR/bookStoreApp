@@ -42,7 +42,7 @@ public class Cart {
     public Cart(Integer id, Customer customer, Book book, Integer bookCounter) {
         this.id = id;
         this.customer = customer;
-        this.book= book;
+        this.book = book;
         this.bookCounter = bookCounter;
     }
 }

@@ -43,7 +43,7 @@ public class PublisherController {
     public ResponseEntity<Page<PublisherDTO>> findAll() {
         final Page<PublisherDTO> publishers = publisherService.findAll(pageable);
 
-        return publishers != null &&  !publishers.isEmpty()
+        return publishers != null && !publishers.isEmpty()
                 ? new ResponseEntity<>(publishers, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

@@ -63,7 +63,7 @@ public class BookController {
     public ResponseEntity<List<BookDTO>> createAll(@RequestBody List<BookDTO> bookDTOList) {
         final List<BookDTO> books = bookService.createAll(bookDTOList);
 
-        return books != null &&  !books.isEmpty()
+        return books != null && !books.isEmpty()
                 ? new ResponseEntity<>(books, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.CREATED);
     }

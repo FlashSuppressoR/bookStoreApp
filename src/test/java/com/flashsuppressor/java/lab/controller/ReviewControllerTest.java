@@ -1,11 +1,8 @@
 package com.flashsuppressor.java.lab.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flashsuppressor.java.lab.service.dto.BookDTO;
-import com.flashsuppressor.java.lab.service.dto.GenreDTO;
-import com.flashsuppressor.java.lab.service.dto.PublisherDTO;
-import com.flashsuppressor.java.lab.service.dto.ReviewDTO;
 import com.flashsuppressor.java.lab.service.ReviewService;
+import com.flashsuppressor.java.lab.service.dto.ReviewDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +44,7 @@ class ReviewControllerTest {
     void findTest() throws Exception {
         //given
         int reviewID = 1;
-        ReviewDTO expectedReview = ReviewDTO.builder().id(reviewID).mark(4).comment("Norm").bookDTO(BookDTO.builder().id(4).name("New Book").price(123)
-                .publisherDTO(PublisherDTO.builder().id(4).name("Need For Speed").build())
-                .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build()).build();
+        ReviewDTO expectedReview = ReviewDTO.builder().id(reviewID).mark(4).comment("Norm").bookId(1).build();
         when(reviewService.findById(reviewID)).thenReturn(expectedReview);
         //when
         MvcResult mvcResult = mockMvc.perform(get("/reviews/find/{id}", reviewID)
@@ -79,9 +74,7 @@ class ReviewControllerTest {
     @Test
     void createTest() throws Exception {
         //given
-        ReviewDTO expectedReview = ReviewDTO.builder().id(4).mark(4).comment("Norm").bookDTO(BookDTO.builder().id(4).name("New Book").price(123)
-                .publisherDTO(PublisherDTO.builder().id(4).name("Need For Speed").build())
-                .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build()).build();
+        ReviewDTO expectedReview = ReviewDTO.builder().id(4).mark(4).comment("Norm").bookId(1).build();
         when(reviewService.create(expectedReview)).thenReturn(expectedReview);
         //when
         MvcResult mvcResult = mockMvc.perform(post("/reviews/create")
@@ -97,12 +90,8 @@ class ReviewControllerTest {
     @Test
     void createAllTest() throws Exception {
         //given
-        ReviewDTO expectedFirstReview = ReviewDTO.builder().id(4).mark(4).comment("Good").bookDTO(BookDTO.builder().id(4).name("New Super Book").price(123)
-                .publisherDTO(PublisherDTO.builder().id(4).name("Need more...").build())
-                .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build()).build();
-        ReviewDTO expectedSecondReview = ReviewDTO.builder().id(5).mark(4).comment("Norm").bookDTO(BookDTO.builder().id(4).name("New Book").price(123)
-                .publisherDTO(PublisherDTO.builder().id(5).name("Need For Speed").build())
-                .genreDTO(GenreDTO.builder().id(5).name("Soe EEw").build()).amount(2).build()).build();
+        ReviewDTO expectedFirstReview = ReviewDTO.builder().id(4).mark(4).comment("Norm").bookId(1).build();
+        ReviewDTO expectedSecondReview = ReviewDTO.builder().id(5).mark(4).comment("Norm").bookId(2).build();
         List<ReviewDTO> expectedList = new ArrayList<>();
         expectedList.add(expectedFirstReview);
         expectedList.add(expectedSecondReview);
@@ -124,9 +113,7 @@ class ReviewControllerTest {
         //given
         int reviewId = 1;
         String updatedComment = "Good job (No)";
-        ReviewDTO expectedReview = ReviewDTO.builder().id(4).mark(4).comment(updatedComment).bookDTO(BookDTO.builder().id(4).name("New Super Book").price(123)
-                .publisherDTO(PublisherDTO.builder().id(4).name("Need more...").build())
-                .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build()).build();
+        ReviewDTO expectedReview = ReviewDTO.builder().id(reviewId).mark(4).comment("Norm").bookId(1).build();
         when(reviewService.update(expectedReview)).thenReturn(expectedReview);
         //when
         MvcResult mvcResult = mockMvc.perform(put("/reviews/update")

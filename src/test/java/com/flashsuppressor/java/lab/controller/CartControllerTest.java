@@ -1,12 +1,8 @@
 package com.flashsuppressor.java.lab.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flashsuppressor.java.lab.service.dto.BookDTO;
-import com.flashsuppressor.java.lab.service.dto.CartDTO;
-import com.flashsuppressor.java.lab.service.dto.CustomerDTO;
 import com.flashsuppressor.java.lab.service.CartService;
-import com.flashsuppressor.java.lab.service.dto.GenreDTO;
-import com.flashsuppressor.java.lab.service.dto.PublisherDTO;
+import com.flashsuppressor.java.lab.service.dto.CartDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +41,7 @@ class CartControllerTest {
     void findTest() throws Exception {
         //given
         int cartId = 4;
-        CartDTO expectedCart = CartDTO.builder().id(4).customerDTO
-                (CustomerDTO.builder().id(4).name("Ae").email("Ae@gmail.com").password("Ad").build())
-                .bookDTO(BookDTO.builder().id(4).name("New Book").price(123)
-                        .publisherDTO(PublisherDTO.builder().id(4).name("Need For Speed").build())
-                        .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build()).build();
+        CartDTO expectedCart = CartDTO.builder().id(4).customerId(1).bookId(1).bookCounter(1).build();
         when(cartService.findById(cartId)).thenReturn(expectedCart);
         //when
         MvcResult mvcResult = mockMvc.perform(get("/carts/find/{id}", cartId)
@@ -58,7 +50,7 @@ class CartControllerTest {
                 .andReturn();
         String actualCart = mvcResult.getResponse().getContentAsString();
         //then
-        assertEquals(objectMapper.writeValueAsString(expectedCart),actualCart);
+        assertEquals(objectMapper.writeValueAsString(expectedCart), actualCart);
     }
 
     @Test
@@ -79,11 +71,7 @@ class CartControllerTest {
     @Test
     void createTest() throws Exception {
         //given
-        CartDTO expectedCart = CartDTO.builder().id(4).customerDTO
-                (CustomerDTO.builder().id(4).name("Ae").email("Ae@gmail.com").password("Ad").build())
-                .bookDTO(BookDTO.builder().id(4).name("New Book").price(123)
-                        .publisherDTO(PublisherDTO.builder().id(4).name("Need For Speed").build())
-                        .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build()).build();
+        CartDTO expectedCart = CartDTO.builder().id(4).customerId(1).bookId(1).bookCounter(1).build();
         when(cartService.create(expectedCart)).thenReturn(expectedCart);
         //when
         CartDTO actualCartDTO = cartService.create(expectedCart);
@@ -102,11 +90,7 @@ class CartControllerTest {
         //given
         int cartId = 1;
         int bookCounter = 3;
-        CartDTO expectedCart = CartDTO.builder().id(4).customerDTO
-                (CustomerDTO.builder().id(4).name("Ae").email("Ae@gmail.com").password("Ad").build())
-                .bookDTO(BookDTO.builder().id(4).name("New Book").price(123)
-                        .publisherDTO(PublisherDTO.builder().id(4).name("Need For Speed").build())
-                        .genreDTO(GenreDTO.builder().id(4).name("Soe Ew").build()).amount(1).build()).build();
+        CartDTO expectedCart = CartDTO.builder().id(4).customerId(1).bookId(1).bookCounter(1).build();
         when(cartService.update(expectedCart)).thenReturn(expectedCart);
         //when
         MvcResult mvcResult = mockMvc.perform(put("/carts/update")

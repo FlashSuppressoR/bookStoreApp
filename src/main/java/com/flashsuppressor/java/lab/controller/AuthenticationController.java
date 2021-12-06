@@ -29,7 +29,7 @@ public class AuthenticationController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestDTO requestDTO){
+    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestDTO requestDTO) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestDTO.getEmail(), requestDTO.getPassword()));
             CustomerDTO customer = customerService.findByEmail(requestDTO.getEmail());
@@ -39,14 +39,13 @@ public class AuthenticationController {
             response.put("token", token);
 
             return ResponseEntity.ok(response);
-        }
-        catch (AuthenticationException ex){
+        } catch (AuthenticationException ex) {
             return new ResponseEntity<>("Invalid email/password combination", HttpStatus.FORBIDDEN);
         }
     }
 
     @PostMapping("/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response){
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
         securityContextLogoutHandler.logout(request, response, null);
     }

@@ -24,10 +24,12 @@ CREATE TABLE IF NOT EXISTS book_store.book
     amount       INT           NOT NULL DEFAULT 0,
     CONSTRAINT fk_book_publisher
         FOREIGN KEY (publisher_id)
-            REFERENCES book_store.publisher (id),
+            REFERENCES book_store.publisher (id)
+            ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_book_genre
         FOREIGN KEY (genre_id)
             REFERENCES book_store.genre (id)
+            ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS book_store.review
@@ -40,15 +42,16 @@ CREATE TABLE IF NOT EXISTS book_store.review
     CONSTRAINT fk_review_book
         FOREIGN KEY (book_id)
             REFERENCES book_store.book (id)
+            ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS book_store.customer
 (
-    id       INT         NOT NULL AUTO_INCREMENT,
-    name     VARCHAR(32) NOT NULL,
-    email    VARCHAR(64) NOT NULL UNIQUE,
+    id       INT          NOT NULL AUTO_INCREMENT,
+    name     VARCHAR(32)  NOT NULL,
+    email    VARCHAR(64)  NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    role VARCHAR(16) NOT NULL DEFAULT 'USER',
+    role     VARCHAR(16)  NOT NULL DEFAULT 'USER',
     PRIMARY KEY (id)
 );
 
@@ -68,10 +71,12 @@ CREATE TABLE IF NOT EXISTS book_store.cart
     PRIMARY KEY (id),
     CONSTRAINT fk_cart_customer
         FOREIGN KEY (customer_id)
-            REFERENCES book_store.customer (id),
+            REFERENCES book_store.customer (id)
+            ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_cart_book
         FOREIGN KEY (book_id)
             REFERENCES book_store.book (id)
+            ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS book_store.purchase
@@ -83,6 +88,7 @@ CREATE TABLE IF NOT EXISTS book_store.purchase
     CONSTRAINT fk_purchase_user
         FOREIGN KEY (customer_id)
             REFERENCES book_store.customer (id)
+            ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS book_store.book_author
@@ -92,10 +98,12 @@ CREATE TABLE IF NOT EXISTS book_store.book_author
     PRIMARY KEY (book_id, author_id),
     CONSTRAINT fk_book_has_author_book
         FOREIGN KEY (book_id)
-            REFERENCES book_store.book (id),
+            REFERENCES book_store.book (id)
+            ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_book_has_author_author
         FOREIGN KEY (author_id)
             REFERENCES book_store.author (id)
+            ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 COMMIT;

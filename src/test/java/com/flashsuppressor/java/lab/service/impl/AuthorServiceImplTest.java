@@ -41,9 +41,9 @@ public class AuthorServiceImplTest {
         int authorID = 1;
         Author author = Author.builder().id(authorID).name("TestAuthor").build();
         AuthorDTO expectedAuthorDTO = AuthorDTO.builder().id(authorID).name("TestAuthor").build();
-        //when
         when(repository.getById(authorID)).thenReturn(author);
         when(modelMapper.map(author, AuthorDTO.class)).thenReturn(expectedAuthorDTO);
+        //when
         AuthorDTO actualAuthorDTO = service.findById(authorID);
         //then
         assertEquals(expectedAuthorDTO, actualAuthorDTO);
@@ -53,8 +53,8 @@ public class AuthorServiceImplTest {
     void findAllTest() {
         //given
         int expectedSize = 2;
-        //when
         Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Author(), new Author()));
+        //when
         int actualSize = service.findAll(pageable).getSize();
         //then
         assertEquals(expectedSize, actualSize);
@@ -65,10 +65,10 @@ public class AuthorServiceImplTest {
         //given
         AuthorDTO authorDTO = AuthorDTO.builder().id(4).name("New Author").build();
         Author author = Author.builder().id(4).name("New Author").build();
-        //when
         when(modelMapper.map(authorDTO, Author.class)).thenReturn(author);
         when(modelMapper.map(author, AuthorDTO.class)).thenReturn(authorDTO);
         when(repository.save(author)).thenReturn(author);
+        //when
         AuthorDTO actualAuthorDTO = service.create(authorDTO);
         //then
         assertAll(() -> assertEquals(author.getId(), actualAuthorDTO.getId()),
@@ -86,13 +86,13 @@ public class AuthorServiceImplTest {
             add(Author.builder().id(4).name("First Author").build());
             add(Author.builder().id(5).name("Second Author").build());
         }};
-        //when
         when(modelMapper.map(expectedListDto.get(0), Author.class)).thenReturn(list.get(0));
         when(modelMapper.map(expectedListDto.get(1), Author.class)).thenReturn(list.get(1));
         when(modelMapper.map(list.get(0), AuthorDTO.class)).thenReturn(expectedListDto.get(0));
         when(modelMapper.map(list.get(1), AuthorDTO.class)).thenReturn(expectedListDto.get(1));
         when(repository.save(list.get(0))).thenReturn(list.get(0));
         when(repository.save(list.get(1))).thenReturn(list.get(1));
+        //when
         List<AuthorDTO> actualListDto = service.createAll(expectedListDto);
         //then
         assertAll(() -> assertEquals(expectedListDto.get(0).getId(), actualListDto.get(0).getId()),
@@ -108,10 +108,10 @@ public class AuthorServiceImplTest {
         String newName = "Updated Author";
         AuthorDTO authorDTO = AuthorDTO.builder().id(authorId).name(newName).build();
         Author author = Author.builder().id(authorId).name(newName).build();
-        //when
         when(repository.getById(authorId)).thenReturn(author);
         when(modelMapper.map(author, AuthorDTO.class)).thenReturn(authorDTO);
         when(repository.getById(authorId)).thenReturn(author);
+        //when
         AuthorDTO actualUpdatedAuthor = service.update(authorDTO);
         //then
         assertAll(() -> assertEquals(authorId, actualUpdatedAuthor.getId()),
